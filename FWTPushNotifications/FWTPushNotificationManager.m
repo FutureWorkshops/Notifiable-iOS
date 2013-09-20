@@ -47,76 +47,36 @@
 - (void)registerTokenInNeeded {
     if (!self.deviceToken)
         return;
-    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken]) {
+    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:self.deviceId]) {
         
         NSString *params = [NSString stringWithFormat:@"token=%@&device_name=%@&device_id=%@", self.deviceToken, self.deviceName, self.deviceId];
         NSString *signature = [self _signatureForRequestParams:params];
-        [self _registerDevice:YES
-                   withParams:params
-                    signature:signature
-                     attempts:self.retryAttempts];
+        [self _registerDeviceParams:params signature:signature attempts:self.retryAttempts];
     }
 }
 
 #pragma mark - Private
 
-- (void)unregisterDevice
-{
-    NSString *params = [NSString stringWithFormat:@"token=%@&device_name=%@&device_id=%@", self.deviceToken, self.deviceName, self.deviceId];
-    NSString *signature = [self _signatureForRequestParams:params];
-
-    [self _registerDevice:NO
-               withParams:params
-                signature:signature
-                 attempts:self.retryAttempts];
-}
-
-
-- (void)_registerDevice:(BOOL)activate withParams:(NSString *)params signature:(NSString *)signature attempts:(NSUInteger)attempts
-{
+- (void)_registerDeviceParams:(NSString *)params signature:(NSString *)signature attempts:(NSUInteger)attempts {
     if (attempts == 0)
         return;
-
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.APIURL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:self.timeoutInterval];
-    request.HTTPMethod = activate ? @"POST" : @"DELETE";
+    request.HTTPMethod = @"POST";
     request.HTTPBody = [[params stringByAppendingFormat:@"&sig=%@", signature] dataUsingEncoding:NSUTF8StringEncoding];
-    [[AFJSONRequestOperation JSONRequestOperationWithRequest:request
-                                                     success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                                                         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-                                                             if(activate){
-                                                                 [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken];
-                                                                 NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
-                                                             }else{
-                                                                 [[NSUserDefaults standardUserDefaults] removeDeviceToken:self.deviceToken];
-                                                                 NSLog(@"Did remove device for push notifications with token: %@", self.deviceToken);
-                                                             }
-                                                         } else {
-                                                             if(activate){
-                                                                 NSLog(@"Failed to register device token: %@", error);
-                                                             }else{
-                                                                 NSLog(@"Failed to remove device for push notifications with token: %@", self.deviceToken);
-                                                             }
-
-                                                             [self _registerDevice:activate
-                                                                        withParams:params
-                                                                         signature:signature
-                                                                          attempts:attempts - 1];
-                                                         }
-                                                     }
-                                                     failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                         if(activate){
-                                                             NSLog(@"Failed to register device token: %@", error);
-                                                         }else{
-                                                             NSLog(@"Failed to remove device for push notifications with token: %@", self.deviceToken);
-                                                         }
-                                                         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
-                                                         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                                                             [self _registerDevice:activate
-                                                                        withParams:params
-                                                                         signature:signature
-                                                                          attempts:attempts - 1];
-                                                         });
-                                                     }] start];
+    [[AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+            [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:self.deviceId];
+            NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
+        } else {
+            [self _registerDeviceParams:params signature:signature attempts:attempts - 1];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"Failed to register device token: %@", error);
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self _registerDeviceParams:params signature:signature attempts:attempts - 1];
+        });
+    }] start];
 }
 
 - (NSString *)_signatureForRequestParams:(NSString *)params {

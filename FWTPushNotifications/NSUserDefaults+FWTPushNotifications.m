@@ -12,20 +12,27 @@
 
 static NSString *FWTDeviceTokenKey = @"FWTDeviceToken";
 
-- (BOOL)didRegisterDeviceToken:(NSString *)token {
+- (BOOL)didRegisterDeviceToken:(NSString *)token forUserInfo:(NSString *)name {
     NSString *key = [NSString stringWithFormat:@"%@_%@", FWTDeviceTokenKey, token];
-    return [self boolForKey:key];
+    
+    NSString *savedValue = [self valueForKey:key];
+    
+    BOOL matchFound = NO;
+    
+    if(!savedValue){
+        matchFound = NO;
+    }else if(name){
+        matchFound = [savedValue isEqualToString:name];
+    }else{
+        matchFound = [savedValue length] == 0;
+    }
+    
+    return matchFound;
 }
 
-- (void)registerDeviceToken:(NSString *)token {
+- (void)registerDeviceToken:(NSString *)token forUserInfo:(NSString *)name {
     NSString *key = [NSString stringWithFormat:@"%@_%@", FWTDeviceTokenKey, token];
-    [self setBool:YES forKey:key];
-    [self synchronize];
-}
-
-- (void)removeDeviceToken:(NSString *)token {
-    NSString *key = [NSString stringWithFormat:@"%@_%@", FWTDeviceTokenKey, token];
-    [self setBool:NO forKey:key];
+    [self setValue:(name ?: @"") forKey:key];
     [self synchronize];
 }
 

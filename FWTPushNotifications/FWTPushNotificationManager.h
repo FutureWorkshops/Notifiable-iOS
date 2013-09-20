@@ -16,6 +16,7 @@
 
 + (instancetype)sharedManager;
 - (void)registerTokenInNeeded;
+- (void)unregisterDevice;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 
 @end

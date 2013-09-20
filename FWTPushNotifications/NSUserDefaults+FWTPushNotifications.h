@@ -10,5 +10,6 @@
 
 - (BOOL)didRegisterDeviceToken:(NSString *)token;
 - (void)registerDeviceToken:(NSString *)token;
+- (void)removeDeviceToken:(NSString *)token;
 
 @end

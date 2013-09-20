@@ -23,5 +23,11 @@ static NSString *FWTDeviceTokenKey = @"FWTDeviceToken";
     [self synchronize];
 }
 
+- (void)removeDeviceToken:(NSString *)token {
+    NSString *key = [NSString stringWithFormat:@"%@_%@", FWTDeviceTokenKey, token];
+    [self setBool:NO forKey:key];
+    [self synchronize];
+}
+
 @end
 

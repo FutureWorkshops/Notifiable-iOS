@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "FWTPushNotifications"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3.pre"
   s.summary      = "Utility classes to integrate with FWTPushNotificationServer gem"
 
   s.description  = <<-DESC
@@ -12,9 +12,9 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/FutureWorkshops/FWTPushNotifications"
   s.license      = { :type => 'Apache License Version 2.0', :file => 'LICENSE' }
-  s.author       = { "Daniel Phillips" => "daniel@futureworkshops.com" }
+  s.author       = { "Kamil Kocemba" => "kamil@futureworkshops.com" }
 
-  s.source       = { :git => "git@github.com:FutureWorkshops/FWTPushNotifications.git", :tag => "0.0.2" }
+  s.source       = { :git => "git@github.com:FutureWorkshops/FWTPushNotifications.git", :tag => "0.0.3.pre" }
 
   s.source_files  = 'FWTPushNotifications'
   s.public_header_files = 'FWTPushNotifications/**/*.h'

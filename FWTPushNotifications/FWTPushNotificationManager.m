@@ -10,11 +10,18 @@
 #import "NSUserDefaults+FWTPushNotifications.h"
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <AFNetworking/AFNetworking.h>
 #import <AFNetworking/AFJSONRequestOperation.h>
+
+
+NSString * const FWTPushNotificationsAuthTokenKey = @"auth_token";
+NSString * const FWTPushNotificationsUserIdKey = @"user_id";
+NSString * const FWTPushNotificationsDeviceTokenKey = @"token";
 
 @interface FWTPushNotificationManager ()
 
 @property (nonatomic, strong) NSString *deviceToken;
+@property (nonatomic, strong) AFHTTPClient *httpClient;
 
 @end
 
@@ -32,60 +39,57 @@
 - (instancetype)init {
     if ((self = [super init])) {
         self.retryAttempts = 5;
-        self.timeoutInterval = 300;
         self.retryDelay = 60;
-        self.deviceName = @"";
-        self.deviceId = @"";
     }
     return self;
+}
+
+- (AFHTTPClient *)httpClient {
+    if (!self->_httpClient) {
+        self->_httpClient = [AFHTTPClient clientWithBaseURL:self.baseURL];
+        self->_httpClient.parameterEncoding = AFJSONParameterEncoding;
+    }
+    return self->_httpClient;
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
-- (void)registerTokenInNeeded {
+- (void)registerTokenInNeededWithParams:(NSDictionary *)params {
     if (!self.deviceToken)
         return;
-    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:self.deviceId]) {
-        
-        NSString *params = [NSString stringWithFormat:@"token=%@&device_name=%@&device_id=%@", self.deviceToken, self.deviceName, self.deviceId];
-        NSString *signature = [self _signatureForRequestParams:params];
-        [self _registerDeviceParams:params signature:signature attempts:self.retryAttempts];
+    NSString *userId = params[FWTPushNotificationsUserIdKey];
+    NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
+    p[FWTPushNotificationsDeviceTokenKey] = self.deviceToken;
+    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
+        [self _registerDeviceWithParams:p attempts:self.retryAttempts];
     }
 }
 
 #pragma mark - Private
 
-- (void)_registerDeviceParams:(NSString *)params signature:(NSString *)signature attempts:(NSUInteger)attempts {
+- (void)_registerDeviceWithParams:(NSDictionary *)params attempts:(NSUInteger)attempts {
     if (attempts == 0)
         return;
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.APIURL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:self.timeoutInterval];
-    request.HTTPMethod = @"POST";
-    request.HTTPBody = [[params stringByAppendingFormat:@"&sig=%@", signature] dataUsingEncoding:NSUTF8StringEncoding];
-    [[AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+    [self.httpClient postPath:@"device_tokens" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+        NSError *error;
+        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+        NSLog(@"%@", JSON);
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:self.deviceId];
+            NSString *userId = params[FWTPushNotificationsUserIdKey];
+            [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:userId];
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
         } else {
-            [self _registerDeviceParams:params signature:signature attempts:attempts - 1];
+            [self _registerDeviceWithParams:params attempts:attempts - 1];
         }
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Failed to register device token: %@", error);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self _registerDeviceParams:params signature:signature attempts:attempts - 1];
+            [self _registerDeviceWithParams:params attempts:attempts - 1];
         });
-    }] start];
-}
-
-- (NSString *)_signatureForRequestParams:(NSString *)params {
-    uint8_t digest[CC_SHA256_DIGEST_LENGTH] = { 0 };
-    const char *cKey = self.APIKey.UTF8String;
-    const char *cData = params.UTF8String;
-    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), digest);
-    NSData *digestData = [NSData dataWithBytes:digest length:CC_SHA256_DIGEST_LENGTH];
-    return [[digestData.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }];
 }
 
 @end

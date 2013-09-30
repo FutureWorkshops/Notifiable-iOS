@@ -6,16 +6,18 @@
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 
+extern NSString * const FWTPushNotificationsAuthTokenKey;
+extern NSString * const FWTPushNotificationsUserIdKey;
+
+
 @interface FWTPushNotificationManager : NSObject
 
-@property (nonatomic, strong) NSURL *APIURL;
-@property (nonatomic, strong) NSString *APIKey;
-@property (nonatomic, strong) NSString *deviceId, *deviceName;
+@property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, assign) NSInteger retryAttempts;
-@property (nonatomic, assign) NSTimeInterval retryDelay, timeoutInterval;
+@property (nonatomic, assign) NSTimeInterval retryDelay;
 
 + (instancetype)sharedManager;
-- (void)registerTokenInNeeded;
+- (void)registerTokenInNeededWithParams:(NSDictionary *)params;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 
 @end

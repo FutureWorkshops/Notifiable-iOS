@@ -17,6 +17,7 @@
 NSString * const FWTPushNotificationsAuthTokenKey = @"auth_token";
 NSString * const FWTPushNotificationsUserIdKey = @"user_id";
 NSString * const FWTPushNotificationsDeviceTokenKey = @"token";
+NSString * const FWTPushNotificationsProviderKey = @"provider";
 
 @interface FWTPushNotificationManager ()
 
@@ -56,12 +57,13 @@ NSString * const FWTPushNotificationsDeviceTokenKey = @"token";
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
-- (void)registerTokenInNeededWithParams:(NSDictionary *)params {
+- (void)registerTokenIfNeededWithParams:(NSDictionary *)params {
     if (!self.deviceToken)
         return;
     NSString *userId = params[FWTPushNotificationsUserIdKey];
     NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
     p[FWTPushNotificationsDeviceTokenKey] = self.deviceToken;
+    p[FWTPushNotificationsProviderKey] = @"apns";
     if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
         [self _registerDeviceWithParams:p attempts:self.retryAttempts];
     }

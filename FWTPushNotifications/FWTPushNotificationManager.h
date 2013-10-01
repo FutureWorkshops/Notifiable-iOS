@@ -17,7 +17,7 @@ extern NSString * const FWTPushNotificationsUserIdKey;
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 
 + (instancetype)sharedManager;
-- (void)registerTokenInNeededWithParams:(NSDictionary *)params;
+- (void)registerTokenIfNeededWithParams:(NSDictionary *)params;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 
 @end

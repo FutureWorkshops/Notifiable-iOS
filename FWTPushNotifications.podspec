@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Apache License Version 2.0', :file => 'LICENSE' }
   s.author       = { "Kamil Kocemba" => "kamil@futureworkshops.com" }
 
-  s.source       = { :git => "https://github.com/FutureWorkshops/FWTPushNotifications.git", :tag => "0.0.3.pre2" }
+  s.source       = { :git => "https://github.com/FutureWorkshops/FWTPushNotifications.git", :tag => "0.0.3" }
 
   s.source_files  = 'FWTPushNotifications'
   s.public_header_files = 'FWTPushNotifications/**/*.h'

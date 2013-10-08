@@ -77,7 +77,6 @@ NSString * const FWTPushNotificationsProviderKey = @"provider";
     [self.httpClient postPath:@"device_tokens" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-        NSLog(@"%@", JSON);
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
             NSString *userId = params[FWTPushNotificationsUserIdKey];
             [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:userId];

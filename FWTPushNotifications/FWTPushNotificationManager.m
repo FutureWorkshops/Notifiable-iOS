@@ -10,6 +10,8 @@
 #import "NSUserDefaults+FWTPushNotifications.h"
 
 #import <CommonCrypto/CommonCrypto.h>
+#import <SystemConfiguration/SystemConfiguration.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <AFNetworking/AFNetworking.h>
 #import <AFNetworking/AFJSONRequestOperation.h>
 
@@ -18,6 +20,7 @@ NSString * const FWTPushNotificationsAuthTokenKey = @"auth_token";
 NSString * const FWTPushNotificationsUserIdKey = @"user_id";
 NSString * const FWTPushNotificationsDeviceTokenKey = @"token";
 NSString * const FWTPushNotificationsProviderKey = @"provider";
+NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
 
 @interface FWTPushNotificationManager ()
 
@@ -61,12 +64,16 @@ NSString * const FWTPushNotificationsProviderKey = @"provider";
     if (!self.deviceToken)
         return;
     NSString *userId = params[FWTPushNotificationsUserIdKey];
+    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
+        [self registerTokenWithParams:params];
+    }
+}
+
+- (void)registerTokenWithParams:(NSDictionary *)params {
     NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
     p[FWTPushNotificationsDeviceTokenKey] = self.deviceToken;
     p[FWTPushNotificationsProviderKey] = @"apns";
-    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
-        [self _registerDeviceWithParams:p attempts:self.retryAttempts];
-    }
+    [self _registerDeviceWithParams:p attempts:self.retryAttempts];
 }
 
 #pragma mark - Private

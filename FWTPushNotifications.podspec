@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 
   s.name         = "FWTPushNotifications"
   s.version      = "0.0.3"
-  s.platform     = :ios
+  s.platform     = :ios, '6.0'
   s.summary      = "Utility classes to integrate with FWTPushNotificationServer gem"
 
   s.dependency 'AFNetworking'
@@ -23,6 +23,5 @@ Pod::Spec.new do |s|
   s.source_files  = 'FWTPushNotifications'
   s.public_header_files = 'FWTPushNotifications/**/*.h'
   s.requires_arc = true 
-
 
 end

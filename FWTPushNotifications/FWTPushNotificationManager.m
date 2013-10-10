@@ -48,6 +48,10 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
     return self;
 }
 
+- (void)setUseBasicAuthWithUsername:(NSString *)username andPassword:(NSString *)password {
+    [self.httpClient setAuthorizationHeaderWithUsername:username password:password];
+}
+
 - (AFHTTPClient *)httpClient {
     if (!self->_httpClient) {
         self->_httpClient = [AFHTTPClient clientWithBaseURL:self.baseURL];

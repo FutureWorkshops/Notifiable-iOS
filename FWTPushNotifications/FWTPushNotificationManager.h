@@ -18,6 +18,8 @@ extern NSString * const FWTPushNotificationsUserDictionaryKey;
 
 + (instancetype)sharedManager;
 
+- (void)setUseBasicAuthWithUsername:(NSString *)username andPassword:(NSString *)password;
+
 - (void)registerTokenWithParams:(NSDictionary *)params;
 - (void)registerTokenIfNeededWithParams:(NSDictionary *)params;
 

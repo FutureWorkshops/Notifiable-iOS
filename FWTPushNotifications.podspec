@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.summary      = "Utility classes to integrate with FWTPushNotificationServer gem"
 
   s.dependency 'AFNetworking', '~> 1.3'
-  s.frameworks   = ['MobileCoreServices.framework', 'SystemConfiguration']
+  s.frameworks   = ['MobileCoreServices', 'SystemConfiguration']
 
   s.description  = <<-DESC
                    Utility classes to integrate with FWTPushNotificationServer gem

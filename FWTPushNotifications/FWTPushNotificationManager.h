@@ -22,6 +22,7 @@ extern NSString * const FWTPushNotificationsUserDictionaryKey;
 
 - (void)registerTokenWithParams:(NSDictionary *)params;
 - (void)registerTokenIfNeededWithParams:(NSDictionary *)params;
+- (void)unregisterTokenForUserId:(NSString *)userId;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 

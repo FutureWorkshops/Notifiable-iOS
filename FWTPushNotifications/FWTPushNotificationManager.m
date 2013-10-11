@@ -67,8 +67,7 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
 - (void)registerTokenIfNeededWithParams:(NSDictionary *)params {
     if (!self.deviceToken)
         return;
-    NSString *userId = params[FWTPushNotificationsUserIdKey];
-    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
+    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken]) {
         [self registerTokenWithParams:params];
     }
 }
@@ -80,6 +79,12 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
     [self _registerDeviceWithParams:p attempts:self.retryAttempts];
 }
 
+- (void)unregisterTokenForUserId:(NSString *)userId {
+    NSDictionary *params = @{ FWTPushNotificationsUserIdKey : [NSNull null] };
+    [self registerTokenWithParams:params];
+    [[NSUserDefaults standardUserDefaults] unregisterDeviceToken:self.deviceToken];
+}
+
 #pragma mark - Private
 
 - (void)_registerDeviceWithParams:(NSDictionary *)params attempts:(NSUInteger)attempts {
@@ -89,8 +94,7 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            NSString *userId = params[FWTPushNotificationsUserIdKey];
-            [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:userId];
+            [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken];
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
         } else {
             [self _registerDeviceWithParams:params attempts:attempts - 1];

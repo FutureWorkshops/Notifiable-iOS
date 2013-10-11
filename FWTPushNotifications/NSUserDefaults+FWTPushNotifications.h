@@ -8,7 +8,8 @@
 
 @interface NSUserDefaults (FWTPushNotifications)
 
-- (BOOL)didRegisterDeviceToken:(NSString *)token forUserInfo:(NSString *)name;
-- (void)registerDeviceToken:(NSString *)token forUserInfo:(NSString *)name;
+- (BOOL)didRegisterDeviceToken:(NSString *)token;
+- (void)registerDeviceToken:(NSString *)token;
+- (void)unregisterDeviceToken:(NSString *)token;
 
 @end

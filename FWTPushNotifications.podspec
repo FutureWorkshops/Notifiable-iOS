@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "FWTPushNotifications"
-  s.version      = "0.0.4.b1"
+  s.version      = "0.0.4.b2"
   s.platform     = :ios, '6.0'
   s.summary      = "Utility classes to integrate with FWTPushNotificationServer gem"
 

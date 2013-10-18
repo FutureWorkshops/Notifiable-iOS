@@ -73,6 +73,8 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
 }
 
 - (void)registerTokenWithParams:(NSDictionary *)params {
+    if (!self.deviceToken)
+        return;
     NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
     p[FWTPushNotificationsDeviceTokenKey] = self.deviceToken;
     p[FWTPushNotificationsProviderKey] = @"apns";
@@ -80,6 +82,8 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
 }
 
 - (void)unregisterTokenForUserId:(NSString *)userId {
+    if (!self.deviceToken)
+        return;
     NSDictionary *params = @{ FWTPushNotificationsUserIdKey : [NSNull null] };
     [self registerTokenWithParams:params];
     [[NSUserDefaults standardUserDefaults] unregisterDeviceToken:self.deviceToken];

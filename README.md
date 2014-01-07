@@ -23,7 +23,7 @@ You should the following to your <i>AppDelegate</i>:
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
 	[manager registerTokenIfNeededWithParams:@{
-        FWTPushNotificationsUserIdKey : userId
+        FWTNotifiableUserIdKey : userId
     }];
 
 }

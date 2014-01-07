@@ -1,0 +1,4 @@
+xcodeproj 'PushNotificationsTesterApp/PushNotificationsTesterApp.xcodeproj'
+platform :ios, '6.0'
+
+pod 'Notifiable'

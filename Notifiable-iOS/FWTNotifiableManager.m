@@ -1,13 +1,13 @@
 //
-//  FWTPushNotificationManager.m
-//  FWTPushNotifications
+//  FWTNotifiableManager.m
+//  FWTNotifiable
 //
 //  Created by Kamil Kocemba on 18/09/2013.
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 
-#import "FWTPushNotificationManager.h"
-#import "NSUserDefaults+FWTPushNotifications.h"
+#import "FWTNotifiableManager.h"
+#import "NSUserDefaults+FWTNotifiable.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 #import <SystemConfiguration/SystemConfiguration.h>
@@ -16,26 +16,26 @@
 #import <AFNetworking/AFJSONRequestOperation.h>
 
 
-NSString * const FWTPushNotificationsAuthTokenKey = @"auth_token";
-NSString * const FWTPushNotificationsUserIdKey = @"user_id";
-NSString * const FWTPushNotificationsDeviceTokenKey = @"token";
-NSString * const FWTPushNotificationsProviderKey = @"provider";
-NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
+NSString * const FWTNotifiableAuthTokenKey = @"auth_token";
+NSString * const FWTNotifiableUserIdKey = @"user_id";
+NSString * const FWTNotifiableDeviceTokenKey = @"token";
+NSString * const FWTNotifiableProviderKey = @"provider";
+NSString * const FWTNotifiableUserDictionaryKey = @"user";
 
-@interface FWTPushNotificationManager ()
+@interface FWTNotifiableManager ()
 
 @property (nonatomic, strong) NSString *deviceToken;
 @property (nonatomic, strong) AFHTTPClient *httpClient;
 
 @end
 
-@implementation FWTPushNotificationManager
+@implementation FWTNotifiableManager
 
 + (instancetype)sharedManager {
-    static FWTPushNotificationManager *sharedManagerInstance;
+    static FWTNotifiableManager *sharedManagerInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedManagerInstance = [[FWTPushNotificationManager alloc] init];
+        sharedManagerInstance = [[FWTNotifiableManager alloc] init];
     });
     return sharedManagerInstance;
 }
@@ -63,7 +63,7 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
 - (void)registerTokenIfNeededWithParams:(NSDictionary *)params {
     if (!self.deviceToken)
         return;
-    NSString *userId = params[FWTPushNotificationsUserIdKey];
+    NSString *userId = params[FWTNotifiableUserIdKey];
     if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
         [self registerTokenWithParams:params];
     }
@@ -71,8 +71,8 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
 
 - (void)registerTokenWithParams:(NSDictionary *)params {
     NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
-    p[FWTPushNotificationsDeviceTokenKey] = self.deviceToken;
-    p[FWTPushNotificationsProviderKey] = @"apns";
+    p[FWTNotifiableDeviceTokenKey] = self.deviceToken;
+    p[FWTNotifiableProviderKey] = @"apns";
     [self _registerDeviceWithParams:p attempts:self.retryAttempts];
 }
 
@@ -85,7 +85,7 @@ NSString * const FWTPushNotificationsUserDictionaryKey = @"user";
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            NSString *userId = params[FWTPushNotificationsUserIdKey];
+            NSString *userId = params[FWTNotifiableUserIdKey];
             [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:userId];
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
         } else {

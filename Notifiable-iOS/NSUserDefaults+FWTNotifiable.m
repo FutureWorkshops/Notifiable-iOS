@@ -1,14 +1,14 @@
 //
-//  NSUserDefaults+FWTPushNotifications.m
-//  FWTPushNotifications
+//  NSUserDefaults+FWTNotifiable.m
+//  FWTNotifiable
 //
 //  Created by Kamil Kocemba on 19/09/2013.
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 
-#import "NSUserDefaults+FWTPushNotifications.h"
+#import "NSUserDefaults+FWTNotifiable.h"
 
-@implementation NSUserDefaults (FWTPushNotifications)
+@implementation NSUserDefaults (FWTNotifiable)
 
 static NSString *FWTDeviceTokenKey = @"FWTDeviceToken";
 

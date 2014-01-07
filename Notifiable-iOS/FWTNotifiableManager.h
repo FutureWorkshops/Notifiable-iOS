@@ -1,16 +1,16 @@
 //
-//  FWTPushNotificationManager.h
-//  FWTPushNotifications
+//  FWTNotifiableManager.h
+//  FWTNotifiable
 //
 //  Created by Kamil Kocemba on 18/09/2013.
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 
-extern NSString * const FWTPushNotificationsAuthTokenKey;
-extern NSString * const FWTPushNotificationsUserIdKey;
-extern NSString * const FWTPushNotificationsUserDictionaryKey;
+extern NSString * const FWTNotifiableAuthTokenKey;
+extern NSString * const FWTNotifiableUserIdKey;
+extern NSString * const FWTNotifiableUserDictionaryKey;
 
-@interface FWTPushNotificationManager : NSObject
+@interface FWTNotifiableManager : NSObject
 
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, assign) NSInteger retryAttempts;

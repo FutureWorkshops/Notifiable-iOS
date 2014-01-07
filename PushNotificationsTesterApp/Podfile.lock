@@ -1,13 +1,13 @@
 PODS:
   - AFNetworking (1.3.3)
-  - FWTPushNotifications (0.0.4.b3):
+  - Notifiable (0.0.5):
     - AFNetworking (~> 1.3)
 
 DEPENDENCIES:
-  - FWTPushNotifications
+  - Notifiable
 
 SPEC CHECKSUMS:
-  AFNetworking: 0700ec7a58c36ad217173e167f6e4df7270df66b
-  FWTPushNotifications: 12809535d205b4895d313aaf1a166bafb53f2d69
+  AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
+  Notifiable: 04a53196e81d716b0868e3bd04609e4625df0859
 
 COCOAPODS: 0.28.0

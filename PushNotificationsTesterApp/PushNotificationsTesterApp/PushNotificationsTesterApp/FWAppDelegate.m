@@ -104,12 +104,12 @@
     
     rootController.pasteboardStatusLabel.text = @"Token copied to pasteboard";
 
-    FWTPushNotificationManager *manager = [FWTPushNotificationManager sharedManager];
+    FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
     manager.baseURL = [NSURL URLWithString:apnsHostURLString];
     
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
-    [manager registerTokenWithParams:@{ FWTPushNotificationsUserIdKey : @"oliver@futureworkshops.com" }];
+    [manager registerTokenWithParams:@{ FWTNotifiableUserIdKey : @"oliver@futureworkshops.com" }];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {

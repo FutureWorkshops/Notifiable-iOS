@@ -13,4 +13,4 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#import <FWTNotifiable/FWTNotifiableManager.h>
+#import <Notifiable/FWTNotifiableManager.h>

@@ -1,6 +1,6 @@
-# Notifiable
+# Notifiable-iOS
 
-<b>Notifiable</b> is a set of utility classes to easily integrate with
+<b>Notifiable-iOS</b> is a set of utility classes to easily integrate with
 <a href="https://github.com/FutureWorkshops/Notifiable-Rails">Notifiable-Rails</a>.
 
 It handles device token registration and takes care of retrying failed requests and avoiding duplicate registrations.
@@ -28,7 +28,7 @@ You should the following to your <i>AppDelegate</i>:
 
 }
 ```
-<b>user_id</b> parameter is used to associate device token with user model in the backend.
+<b>FWTNotifiableUserIdKey</b> parameter is used to associate device token with user model in the backend.
 
 
 ## LICENSE

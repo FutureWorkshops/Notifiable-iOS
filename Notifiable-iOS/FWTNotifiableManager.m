@@ -16,7 +16,7 @@
 
 
 NSString * const FWTNotifiableAuthTokenKey = @"auth_token";
-NSString * const FWTNotifiableUserIdKey = @"user_id";
+NSString * const FWTNotifiableUserInfoKey = @"user";
 NSString * const FWTNotifiableDeviceTokenKey = @"token";
 NSString * const FWTNotifiableProviderKey = @"provider";
 NSString * const FWTNotifiableUserDictionaryKey = @"user";

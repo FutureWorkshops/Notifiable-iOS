@@ -7,7 +7,7 @@
 //
 
 extern NSString * const FWTNotifiableAuthTokenKey;
-extern NSString * const FWTNotifiableUserIdKey;
+extern NSString * const FWTNotifiableUserInfoKey;
 extern NSString * const FWTNotifiableUserDictionaryKey;
 
 typedef void (^FWNotifiableOperationCompletionHandler)(BOOL success);

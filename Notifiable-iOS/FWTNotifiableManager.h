@@ -21,6 +21,7 @@ typedef void (^FWNotifiableOperationCompletionHandler)(BOOL success);
 + (instancetype)sharedManager;
 
 - (void)registerTokenWithParams:(NSDictionary *)params;
+- (void)registerTokenWithParams:(NSDictionary *)params completionHandler:(FWNotifiableOperationCompletionHandler)hanlder;
 - (void)unregisterToken;
 - (void)unregisterTokenWithCompletionHandler:(FWNotifiableOperationCompletionHandler)hanlder;
 

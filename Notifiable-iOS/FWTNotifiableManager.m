@@ -59,17 +59,24 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
     return self->_httpClient;
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
+- (void)registerTokenWithParams:(NSDictionary *)params
+{
+    [self registerTokenWithParams:params completionHandler:nil];
 }
 
-- (void)registerTokenWithParams:(NSDictionary *)params {
+- (void)registerTokenWithParams:(NSDictionary *)params completionHandler:(FWNotifiableOperationCompletionHandler)hanlder
+{
     NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
     p[FWTNotifiableDeviceTokenKey] = self.deviceToken;
     p[FWTNotifiableProviderKey] = @"apns";
-    [self _registerDeviceWithParams:p attempts:self.retryAttempts];
+    [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
+}
+
 
 - (void)unregisterToken
 {
@@ -83,14 +90,23 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
 
 #pragma mark - Private
 
-- (void)_registerDeviceWithParams:(NSDictionary *)params attempts:(NSUInteger)attempts {
-    if (attempts == 0)
+- (void)_registerDeviceWithParams:(NSDictionary *)params
+                         attempts:(NSUInteger)attempts
+                completionHandler:(FWNotifiableOperationCompletionHandler)handler
+{
+    if (attempts == 0){
+        if(handler)
+            handler(NO);
         return;
+    }
+    
     [self.httpClient postPath:@"device_tokens" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
+            if(handler)
+                handler(YES);
         } else {
             [self _registerDeviceWithParams:params attempts:attempts - 1];
         }

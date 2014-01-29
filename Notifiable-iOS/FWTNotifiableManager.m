@@ -66,6 +66,15 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
     p[FWTNotifiableDeviceTokenKey] = self.deviceToken;
     p[FWTNotifiableProviderKey] = @"apns";
     [self _registerDeviceWithParams:p attempts:self.retryAttempts];
+
+- (void)unregisterToken
+{
+    [self unregisterTokenWithCompletionHandler:nil];
+}
+
+- (void)unregisterTokenWithCompletionHandler:(FWNotifiableOperationCompletionHandler)hanlder
+{
+    [self _unregisterTokenWithAttempts:self.retryAttempts completionHandler:hanlder];
 }
 
 #pragma mark - Private
@@ -88,6 +97,37 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
             [self _registerDeviceWithParams:params attempts:attempts - 1];
         });
     }];
+}
+
+- (void)_unregisterTokenWithAttempts:(NSUInteger)attempts
+                   completionHandler:(FWNotifiableOperationCompletionHandler)handler
+{
+    if (attempts == 0){
+        if(handler)
+            handler(NO);
+        return;
+    }
+    
+    NSString *path = [NSString stringWithFormat:@"device_tokens/%@", self.deviceToken];
+    
+    [self.httpClient deletePath:path parameters:nil success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+        NSError *error;
+        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+            NSLog(@"Did unsubscribe for push notifications");
+            if(handler)
+                handler(YES);
+        } else {
+            [self _unregisterTokenWithAttempts:attempts - 1 completionHandler:handler];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Failed to register device token: %@", error);
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self _unregisterTokenWithAttempts:attempts - 1 completionHandler:handler];
+        });
+    }];
+
 }
 
 @end

@@ -30,7 +30,8 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
 
 @implementation FWTNotifiableManager
 
-+ (instancetype)sharedManager {
++ (instancetype)sharedManager
+{
     static FWTNotifiableManager *sharedManagerInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -39,15 +40,18 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
     return sharedManagerInstance;
 }
 
-- (instancetype)init {
-    if ((self = [super init])) {
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
         self.retryAttempts = 5;
         self.retryDelay = 60;
     }
     return self;
 }
 
-- (AFHTTPClient *)httpClient {
+- (AFHTTPClient *)httpClient
+{
     if (!self->_httpClient) {
         self->_httpClient = [AFHTTPClient clientWithBaseURL:self.baseURL];
         self->_httpClient.parameterEncoding = AFJSONParameterEncoding;

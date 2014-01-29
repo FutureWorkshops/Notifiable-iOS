@@ -19,7 +19,6 @@ extern NSString * const FWTNotifiableUserDictionaryKey;
 + (instancetype)sharedManager;
 
 - (void)registerTokenWithParams:(NSDictionary *)params;
-- (void)registerTokenIfNeededWithParams:(NSDictionary *)params;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 

@@ -7,7 +7,6 @@
 //
 
 #import "FWTNotifiableManager.h"
-#import "NSUserDefaults+FWTNotifiable.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 #import <SystemConfiguration/SystemConfiguration.h>
@@ -60,13 +59,6 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
-- (void)registerTokenIfNeededWithParams:(NSDictionary *)params {
-    if (!self.deviceToken)
-        return;
-    NSString *userId = params[FWTNotifiableUserIdKey];
-    if (![[NSUserDefaults standardUserDefaults] didRegisterDeviceToken:self.deviceToken forUserInfo:userId]) {
-        [self registerTokenWithParams:params];
-    }
 }
 
 - (void)registerTokenWithParams:(NSDictionary *)params {
@@ -85,8 +77,6 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            NSString *userId = params[FWTNotifiableUserIdKey];
-            [[NSUserDefaults standardUserDefaults] registerDeviceToken:self.deviceToken forUserInfo:userId];
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
         } else {
             [self _registerDeviceWithParams:params attempts:attempts - 1];

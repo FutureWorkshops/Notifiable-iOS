@@ -113,7 +113,7 @@ NSString * const FWTNotifiableProviderKey = @"provider";
         NSLog(@"Failed to register device token: %@", error);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self _registerDeviceWithParams:params attempts:(attempts - 1)  completionHandler:handler];
+            [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
         });
     }];
 }
@@ -137,13 +137,13 @@ NSString * const FWTNotifiableProviderKey = @"provider";
             if(handler)
                 handler(YES);
         } else {
-            [self _unregisterTokenWithAttempts:attempts - 1 completionHandler:handler];
+            [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Failed to unregister for push notifications");
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self _unregisterTokenWithAttempts:attempts - 1 completionHandler:handler];
+            [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         });
     }];
 

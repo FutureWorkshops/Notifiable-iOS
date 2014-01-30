@@ -94,8 +94,11 @@ NSString * const FWTNotifiableProviderKey = @"provider";
                 completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
-        if(handler)
-            handler(NO);
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(NO);
+            });
+        }
         return;
     }
     
@@ -104,8 +107,11 @@ NSString * const FWTNotifiableProviderKey = @"provider";
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
-            if(handler)
-                handler(YES);
+            if(handler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(YES);
+                });
+            }
         } else {
             [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
@@ -122,8 +128,11 @@ NSString * const FWTNotifiableProviderKey = @"provider";
                    completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
-        if(handler)
-            handler(NO);
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(NO);
+            });
+        }
         return;
     }
     
@@ -134,8 +143,11 @@ NSString * const FWTNotifiableProviderKey = @"provider";
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
             NSLog(@"Did unregister for push notifications");
-            if(handler)
-                handler(YES);
+            if(handler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(YES);
+                });
+            }
         } else {
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         }

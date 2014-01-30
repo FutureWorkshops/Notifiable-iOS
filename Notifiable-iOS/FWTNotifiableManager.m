@@ -19,7 +19,6 @@ NSString * const FWTNotifiableAuthTokenKey = @"auth_token";
 NSString * const FWTNotifiableUserInfoKey = @"user";
 NSString * const FWTNotifiableDeviceTokenKey = @"token";
 NSString * const FWTNotifiableProviderKey = @"provider";
-NSString * const FWTNotifiableUserDictionaryKey = @"user";
 
 @interface FWTNotifiableManager ()
 
@@ -64,14 +63,14 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
-- (void)registerTokenWithParams:(NSDictionary *)params
+- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo
 {
-    [self registerTokenWithParams:params completionHandler:nil];
+    [self registerTokenWithUserInfo:userInfo completionHandler:nil];
 }
 
-- (void)registerTokenWithParams:(NSDictionary *)params completionHandler:(FWNotifiableOperationCompletionHandler)hanlder
+- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
 {
-    NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:params];
+    NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:userInfo];
     p[FWTNotifiableDeviceTokenKey] = self.deviceToken;
     p[FWTNotifiableProviderKey] = @"apns";
     [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
@@ -83,7 +82,7 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
     [self unregisterTokenWithCompletionHandler:nil];
 }
 
-- (void)unregisterTokenWithCompletionHandler:(FWNotifiableOperationCompletionHandler)hanlder
+- (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
 {
     [self _unregisterTokenWithAttempts:self.retryAttempts completionHandler:hanlder];
 }
@@ -92,7 +91,7 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
 
 - (void)_registerDeviceWithParams:(NSDictionary *)params
                          attempts:(NSUInteger)attempts
-                completionHandler:(FWNotifiableOperationCompletionHandler)handler
+                completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
         if(handler)
@@ -120,7 +119,7 @@ NSString * const FWTNotifiableUserDictionaryKey = @"user";
 }
 
 - (void)_unregisterTokenWithAttempts:(NSUInteger)attempts
-                   completionHandler:(FWNotifiableOperationCompletionHandler)handler
+                   completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
         if(handler)

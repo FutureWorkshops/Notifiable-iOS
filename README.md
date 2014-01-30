@@ -22,13 +22,22 @@ You should the following to your <i>AppDelegate</i>:
     
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     
-	[manager registerTokenIfNeededWithParams:@{
-        FWTNotifiableUserIdKey : userId
+	[manager registerTokenWithUserInfo:@{
+		@"userId" : user_id,
+        @"email"  : @"test@email.com"
     }];
 
 }
 ```
-<b>FWTNotifiableUserIdKey</b> parameter is used to associate device token with user model in the backend.
+<b>userInfo</b> parameter is used optionally to provide the backend implementation with additional data associated with the token.
+
+You may wish to unregister a device token, such a scenario may be on user logout, this can be done as follows.
+
+```objectivec
+    FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
+
+	[manager unregisterToken];
+```
 
 
 ## LICENSE

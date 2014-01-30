@@ -14,11 +14,12 @@
 #import <AFNetworking/AFNetworking.h>
 #import <AFNetworking/AFJSONRequestOperation.h>
 
+NSString * const FWTNotifiableUserInfoKey           = @"user";
+NSString * const FWTNotifiableDeviceTokenKey        = @"token";
+NSString * const FWTNotifiableProviderKey           = @"provider";
 
-NSString * const FWTNotifiableAuthTokenKey = @"auth_token";
-NSString * const FWTNotifiableUserInfoKey = @"user";
-NSString * const FWTNotifiableDeviceTokenKey = @"token";
-NSString * const FWTNotifiableProviderKey = @"provider";
+NSString * const FWTNotifiableDidRegisterWithAPNSNotification      = @"FWTNotifiableDidRegisterWithAPNSNotification";
+NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifiableFailedToRegisterWithAPNSNotification";
 
 @interface FWTNotifiableManager ()
 
@@ -43,8 +44,8 @@ NSString * const FWTNotifiableProviderKey = @"provider";
 {
     self = [super init];
     if (self) {
-        self.retryAttempts = 5;
-        self.retryDelay = 60;
+        self->_retryAttempts = 5;
+        self->_retryDelay = 60;
     }
     return self;
 }
@@ -58,9 +59,14 @@ NSString * const FWTNotifiableProviderKey = @"provider";
     return self->_httpClient;
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+#pragma mark - Public
+
++ (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types
 {
-    self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    UIApplication *app = [UIApplication sharedApplication];
+    UIRemoteNotificationType typesAllowed = [app enabledRemoteNotificationTypes];
+    
+    return typesAllowed == types;
 }
 
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo
@@ -70,12 +76,17 @@ NSString * const FWTNotifiableProviderKey = @"provider";
 
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
 {
-    NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:userInfo];
-    p[FWTNotifiableDeviceTokenKey] = self.deviceToken;
-    p[FWTNotifiableProviderKey] = @"apns";
+    NSMutableDictionary *p = [NSMutableDictionary dictionary];
+    
+    if(userInfo)
+        p[FWTNotifiableUserInfoKey] = userInfo;
+    
+    if(self.deviceToken)
+        p[FWTNotifiableDeviceTokenKey]  = self.deviceToken;
+    
+    p[FWTNotifiableProviderKey]     = @"apns";
     [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
 }
-
 
 - (void)unregisterToken
 {
@@ -85,6 +96,20 @@ NSString * const FWTNotifiableProviderKey = @"provider";
 - (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
 {
     [self _unregisterTokenWithAttempts:self.retryAttempts completionHandler:hanlder];
+}
+
+#pragma mark - UIApplicationDelegate forwarding methods
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterWithAPNSNotification object:self];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableFailedToRegisterWithAPNSNotification object:self];
 }
 
 #pragma mark - Private
@@ -128,6 +153,15 @@ NSString * const FWTNotifiableProviderKey = @"provider";
                    completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(NO);
+            });
+        }
+        return;
+    }
+    
+    if(!self.deviceToken){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(NO);

@@ -7,8 +7,10 @@
 //
 
 extern NSString * const FWTNotifiableAuthTokenKey;
-extern NSString * const FWTNotifiableUserIdKey;
+extern NSString * const FWTNotifiableUserInfoKey;
 extern NSString * const FWTNotifiableUserDictionaryKey;
+
+typedef void (^FWNotifiableOperationCompletionHandler)(BOOL success);
 
 @interface FWTNotifiableManager : NSObject
 
@@ -19,7 +21,9 @@ extern NSString * const FWTNotifiableUserDictionaryKey;
 + (instancetype)sharedManager;
 
 - (void)registerTokenWithParams:(NSDictionary *)params;
-- (void)registerTokenIfNeededWithParams:(NSDictionary *)params;
+- (void)registerTokenWithParams:(NSDictionary *)params completionHandler:(FWNotifiableOperationCompletionHandler)hanlder;
+- (void)unregisterToken;
+- (void)unregisterTokenWithCompletionHandler:(FWNotifiableOperationCompletionHandler)hanlder;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 

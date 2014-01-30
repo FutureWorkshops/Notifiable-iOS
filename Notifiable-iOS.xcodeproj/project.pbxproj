@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */; };
-		65598A14187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 65598A12187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
 		8E4119DB17E9B9D1000CD6F3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */; };
 		8E4119DC17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
@@ -43,8 +42,6 @@
 /* Begin PBXFileReference section */
 		65598A0F187C59EB00C46A51 /* FWTNotifiableManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableManager.h; path = "Notifiable-iOS/FWTNotifiableManager.h"; sourceTree = SOURCE_ROOT; };
 		65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTNotifiableManager.m; path = "Notifiable-iOS/FWTNotifiableManager.m"; sourceTree = SOURCE_ROOT; };
-		65598A11187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+FWTNotifiable.h"; path = "Notifiable-iOS/NSUserDefaults+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
-		65598A12187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+FWTNotifiable.m"; path = "Notifiable-iOS/NSUserDefaults+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
 		65750991187C42B6007927D0 /* Notifiable-iOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Notifiable-iOS-Prefix.pch"; path = "Notifiable-iOS/Notifiable-iOS-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -113,8 +110,6 @@
 			children = (
 				65598A0F187C59EB00C46A51 /* FWTNotifiableManager.h */,
 				65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */,
-				65598A11187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.h */,
-				65598A12187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.m */,
 				8E4119CF17E9B9D1000CD6F3 /* Supporting Files */,
 			);
 			name = "Notifiable-iOS";
@@ -229,7 +224,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65598A14187C59EB00C46A51 /* NSUserDefaults+FWTNotifiable.m in Sources */,
 				65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -88,6 +88,16 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
     [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
 }
 
+- (void)anonymiseToken
+{
+    [self anonymiseTokenWithCompletionHandler:nil];
+}
+
+- (void)anonymiseTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _anonymiseTokenWithAttempts:self.retryAttempts completionHandler:handler];
+}
+
 - (void)unregisterToken
 {
     [self unregisterTokenWithCompletionHandler:nil];
@@ -190,6 +200,49 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
+        });
+    }];
+
+}
+
+- (void)_anonymiseTokenWithAttempts:(NSUInteger)attempts completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    if (attempts == 0){
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(NO);
+            });
+        }
+        return;
+    }
+    
+    if(!self.deviceToken){
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(NO);
+            });
+        }
+        return;
+    }
+    
+    [self.httpClient postPath:@"device_tokens/anonymise" parameters:nil success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+        NSError *error;
+        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+            NSLog(@"Did anonymise device token");
+            if(handler){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(YES);
+                });
+            }
+        } else {
+            [self _anonymiseTokenWithAttempts:(attempts - 1) completionHandler:handler];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Failed to anonymise device token");
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self _anonymiseTokenWithAttempts:(attempts - 1) completionHandler:handler];
         });
     }];
 

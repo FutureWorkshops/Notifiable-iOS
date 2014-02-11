@@ -88,14 +88,22 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
     [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
 }
 
-- (void)anonymiseToken
+- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo
 {
-    [self anonymiseTokenWithCompletionHandler:nil];
+    [self anonymiseTokenWithUserInfo:userInfo completionHandler:nil];
 }
 
-- (void)anonymiseTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self _anonymiseTokenWithAttempts:self.retryAttempts completionHandler:handler];
+    NSMutableDictionary *p = [NSMutableDictionary dictionary];
+    
+    if(userInfo)
+        p[FWTNotifiableUserInfoKey] = userInfo;
+    
+    if(self.deviceToken)
+        p[FWTNotifiableDeviceTokenKey]  = self.deviceToken;
+    
+    [self _anonymiseTokenWithParams:p attempts:self.retryAttempts completionHandler:handler];
 }
 
 - (void)unregisterToken
@@ -205,7 +213,9 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
 
 }
 
-- (void)_anonymiseTokenWithAttempts:(NSUInteger)attempts completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)_anonymiseTokenWithParams:(NSDictionary *)params
+                         attempts:(NSUInteger)attempts
+                completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
         if(handler){
@@ -225,7 +235,7 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
         return;
     }
     
-    [self.httpClient putPath:@"device_tokens/anonymise" parameters:@{ @"token" : self.deviceToken } success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+    [self.httpClient putPath:@"device_tokens/anonymise" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
@@ -236,13 +246,13 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
                 });
             }
         } else {
-            [self _anonymiseTokenWithAttempts:(attempts - 1) completionHandler:handler];
+            [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Failed to anonymise device token");
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self _anonymiseTokenWithAttempts:(attempts - 1) completionHandler:handler];
+            [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
         });
     }];
 

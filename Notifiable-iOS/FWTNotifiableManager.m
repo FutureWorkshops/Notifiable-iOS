@@ -225,7 +225,7 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
         return;
     }
     
-    [self.httpClient postPath:@"device_tokens/anonymise" parameters:nil success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+    [self.httpClient postPath:@"device_tokens/anonymise" parameters:@{ @"token" : self.deviceToken } success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {

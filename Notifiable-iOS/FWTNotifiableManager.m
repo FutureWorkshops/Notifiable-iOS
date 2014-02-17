@@ -76,7 +76,12 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
 
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
 {
-    NSMutableDictionary *p = [NSMutableDictionary dictionary];
+    [self registerTokenWithUserInfo:userInfo extendedParameters:nil completionHandler:hanlder];
+}
+
+- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
+{
+    NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:parameters];
     
     if(userInfo)
         p[FWTNotifiableUserInfoKey] = userInfo;
@@ -86,6 +91,7 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
     
     p[FWTNotifiableProviderKey]     = @"apns";
     [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
+    
 }
 
 - (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo
@@ -210,7 +216,7 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         });
     }];
-
+    
 }
 
 - (void)_anonymiseTokenWithParams:(NSDictionary *)params
@@ -255,7 +261,7 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
             [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
         });
     }];
-
+    
 }
 
 @end

@@ -18,8 +18,10 @@ NSString * const FWTNotifiableUserInfoKey           = @"user";
 NSString * const FWTNotifiableDeviceTokenKey        = @"token";
 NSString * const FWTNotifiableProviderKey           = @"provider";
 
-NSString * const FWTNotifiableDidRegisterWithAPNSNotification      = @"FWTNotifiableDidRegisterWithAPNSNotification";
-NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifiableFailedToRegisterWithAPNSNotification";
+NSString * const FWTNotifiableDidRegisterWithAPNSNotification       = @"FWTNotifiableDidRegisterWithAPNSNotification";
+NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification  = @"FWTNotifiableFailedToRegisterWithAPNSNotification";
+
+NSString * const FWTNotifiableTokenKey                              = @"FWTNotifiableTokenKey";
 
 @interface FWTNotifiableManager ()
 
@@ -59,6 +61,16 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
     return self->_httpClient;
 }
 
+- (NSString *)deviceToken
+{
+    if(!self->_deviceToken){
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        self->_deviceToken = [ud objectForKey:FWTNotifiableTokenKey];
+    }
+    
+    return self->_deviceToken;
+}
+
 #pragma mark - Public
 
 + (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types
@@ -79,8 +91,15 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
     [self registerTokenWithUserInfo:userInfo extendedParameters:nil completionHandler:hanlder];
 }
 
-- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
+- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
+    if(!self.deviceToken)
+    {
+        if(handler)
+            handler(NO);
+        return;
+    }
+    
     NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:parameters];
     
     if(userInfo)
@@ -90,7 +109,7 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
         p[FWTNotifiableDeviceTokenKey]  = self.deviceToken;
     
     p[FWTNotifiableProviderKey]     = @"apns";
-    [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:hanlder];
+    [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:handler];
     
 }
 
@@ -101,13 +120,20 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
 
 - (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
+    if(!self.deviceToken)
+    {
+        if(handler)
+            handler(NO);
+        return;
+    }
+    
     NSMutableDictionary *p = [NSMutableDictionary dictionary];
     
     if(userInfo)
         p[FWTNotifiableUserInfoKey] = userInfo;
     
     if(self.deviceToken)
-        p[FWTNotifiableDeviceTokenKey]  = self.deviceToken;
+        p[FWTNotifiableDeviceTokenKey] = self.deviceToken;
     
     [self _anonymiseTokenWithParams:p attempts:self.retryAttempts completionHandler:handler];
 }
@@ -129,6 +155,9 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification = @"FWTNotifi
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterWithAPNSNotification object:self];
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setObject:self.deviceToken forKey:FWTNotifiableTokenKey];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error

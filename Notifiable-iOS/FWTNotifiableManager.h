@@ -22,7 +22,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo;
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder;
-- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder;
+- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
 - (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo;
 - (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
 - (void)unregisterToken;

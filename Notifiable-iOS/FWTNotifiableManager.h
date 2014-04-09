@@ -16,6 +16,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, assign) NSInteger retryAttempts;
 @property (nonatomic, assign) NSTimeInterval retryDelay;
+@property (nonatomic, assign) BOOL debugLogging;
 
 + (instancetype)sharedManager;
 + (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types;
@@ -31,5 +32,8 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 // entry points for token registration
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+
+// Read receipts can be delivered back to server via this method
+- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo forUserInfo:(NSDictionary *)userInfo;
 
 @end

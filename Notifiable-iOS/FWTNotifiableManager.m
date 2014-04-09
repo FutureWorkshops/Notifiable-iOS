@@ -48,6 +48,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
     if (self) {
         self->_retryAttempts = 5;
         self->_retryDelay = 60;
+        self->_debugLogging = NO;
     }
     return self;
 }
@@ -148,6 +149,24 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
     [self _unregisterTokenWithAttempts:self.retryAttempts completionHandler:hanlder];
 }
 
+- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo forUserInfo:(NSDictionary *)userInfo
+{
+    NSString *notificationID = notificationInfo[@"notification_id"];
+    
+    NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
+    
+    if(notificationID)
+        requestParameters[@"notification_id"] = notificationID;
+    
+    if(self.deviceToken)
+        requestParameters[@"device_token"] = @{ FWTNotifiableDeviceTokenKey : self.deviceToken };
+    
+    if(userInfo)
+        requestParameters[FWTNotifiableUserInfoKey] = userInfo;
+    
+    [self _markNotificationAsOpenedWithParams:requestParameters attempts:self.retryAttempts];
+}
+
 #pragma mark - UIApplicationDelegate forwarding methods
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -184,7 +203,10 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
+            
+            if(self.debugLogging)
+                NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
+            
             if(handler){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     handler(YES);
@@ -194,7 +216,10 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
             [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed to register device token: %@", error);
+        
+        if(self.debugLogging)
+            NSLog(@"Failed to register device token: %@", error);
+        
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
@@ -229,7 +254,10 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            NSLog(@"Did unregister for push notifications");
+            
+            if(self.debugLogging)
+                NSLog(@"Did unregister for push notifications");
+            
             if(handler){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     handler(YES);
@@ -239,7 +267,10 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed to unregister for push notifications");
+        
+        if(self.debugLogging)
+            NSLog(@"Failed to unregister for push notifications");
+        
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
@@ -274,7 +305,10 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-            NSLog(@"Did anonymise device token");
+            
+            if(self.debugLogging)
+                NSLog(@"Did anonymise device token");
+            
             if(handler){
                 dispatch_async(dispatch_get_main_queue(), ^{
                     handler(YES);
@@ -284,10 +318,46 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
             [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Failed to anonymise device token");
+        
+        if(self.debugLogging)
+            NSLog(@"Failed to anonymise device token");
+        
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
+        });
+    }];
+    
+}
+
+- (void)_markNotificationAsOpenedWithParams:(NSDictionary *)params
+                                   attempts:(NSUInteger)attempts
+{
+    if (attempts == 0)
+        return;
+    
+    if(!self.deviceToken)
+        return;
+    
+    [self.httpClient putPath:@"notifications/opened" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+        
+        if(self.debugLogging)
+            NSLog(@"Notification flagged as opened");
+            
+        NSError *error;
+        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+        } else {
+            [self _markNotificationAsReadWithParams:params attempts:(attempts - 1)];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if(self.debugLogging)
+            NSLog(@"Failed to mark notification as opened");
+
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self _markNotificationAsReadWithParams:params attempts:(attempts - 1)];
         });
     }];
     

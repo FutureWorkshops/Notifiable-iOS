@@ -7,36 +7,62 @@ It handles device token registration and takes care of retrying failed requests 
 
 Registering existing token for different user will result in token being reassigned.
 
-## USAGE
+## Setup
 
-You should the following to your <i>AppDelegate</i>:
+You should the following to your application delegate:
 
-```objectivec
+At the earliest opportunity set the base URL of the `FWTNotifiableManager` to your notifiable rails service.
+
+```
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
+    [manager setBaseURL:[NSURL URLWithString:@"http://myserver.herokuapp.com/user_api/v1/"]];
+
+    return YES;
+}
+```
+
+Forward device token to `FWTNotifiableManager`:
+
+```
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
 	
-    NSURL *endpointURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://HOST/device_tokens"]];
-    NSString *userId = @"current_user_id";
-    
     FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
-    manager.baseURL = endpointURL;
-    
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-    
-	[manager registerTokenWithUserInfo:@{
-		@"userId" : user_id,
-        @"email"  : @"test@email.com"
-    }];
 
 }
 ```
-<b>userInfo</b> parameter is used optionally to provide the backend implementation with additional data associated with the token.
 
-You may wish to unregister a device token, such a scenario may be on user logout, this can be done as follows.
 
-```objectivec
-    FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
+## Registering a user
 
-	[manager unregisterToken];
+A notification is triggered (`FWTNotifiableDidRegisterWithAPNSNotification`) upon the `FWTNotifiableManager` registering the device token, you should proceed to register your user with your service at this point.
+
+UserInfo would be some data used to identify the user of the device (user ID, nickname etc...), the extended parameters should represent metadata about the device, here you could send a locale for example along with an application identifier for your app.
+
+```
+[[FWTNotifiableManager sharedManager] registerTokenWithUserInfo:@{ @"username" : someUsername } 
+											 extendedParameters:@{ @"app_id" : @1 }
+											  completionHandler:nil];
+
+```
+
+You may wish to unregister a device token (on user logout or in-app opt out perhaps).
+
+```
+FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
+[manager unregisterToken];
+```
+
+## Marking a notification as opened
+When the application is launched or has received a remote notification, you can relay the fact it was opened by the user to <a href="https://github.com/FutureWorkshops/Notifiable-Rails">Notifiable-Rails</a>.
+
+The `userInfo` here should provide the necessary data to identify your user on the server (usually you would send the same information as was used during registration), the `notificationInfo` is the payload received from the notification.
+
+```       
+ [[FWTNotifiableManager sharedManager] applicationDidReceiveRemoteNotification:notificationInfo forUserInfo:userInfo];
+ 
 ```
 
 

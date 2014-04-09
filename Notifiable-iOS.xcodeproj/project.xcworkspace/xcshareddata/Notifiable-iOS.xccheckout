@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>BCA76B96-A0B5-4737-802B-23ED070F99B6</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Notifiable-iOS</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>6DACDB7F-7383-428B-9A76-B014D2AF8F20</key>
+		<string>ssh://github.com/FutureWorkshops/Notifiable-iOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Notifiable-iOS.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>6DACDB7F-7383-428B-9A76-B014D2AF8F20</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/FutureWorkshops/Notifiable-iOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>6DACDB7F-7383-428B-9A76-B014D2AF8F20</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6DACDB7F-7383-428B-9A76-B014D2AF8F20</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Notifiable-iOS</string>
+		</dict>
+	</array>
+</dict>
+</plist>

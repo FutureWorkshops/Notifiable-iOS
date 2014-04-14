@@ -348,7 +348,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
         } else {
-            [self _markNotificationAsReadWithParams:params attempts:(attempts - 1)];
+            [self _markNotificationAsOpenedWithParams:params attempts:(attempts - 1)];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
@@ -357,7 +357,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
 
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self _markNotificationAsReadWithParams:params attempts:(attempts - 1)];
+            [self _markNotificationAsOpenedWithParams:params attempts:(attempts - 1)];
         });
     }];
     

@@ -12,7 +12,6 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AFNetworking/AFNetworking.h>
-#import <AFNetworking/AFJSONRequestOperation.h>
 
 NSString * const FWTNotifiableUserInfoKey           = @"user";
 NSString * const FWTNotifiableDeviceTokenKey        = @"token";
@@ -26,7 +25,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
 @interface FWTNotifiableManager ()
 
 @property (nonatomic, strong) NSString *deviceToken;
-@property (nonatomic, strong) AFHTTPClient *httpClient;
+@property (nonatomic, strong) AFHTTPRequestOperationManager *operationManager;
 
 @end
 
@@ -53,13 +52,12 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
     return self;
 }
 
-- (AFHTTPClient *)httpClient
-{
-    if (!self->_httpClient) {
-        self->_httpClient = [AFHTTPClient clientWithBaseURL:self.baseURL];
-        self->_httpClient.parameterEncoding = AFJSONParameterEncoding;
+- (AFHTTPRequestOperationManager *)operationManager {
+    if (!self->_operationManager) {
+        self->_operationManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
+        self->_operationManager.requestSerializer = [AFJSONRequestSerializer serializer];
     }
-    return self->_httpClient;
+    return self->_operationManager;
 }
 
 - (NSString *)deviceToken
@@ -199,7 +197,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
         return;
     }
     
-    [self.httpClient postPath:@"device_tokens" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+    [self.operationManager POST:@"device_tokens" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
@@ -250,7 +248,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
     
     NSString *path = [NSString stringWithFormat:@"device_tokens/%@", self.deviceToken];
     
-    [self.httpClient deletePath:path parameters:nil success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+    [self.operationManager DELETE:path parameters:nil success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
@@ -301,7 +299,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
         return;
     }
     
-    [self.httpClient putPath:@"device_tokens/anonymise" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+    [self.operationManager PUT:@"device_tokens/anonymise" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         NSError *error;
         NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
         if ([[JSON valueForKey:@"status"] integerValue] == 0) {
@@ -339,7 +337,7 @@ NSString * const FWTNotifiableTokenKey                              = @"FWTNotif
     if(!self.deviceToken)
         return;
     
-    [self.httpClient putPath:@"notifications/opened" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
+    [self.operationManager PUT:@"notifications/opened" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
         
         if(self.debugLogging)
             NSLog(@"Notification flagged as opened");

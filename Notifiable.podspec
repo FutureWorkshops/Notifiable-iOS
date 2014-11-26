@@ -3,11 +3,11 @@ Pod::Spec.new do |s|
 
 
   s.name         = "Notifiable"
-  s.version      = "0.0.11"
+  s.version      = "0.0.12"
   s.platform     = :ios, '6.0'
   s.summary      = "Utility classes to integrate with notifiable-rails gem"
 
-  s.dependency 'AFNetworking', '~> 1.3'
+  s.dependency 'AFNetworking', '~> 2.4'
   s.frameworks   = ['MobileCoreServices', 'SystemConfiguration']
 
   s.description  = <<-DESC

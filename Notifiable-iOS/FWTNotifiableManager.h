@@ -17,6 +17,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 @property (nonatomic, assign) NSInteger retryAttempts;
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 @property (nonatomic, assign) BOOL debugLogging;
+@property (nonatomic, readonly) NSString *deviceToken;
 
 + (instancetype)sharedManager;
 + (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types;

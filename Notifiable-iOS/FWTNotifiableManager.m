@@ -26,13 +26,16 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
 
 @interface FWTNotifiableManager ()
 
-@property (nonatomic, strong) NSString *deviceToken;
-@property (nonatomic, strong) NSNumber *deviceTokenId;
+@property (nonatomic, readwrite, strong) NSString *deviceToken;
+@property (nonatomic, readwrite, strong) NSNumber *deviceTokenId;
 @property (nonatomic, strong) AFHTTPClient *httpClient;
 
 @end
 
 @implementation FWTNotifiableManager
+
+@synthesize deviceToken = _deviceToken;
+@synthesize deviceTokenId = _deviceTokenId;
 
 + (instancetype)sharedManager
 {
@@ -74,6 +77,19 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     return self->_deviceToken;
 }
 
+- (void)setDeviceToken:(NSString *)deviceToken
+{
+    self->_deviceToken = deviceToken;
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    if (deviceToken) {
+        [ud setObject:deviceToken forKey:FWTNotifiableTokenKey];
+    }
+    else {
+        [ud removeObjectForKey:FWTNotifiableTokenKey];
+    }
+}
+
 - (NSNumber *)deviceTokenId
 {
     if(!self->_deviceTokenId){
@@ -82,6 +98,19 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     }
     
     return self->_deviceTokenId;
+}
+
+- (void)setDeviceTokenId:(NSNumber *)deviceTokenId
+{
+    self->_deviceTokenId = deviceTokenId;
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    if (deviceTokenId) {
+        [ud setObject:deviceTokenId forKey:FWTNotifiableTokenIdKey];
+    }
+    else {
+        [ud removeObjectForKey:FWTNotifiableTokenIdKey];
+    }
 }
 
 #pragma mark - Public
@@ -186,9 +215,6 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterWithAPNSNotification object:self];
-    
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    [ud setObject:self.deviceToken forKey:FWTNotifiableTokenKey];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -224,8 +250,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             if(self.debugLogging)
                 NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
             
-            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-            [ud setObject:JSON[@"id"] forKey:FWTNotifiableTokenIdKey];
+            self.deviceTokenId = JSON[@"id"];
             
             if(handler){
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -290,9 +315,13 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         if(self.debugLogging)
             NSLog(@"Failed to update device with deviceTokenId %@: %@", self.deviceTokenId, error);
         
+        if (operation.response.statusCode == 404) {
+            self.deviceTokenId = nil;
+        }
+        
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self _updateDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
+            [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
         });
     }];
 }

@@ -8,7 +8,8 @@ Pod::Spec.new do |s|
   s.summary      = "Utility classes to integrate with Notifiable-Rails gem"
 
   s.dependency 'AFNetworking', '~> 1.3'
-  s.frameworks   = ['MobileCoreServices', 'SystemConfiguration']
+  s.ios.frameworks  = 'MobileCoreServices'
+  s.frameworks   = 'SystemConfiguration'
 
   s.description  = <<-DESC
                    Utility classes to integrate with Notifiable-Rails gem

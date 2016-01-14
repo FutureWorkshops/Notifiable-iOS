@@ -115,10 +115,16 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
 
 #pragma mark - Public
 
-+ (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types
++ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types
 {
     UIApplication *app = [UIApplication sharedApplication];
-    UIRemoteNotificationType typesAllowed = [app enabledRemoteNotificationTypes];
+    
+    if(![app isRegisteredForRemoteNotifications]) {
+        return NO;
+    }
+    
+    UIUserNotificationSettings *settings = [app currentUserNotificationSettings];
+    UIUserNotificationType typesAllowed = settings.types;
     
     return typesAllowed == types;
 }

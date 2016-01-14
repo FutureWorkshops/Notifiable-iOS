@@ -8,16 +8,21 @@
 
 #import "FWAppDelegate.h"
 #import "FWViewController.h"
+@import Notifiable;
 
 @implementation FWAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge
+                                                                                         categories:nil];
+    [application registerUserNotificationSettings:notificationSettings];
+    
     NSDictionary *remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (remoteNotification) {
         [self application:application didReceiveRemoteNotification:remoteNotification];
     }
-
+    
     return YES;
 }
 
@@ -108,8 +113,7 @@
     manager.baseURL = [NSURL URLWithString:apnsHostURLString];
     
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-    
-    [manager registerTokenWithParams:@{ FWTNotifiableUserIdKey : @"oliver@futureworkshops.com" }];
+    [manager registerTokenWithUserInfo:nil];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {

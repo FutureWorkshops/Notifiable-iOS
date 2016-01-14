@@ -23,7 +23,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 @property (nonatomic, readonly) NSString *deviceToken;
 
 + (instancetype)sharedManager;
-+ (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types;
++ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo;
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder;

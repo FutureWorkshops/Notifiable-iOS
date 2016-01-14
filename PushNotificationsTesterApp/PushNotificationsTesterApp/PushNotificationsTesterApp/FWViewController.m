@@ -33,21 +33,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-
 - (IBAction)registerForPushNotifications:(id)sender {
-    UIApplication *application = [UIApplication sharedApplication];
-    UIUserNotificationSettings *currentSettings = application.currentUserNotificationSettings;
-    if (currentSettings.types & UIUserNotificationTypeAlert) {
-        [application registerForRemoteNotifications];
-    } else {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil];
-        [application registerUserNotificationSettings:settings];
-    }
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
-
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-    [application registerForRemoteNotifications];
-}
-
 
 @end

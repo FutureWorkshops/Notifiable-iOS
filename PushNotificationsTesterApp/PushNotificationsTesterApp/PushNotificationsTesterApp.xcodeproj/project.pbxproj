@@ -41,11 +41,13 @@
 
 /* Begin PBXFileReference section */
 		0EE4CDCF46FB4989AB78A4AD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.testing.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.testing.xcconfig"; sourceTree = "<group>"; };
 		65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
 		65D693E3184E297200D9DF5B /* FWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWViewController.h; sourceTree = "<group>"; };
 		65D693E4184E297200D9DF5B /* FWViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWViewController.m; sourceTree = "<group>"; };
-		8A20C11230944E3A846EED0A /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = ../Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		783F24AD3435454324BCE28A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B7402BC416C26CE70014570E /* PushNotificationsTesterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushNotificationsTesterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7402BC816C26CE70014570E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B7402BCA16C26CE70014570E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -101,7 +103,7 @@
 				B7402C0016C26F8F0014570E /* Resources */,
 				B7402BC716C26CE70014570E /* Frameworks */,
 				B7402BC516C26CE70014570E /* Products */,
-				8A20C11230944E3A846EED0A /* Pods.xcconfig */,
+				ED18B12FDE502BB5C7FD5626 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,6 +183,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		ED18B12FDE502BB5C7FD5626 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */,
+				218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */,
+				783F24AD3435454324BCE28A /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -221,7 +233,7 @@
 			name = PushNotificationsTesterAppTests;
 			productName = PushNotificationsTesterAppTests;
 			productReference = B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -295,7 +307,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AE018AB755A846CB89078B7A /* Check Pods Manifest.lock */ = {
@@ -423,7 +435,7 @@
 		};
 		B71B013717280481009B2A61 /* Testing */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A20C11230944E3A846EED0A /* Pods.xcconfig */;
+			baseConfigurationReference = 218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -513,7 +525,7 @@
 		};
 		B7402BF816C26CE70014570E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A20C11230944E3A846EED0A /* Pods.xcconfig */;
+			baseConfigurationReference = AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -532,7 +544,7 @@
 		};
 		B7402BF916C26CE70014570E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A20C11230944E3A846EED0A /* Pods.xcconfig */;
+			baseConfigurationReference = 783F24AD3435454324BCE28A /* Pods.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

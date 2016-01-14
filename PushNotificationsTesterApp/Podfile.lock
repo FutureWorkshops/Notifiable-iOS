@@ -1,13 +1,13 @@
 PODS:
-  - AFNetworking (1.3.3)
-  - Notifiable (0.0.5):
+  - AFNetworking (1.3.4)
+  - Notifiable (0.0.11):
     - AFNetworking (~> 1.3)
 
 DEPENDENCIES:
   - Notifiable
 
 SPEC CHECKSUMS:
-  AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
-  Notifiable: 548df128a0dc122a8fc3e5550ec6868be4b9b280
+  AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018
+  Notifiable: 2bf47495f9e9f03a0a8fba15a7e3ba893fe98555
 
-COCOAPODS: 0.28.0
+COCOAPODS: 0.38.2

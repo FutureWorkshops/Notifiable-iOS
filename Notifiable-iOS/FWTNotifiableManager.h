@@ -6,6 +6,9 @@
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 extern NSString * const FWTNotifiableDidRegisterWithAPNSNotification;
 extern NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification;
 

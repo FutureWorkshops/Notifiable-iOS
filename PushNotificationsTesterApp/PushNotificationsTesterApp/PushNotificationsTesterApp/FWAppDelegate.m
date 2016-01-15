@@ -8,7 +8,7 @@
 
 #import "FWAppDelegate.h"
 #import "FWViewController.h"
-#import <Notifiable/FWTNotifiableManager.h>
+@import Notifiable;
 
 @implementation FWAppDelegate
 

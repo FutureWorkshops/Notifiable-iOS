@@ -8,16 +8,21 @@
 
 #import "FWAppDelegate.h"
 #import "FWViewController.h"
+#import <Notifiable/FWTNotifiableManager.h>
 
 @implementation FWAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge
+                                                                                         categories:nil];
+    [application registerUserNotificationSettings:notificationSettings];
+    
     NSDictionary *remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (remoteNotification) {
         [self application:application didReceiveRemoteNotification:remoteNotification];
     }
-
+    
     return YES;
 }
 
@@ -91,7 +96,7 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
-    NSString *apnsHostURLString = apnsHostURLString = @"http://10.10.15.109:3000/api";
+    NSString *apnsHostURLString = apnsHostURLString = @"http://fw-notifiable-staging.herokuapp.com";
     
     NSString *token = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 
@@ -106,10 +111,11 @@
 
     FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
     manager.baseURL = [NSURL URLWithString:apnsHostURLString];
+    manager.appId = @"WyvxpyG9yuuj4kiZUsv6";
+    manager.secretKey = @"chEAmSqR1f9MumaRsd1oTIsibeJBcmrw213mHULEntK4WsUytgX3gPCmGM+hgUGcyBjikE7m2BQ6B3KqB7DoSg==";
     
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-    
-    [manager registerTokenWithParams:@{ FWTNotifiableUserIdKey : @"oliver@futureworkshops.com" }];
+    [manager registerTokenWithUserInfo:nil];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {

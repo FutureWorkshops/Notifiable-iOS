@@ -34,8 +34,7 @@
 }
 
 - (IBAction)registerForPushNotifications:(id)sender {
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-    
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
 @end

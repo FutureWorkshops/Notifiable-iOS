@@ -1,0 +1,5 @@
+framework module FWTNotifiable {
+      umbrella header "FWTNotifiable.h"
+      export *
+      module * { export * }
+}

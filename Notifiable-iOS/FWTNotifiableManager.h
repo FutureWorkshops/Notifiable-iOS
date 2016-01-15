@@ -6,6 +6,9 @@
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 extern NSString * const FWTNotifiableDidRegisterWithAPNSNotification;
 extern NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification;
 
@@ -14,13 +17,15 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 @interface FWTNotifiableManager : NSObject
 
 @property (nonatomic, strong) NSURL *baseURL;
+@property (nonatomic, strong) NSString *appId;
+@property (nonatomic, strong) NSString *secretKey;
 @property (nonatomic, assign) NSInteger retryAttempts;
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 @property (nonatomic, assign) BOOL debugLogging;
 @property (nonatomic, readonly) NSString *deviceToken;
 
 + (instancetype)sharedManager;
-+ (BOOL)userAllowsPushNotificationsForType:(UIRemoteNotificationType)types;
++ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo;
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder;

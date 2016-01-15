@@ -53,6 +53,7 @@ NSString * const FWTNotificationOpenPath = @"user_api/v1/notification_statuses/o
     
     [self.httpSessionManager POST:FWTDeviceTokensPath
                        parameters:params
+                         progress:nil
                           success:[self _defaultSuccessHandler:success]
                           failure:[self _defaultFailureHandler:failure]];
 }

@@ -17,6 +17,8 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 @interface FWTNotifiableManager : NSObject
 
 @property (nonatomic, strong) NSURL *baseURL;
+@property (nonatomic, strong) NSString *appId;
+@property (nonatomic, strong) NSString *secretKey;
 @property (nonatomic, assign) NSInteger retryAttempts;
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 @property (nonatomic, assign) BOOL debugLogging;

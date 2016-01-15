@@ -26,6 +26,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
-  Notifiable: bfad61f82e1ee1cf2eff1a80dfff28e06d8ab687
+  Notifiable: 99ad19ff6f66b34d982e94ed39c6c79eeeee079f
 
 COCOAPODS: 0.38.2

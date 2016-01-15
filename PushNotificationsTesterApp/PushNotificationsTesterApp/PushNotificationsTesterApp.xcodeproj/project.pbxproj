@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		643114F1A85F50781B1CAB02 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F32EEF152A833F2195D1AD2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		65D693E0184E292E00D9DF5B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */; };
 		65D693E2184E293B00D9DF5B /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */; };
 		65D693E5184E297200D9DF5B /* FWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D693E4184E297200D9DF5B /* FWViewController.m */; };
@@ -24,7 +25,6 @@
 		B7402C1516C270FC0014570E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1216C270FC0014570E /* Default.png */; };
 		B7402C1616C270FC0014570E /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1316C270FC0014570E /* Default@2x.png */; };
 		B7402C3016C2DD800014570E /* FWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B7402C2F16C2DD800014570E /* FWAppDelegate.m */; };
-		BB13E8D191B809479FF33913 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E2BB7CFCA329E39CF3B7D23B /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0F32EEF152A833F2195D1AD2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.testing.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.testing.xcconfig"; sourceTree = "<group>"; };
 		65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
 		65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 		B7402C1716C275930014570E /* fw-shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "fw-shared.xcconfig"; sourceTree = "<group>"; };
 		B7402C2E16C2DD800014570E /* FWAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWAppDelegate.h; sourceTree = "<group>"; };
 		B7402C2F16C2DD800014570E /* FWAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWAppDelegate.m; sourceTree = "<group>"; };
-		E2BB7CFCA329E39CF3B7D23B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +76,7 @@
 				B7402BC916C26CE70014570E /* UIKit.framework in Frameworks */,
 				B7402BCB16C26CE70014570E /* Foundation.framework in Frameworks */,
 				B7402BCD16C26CE70014570E /* CoreGraphics.framework in Frameworks */,
-				BB13E8D191B809479FF33913 /* libPods.a in Frameworks */,
+				643114F1A85F50781B1CAB02 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,7 +121,7 @@
 				B7402BCA16C26CE70014570E /* Foundation.framework */,
 				B7402BCC16C26CE70014570E /* CoreGraphics.framework */,
 				B7402BE616C26CE70014570E /* SenTestingKit.framework */,
-				E2BB7CFCA329E39CF3B7D23B /* libPods.a */,
+				0F32EEF152A833F2195D1AD2 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -204,6 +204,7 @@
 				B7402BC216C26CE70014570E /* Resources */,
 				B71B013B17280F78009B2A61 /* Log build environment */,
 				A182B8293D8048DCAB3BA7E4 /* Copy Pods Resources */,
+				9D85183C6AC4367A411BADF6 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -291,6 +292,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		9D85183C6AC4367A411BADF6 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A182B8293D8048DCAB3BA7E4 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

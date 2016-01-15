@@ -20,8 +20,8 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => "0.0.13" }
 
-  s.source_files  = 'Notifiable-iOS'
-  s.public_header_files = 'Notifiable-iOS/**/*.h'
+  s.source_files  = 'Notifiable-iOS/**/*.{h,m}'
+  s.public_header_files = 'Notifiable-iOS/FWTNotifiableManager.h'
   s.requires_arc = true 
 
 end

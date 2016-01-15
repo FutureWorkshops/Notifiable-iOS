@@ -7,6 +7,10 @@
 //
 
 #import "FWViewController.h"
+#if TARGET_IPHONE_SIMULATOR
+#import "FWAppDelegate.h"
+#import <Notifiable/FWTNotifiableManager.h>
+#endif
 
 @interface FWViewController ()
 
@@ -34,7 +38,14 @@
 }
 
 - (IBAction)registerForPushNotifications:(id)sender {
+#if TARGET_IPHONE_SIMULATOR
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"This app need to run on a real device" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertViewStyleDefault handler:nil];
+    [alertController addAction:dismissAction];
+    [self presentViewController:alertController animated:YES completion:nil];
+#else
     [[UIApplication sharedApplication] registerForRemoteNotifications];
+#endif
 }
 
 @end

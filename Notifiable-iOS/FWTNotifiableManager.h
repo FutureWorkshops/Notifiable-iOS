@@ -16,22 +16,21 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success);
 
 @interface FWTNotifiableManager : NSObject
 
-@property (nonatomic, strong) NSURL *baseURL;
-@property (nonatomic, strong) NSString *appId;
-@property (nonatomic, strong) NSString *secretKey;
+@property (nonatomic, readonly) NSURL *baseUrl;
 @property (nonatomic, assign) NSInteger retryAttempts;
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 @property (nonatomic, assign) BOOL debugLogging;
 @property (nonatomic, readonly) NSString *deviceToken;
 
-+ (instancetype)sharedManager;
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithUrl:(NSString *)url
+                   accessId:(NSString *)accessId
+               andSecretKey:(NSString *)secretKey;
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo;
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder;
 - (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
-- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo;
-- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
 - (void)unregisterToken;
 - (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)hanlder;
 

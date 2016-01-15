@@ -12,7 +12,6 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AFNetworking/AFNetworking.h>
-#import <AFNetworking/AFJSONRequestOperation.h>
 
 NSString * const FWTNotifiableUserInfoKey           = @"user";
 NSString * const FWTNotifiableDeviceTokenKey        = @"token";
@@ -24,11 +23,18 @@ NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification  = @"FWTNotif
 NSString * const FWTNotifiableTokenKey                              = @"FWTNotifiableTokenKey";
 NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotifiableTokenIdKey";
 
+NSString * const FWTAuthFormat = @"Auth %@:%@";
+
+NSString * const FWTAuthHeader = @"Authorization";
+NSString * const FWTTimestampHeader = @"Date";
+
 @interface FWTNotifiableManager ()
 
 @property (nonatomic, readwrite, strong) NSString *deviceToken;
 @property (nonatomic, readwrite, strong) NSNumber *deviceTokenId;
-@property (nonatomic, strong) AFHTTPClient *httpClient;
+@property (nonatomic, strong) AFHTTPSessionManager *httpSessionManager;
+@property (nonatomic, strong) AFHTTPRequestSerializer *requestSerializer;
+@property (nonatomic, strong) NSDateFormatter *httpDateFormatter;
 
 @end
 
@@ -58,13 +64,35 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     return self;
 }
 
-- (AFHTTPClient *)httpClient
+- (NSDateFormatter *)httpDateFormatter
 {
-    if (!self->_httpClient) {
-        self->_httpClient = [AFHTTPClient clientWithBaseURL:self.baseURL];
-        self->_httpClient.parameterEncoding = AFJSONParameterEncoding;
+    if (!self->_httpDateFormatter) {
+        self->_httpDateFormatter = [[NSDateFormatter alloc] init];
+        [self->_httpDateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
     }
-    return self->_httpClient;
+    return self->_httpDateFormatter;
+}
+
+- (AFHTTPRequestSerializer *)requestSerializer
+{
+    if (!self->_requestSerializer) {
+        self->_requestSerializer = [AFHTTPRequestSerializer serializer];
+        [self->_requestSerializer setValue:@"application/x-www-form-urlencoded"
+                        forHTTPHeaderField:@"Content-Type"];
+        [self->_requestSerializer setValue:@"application/json"
+                        forHTTPHeaderField:@"Content-Accept"];
+    }
+    return self->_requestSerializer;
+}
+
+- (AFHTTPSessionManager *)httpSessionManager
+{
+    if (!self->_httpSessionManager) {
+        self->_httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:self.baseURL];
+        self->_httpSessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
+        self->_httpSessionManager.requestSerializer = self.requestSerializer;
+    }
+    return self->_httpSessionManager;
 }
 
 - (NSString *)deviceToken
@@ -230,6 +258,63 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
 
 #pragma mark - Private
 
+- (NSString *) _canonicalStringForPath:(NSString *)path
+                                  date:(NSDate *)date
+                             andHeader:(NSDictionary <NSString *, NSString *>*)headers
+{
+    NSString *contentType = headers[@"Content-Type"];
+    if (contentType == nil) {
+        contentType = @"";
+    }
+    
+    NSString* uri = [NSString stringWithFormat:@"/%@", path];
+    NSString* timestamp = [self.httpDateFormatter stringFromDate:date];
+    
+    return [NSString stringWithFormat:@"%@,,%@,%@",contentType, uri, timestamp];
+}
+
+- (NSString *) _hmacHashForString:(NSString *)string
+                          withKey:(NSString *)key
+{
+    unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
+    const char *keyChar = [key UTF8String];
+    const char *stringChar = [string UTF8String];
+    CCHmac(kCCHmacAlgSHA1, keyChar, strlen(keyChar), stringChar, strlen(stringChar), cHMAC);
+    NSData *encriptedData = [[NSData alloc] initWithBytes:cHMAC length:sizeof(cHMAC)];
+    NSString *base64 = [encriptedData base64EncodedStringWithOptions:0];
+    return base64;
+}
+
+- (NSDictionary *) _authHeadersForPath:(NSString *)path
+                              clientId:(NSString *)clientId
+                             secretKey:(NSString *)secretKey
+                            andHeaders:(NSDictionary <NSString *, NSString *>*)headers
+{
+    NSDate *timestamp = [NSDate date];
+    NSString* canonicalString = [self _canonicalStringForPath:path
+                                                         date:timestamp
+                                                    andHeader:headers];
+    
+    NSString* encryptedString = [self _hmacHashForString:canonicalString
+                                                 withKey:secretKey];
+    
+    NSString* authField = [NSString stringWithFormat:FWTAuthFormat, clientId, encryptedString];
+    
+    return @{FWTAuthHeader:authField,
+             FWTTimestampHeader:[self.httpDateFormatter stringFromDate:timestamp]};
+}
+
+- (void)_updateAuthenticationForPath:(NSString *)path
+{
+    NSDictionary *authHeaders = [self _authHeadersForPath:path
+                                                 clientId:self.appId
+                                                secretKey:self.secretKey
+                                               andHeaders:self.requestSerializer.HTTPRequestHeaders];
+    for (NSString *header in authHeaders.keyEnumerator) {
+        [self.requestSerializer setValue:authHeaders[header] forHTTPHeaderField:header];
+    }
+}
+
 - (void)_registerDeviceWithParams:(NSDictionary *)params
                          attempts:(NSUInteger)attempts
                 completionHandler:(FWTNotifiableOperationCompletionHandler)handler
@@ -248,15 +333,16 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         return;
     }
     
-    [self.httpClient postPath:@"device_tokens" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
-        NSError *error;
-        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+    NSString *path = @"user_api/v1/device_tokens";
+    [self _updateAuthenticationForPath:path];
+    
+    [self.httpSessionManager POST:path parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
             
             if(self.debugLogging)
                 NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
             
-            self.deviceTokenId = JSON[@"id"];
+            self.deviceTokenId = responseObject[@"id"];
             
             if(handler){
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -266,8 +352,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         } else {
             [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if(self.debugLogging)
             NSLog(@"Failed to register device token: %@", error);
         
@@ -300,10 +385,10 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         return;
     }
     
-    [self.httpClient putPath:[@"device_tokens/" stringByAppendingString:[self.deviceTokenId stringValue]] parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
-        NSError *error;
-        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+    NSString *path = [@"user_api/v1/device_tokens/" stringByAppendingString:[self.deviceTokenId stringValue]];
+    [self _updateAuthenticationForPath:path];
+    [self.httpSessionManager PUT:path parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
             
             if(self.debugLogging)
                 NSLog(@"Did update device with deviceTokenId: %@", self.deviceTokenId);
@@ -316,12 +401,13 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         } else {
             [self _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if(self.debugLogging)
             NSLog(@"Failed to update device with deviceTokenId %@: %@", self.deviceTokenId, error);
         
-        if (operation.response.statusCode == 404) {
+        NSHTTPURLResponse* response = (NSHTTPURLResponse*)task.response;
+        
+        if (response.statusCode == 404) {
             self.deviceTokenId = nil;
         }
         
@@ -353,12 +439,10 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         return;
     }
     
-    NSString *path = [NSString stringWithFormat:@"device_tokens/%@", self.deviceToken];
-    
-    [self.httpClient deletePath:path parameters:nil success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
-        NSError *error;
-        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+    NSString *path = [NSString stringWithFormat:@"user_api/v1/device_tokens/%@", self.deviceToken];
+    [self _updateAuthenticationForPath:path];
+    [self.httpSessionManager DELETE:path parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
             
             if(self.debugLogging)
                 NSLog(@"Did unregister for push notifications");
@@ -371,8 +455,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         } else {
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if(self.debugLogging)
             NSLog(@"Failed to unregister for push notifications");
         
@@ -381,7 +464,6 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             [self _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];
         });
     }];
-    
 }
 
 - (void)_anonymiseTokenWithParams:(NSDictionary *)params
@@ -406,10 +488,10 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         return;
     }
     
-    [self.httpClient putPath:@"device_tokens/anonymise" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
-        NSError *error;
-        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
+    NSString *path = @"user_api/v1/device_tokens/anonymise";
+    [self _updateAuthenticationForPath:path];
+    [self.httpSessionManager PUT:path parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
             
             if(self.debugLogging)
                 NSLog(@"Did anonymise device token");
@@ -422,8 +504,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         } else {
             [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if(self.debugLogging)
             NSLog(@"Failed to anonymise device token");
         
@@ -432,7 +513,6 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             [self _anonymiseTokenWithParams:params attempts:(attempts - 1) completionHandler:handler];
         });
     }];
-    
 }
 
 - (void)_markNotificationAsOpenedWithParams:(NSDictionary *)params
@@ -444,19 +524,16 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if(!self.deviceToken)
         return;
     
-    [self.httpClient putPath:@"notifications/opened" parameters:params success:^(AFHTTPRequestOperation *operation, NSData * responseData) {
-        
+    NSString *path = @"user_api/v1/notification_statuses/opened";
+    [self _updateAuthenticationForPath:path];
+    [self.httpSessionManager PUT:path parameters:params success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if(self.debugLogging)
             NSLog(@"Notification flagged as opened");
         
-        NSError *error;
-        NSDictionary *JSON = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-        if ([[JSON valueForKey:@"status"] integerValue] == 0) {
-        } else {
+        if (![responseObject isKindOfClass:[NSDictionary class]]) {
             [self _markNotificationAsOpenedWithParams:params attempts:(attempts - 1)];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if(self.debugLogging)
             NSLog(@"Failed to mark notification as opened");
         

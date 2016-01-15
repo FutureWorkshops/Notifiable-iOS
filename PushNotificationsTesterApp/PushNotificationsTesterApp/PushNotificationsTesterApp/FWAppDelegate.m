@@ -8,7 +8,7 @@
 
 #import "FWAppDelegate.h"
 #import "FWViewController.h"
-@import Notifiable;
+#import <Notifiable/FWTNotifiableManager.h>
 
 @implementation FWAppDelegate
 
@@ -96,7 +96,7 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
-    NSString *apnsHostURLString = apnsHostURLString = @"http://10.10.15.109:3000/api";
+    NSString *apnsHostURLString = apnsHostURLString = @"http://fw-notifiable-staging.herokuapp.com";
     
     NSString *token = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 
@@ -111,6 +111,8 @@
 
     FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
     manager.baseURL = [NSURL URLWithString:apnsHostURLString];
+    manager.appId = @"WyvxpyG9yuuj4kiZUsv6";
+    manager.secretKey = @"chEAmSqR1f9MumaRsd1oTIsibeJBcmrw213mHULEntK4WsUytgX3gPCmGM+hgUGcyBjikE7m2BQ6B3KqB7DoSg==";
     
     [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
     [manager registerTokenWithUserInfo:nil];

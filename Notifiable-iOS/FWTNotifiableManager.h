@@ -38,7 +38,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 /** Level of the informations that will be logged by the manager */
 @property (nonatomic, assign) FWTNotifiableLogLevel debugLevel;
 /** Token associated with the current device  */
-@property (nonatomic, readonly) NSString *deviceToken;
+@property (nonatomic, readonly) NSData *deviceToken;
 
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 
@@ -68,7 +68,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
  @param handler Block called once that the operation is finished.
 */
 - (void)registerAnonymousToken:(NSData *)token
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Register a device, without a user associated to it. If the token already exists in the server,
@@ -81,7 +81,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 */
 - (void)registerAnonymousToken:(NSData *)token
                     withLocale:(NSLocale *)locale
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
 /**
@@ -95,7 +95,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 */
 - (void)registerToken:(NSData *)token
         withUserAlias:(NSString *)userAlias
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
+    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Register a device, with a user associated to it. If the token already exists in the server,
@@ -110,7 +110,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 - (void)registerToken:(NSData *)token
         withUserAlias:(NSString *)userAlias
             andLocale:(NSLocale *)locale
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
+    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Update device information
 /**
@@ -166,7 +166,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 
  @param handler Block called once that the operation is finished.
 */
-- (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
+- (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 
 #pragma mark - Read receipts can be delivered back to server via this method

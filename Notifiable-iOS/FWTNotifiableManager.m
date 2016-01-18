@@ -10,20 +10,22 @@
 
 #import "FWTRequestManager.h"
 #import "FWTNotifiableAuthenticator.h"
+#import "NSData+FWTNotifiable.h"
 
-NSString * const FWTNotifiableUserInfoKey           = @"user";
-NSString * const FWTNotifiableDeviceTokenKey        = @"token";
-NSString * const FWTNotifiableProviderKey           = @"provider";
+NSString * const FWTNotifiableUserInfoKey       = @"user";
+NSString * const FWTNotifiableDeviceTokenKey    = @"token";
+NSString * const FWTNotifiableProviderKey       = @"provider";
+NSString * const FWTNotifiableUserAliasKey      = @"alias";
+NSString * const FWTNotifiableLocaleKey         = @"locale";
 
-NSString * const FWTNotifiableDidRegisterWithAPNSNotification       = @"FWTNotifiableDidRegisterWithAPNSNotification";
-NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification  = @"FWTNotifiableFailedToRegisterWithAPNSNotification";
+NSString * const FWTNotifiableProvider          = @"apns";
 
-NSString * const FWTNotifiableTokenKey                              = @"FWTNotifiableTokenKey";
-NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotifiableTokenIdKey";
+NSString * const FWTNotifiableTokenKey          = @"FWTNotifiableTokenKey";
+NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
 
 @interface FWTNotifiableManager ()
 
-@property (nonatomic, readwrite, strong) NSString *deviceToken;
+@property (nonatomic, readwrite, strong) NSData *deviceToken;
 @property (nonatomic, readwrite, strong) NSNumber *deviceTokenId;
 @property (nonatomic, strong) FWTRequestManager *requestManager;
 
@@ -55,7 +57,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     return self.requestManager.baseUrl;
 }
 
-- (NSString *)deviceToken
+- (NSData *)deviceToken
 {
     if(!self->_deviceToken){
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
@@ -65,7 +67,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     return self->_deviceToken;
 }
 
-- (void)setDeviceToken:(NSString *)deviceToken
+- (void)setDeviceToken:(NSData *)deviceToken
 {
     self->_deviceToken = deviceToken;
     
@@ -115,59 +117,92 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     return typesAllowed == types;
 }
 
-- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo
+- (void)registerAnonymousToken:(NSData *)token
+             completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self registerTokenWithUserInfo:userInfo completionHandler:nil];
+    [self registerAnonymousToken:token
+                      withLocale:[NSLocale autoupdatingCurrentLocale]
+               completionHandler:handler];
 }
 
-- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
+-(void)registerAnonymousToken:(NSData *)token withLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self registerTokenWithUserInfo:userInfo extendedParameters:nil completionHandler:hanlder];
+    [self _registerDeviceWithUserAlias:nil
+                                 token:token
+                                locale:locale
+                              attempts:self.retryAttempts completionHandler:handler];
 }
 
-- (void)registerTokenWithUserInfo:(NSDictionary *)userInfo extendedParameters:(NSDictionary *)parameters completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    if(!self.deviceToken)
-    {
-        if(handler)
-            handler(NO, nil);
-        return;
-    }
-    
-    NSMutableDictionary *p = [NSMutableDictionary dictionaryWithDictionary:parameters];
-    
-    if(userInfo)
-        p[FWTNotifiableUserInfoKey] = userInfo;
-    
-    if(self.deviceToken)
-        p[FWTNotifiableDeviceTokenKey]  = self.deviceToken;
-    
-    p[FWTNotifiableProviderKey]     = @"apns";
-    [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:handler];
+    [self registerToken:token
+          withUserAlias:userAlias
+              andLocale:[NSLocale autoupdatingCurrentLocale]
+      completionHandler:handler];
 }
 
-- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo
+- (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias andLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self anonymiseTokenWithUserInfo:userInfo completionHandler:nil];
+    [self _registerDeviceWithUserAlias:userAlias
+                                 token:token
+                                locale:locale
+                              attempts:self.retryAttempts
+                     completionHandler:handler];
 }
 
-- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _updateDeviceWithUserAlias:nil
+                               token:nil
+                              locale:locale
+                            attempts:self.retryAttempts
+                   completionHandler:handler];
+}
+
+- (void)updateDeviceToken:(NSData *)token completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _updateDeviceWithUserAlias:nil
+                               token:token
+                              locale:nil
+                            attempts:self.retryAttempts
+                   completionHandler:handler];
+}
+
+- (void)updateDeviceToken:(NSData *)token andLocation:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _updateDeviceWithUserAlias:nil
+                               token:token
+                              locale:locale
+                            attempts:self.retryAttempts
+                   completionHandler:handler];
+}
+
+-(void)anonymiseTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     self.deviceTokenId = nil;
-    [self registerTokenWithUserInfo:userInfo completionHandler:handler];
+    [self _registerDeviceWithUserAlias:nil
+                                 token:self.deviceToken
+                                locale:nil
+                              attempts:self.retryAttempts
+                     completionHandler:handler];
 }
 
-- (void)unregisterToken
+- (void)associateDeviceToUser:(NSString *)userAlias
+            completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self unregisterTokenWithCompletionHandler:nil];
+    [self _updateDeviceWithUserAlias:userAlias
+                               token:nil
+                              locale:nil
+                            attempts:self.retryAttempts
+                   completionHandler:handler];
 }
 
-- (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)hanlder
+- (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self _unregisterTokenWithAttempts:self.retryAttempts completionHandler:hanlder];
+    [self _unregisterTokenWithAttempts:self.retryAttempts completionHandler:handler];
 }
 
-- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo forUserInfo:(NSDictionary *)userInfo
+- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
     NSString *notificationID = notificationInfo[@"notification_id"];
     
@@ -179,34 +214,45 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if(self.deviceToken)
         requestParameters[@"device_token"] = @{ FWTNotifiableDeviceTokenKey : self.deviceToken };
     
-    if(userInfo)
-        requestParameters[FWTNotifiableUserInfoKey] = userInfo;
-    
     [self _markNotificationAsOpenedWithParams:requestParameters attempts:self.retryAttempts];
 }
 
-#pragma mark - UIApplicationDelegate forwarding methods
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-    self.deviceToken = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterWithAPNSNotification object:self];
-}
-
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableFailedToRegisterWithAPNSNotification object:self];
-}
-
 #pragma mark - Private
+- (NSDictionary *)_buildParametersForUserAlias:(NSString *)userAlias
+                                         token:(NSData *)token
+                                        locale:(NSLocale *)locale
+                             includingProvider:(BOOL)includeProvider
+{
+    NSMutableDictionary *params;
+    if (includeProvider) {
+        params = [@{FWTNotifiableProviderKey: FWTNotifiableProvider} mutableCopy];
+    } else {
+        params = [[NSMutableDictionary alloc] init];
+    }
+    if (userAlias) {
+        [params addEntriesFromDictionary:@{FWTNotifiableUserInfoKey: @{FWTNotifiableUserAliasKey: userAlias}}];
+    }
+    if (token) {
+        [params setObject:[token fwt_notificationTokenString] forKey:FWTNotifiableTokenKey];
+    }
+    if (locale) {
+        [params setObject:[locale localeIdentifier] forKey:FWTNotifiableLocaleKey];
+    }
+    return [NSDictionary dictionaryWithDictionary:params];
+}
 
-- (void)_registerDeviceWithParams:(NSDictionary *)params
-                         attempts:(NSUInteger)attempts
-                completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)_registerDeviceWithUserAlias:(NSString *)userAlias
+                               token:(NSData *)token
+                              locale:(NSLocale *)locale
+                            attempts:(NSUInteger)attempts
+                   completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (self.deviceTokenId) {
-        [self _updateDeviceWithParams:params attempts:attempts completionHandler:handler];
+        [self _updateDeviceWithUserAlias:userAlias
+                                   token:token
+                                  locale:locale
+                                attempts:attempts
+                       completionHandler:handler];
         return;
     }
     
@@ -218,12 +264,20 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         }
         return;
     }
+
+    NSDictionary *params = [self _buildParametersForUserAlias:userAlias
+                                                        token:token
+                                                       locale:locale
+                                            includingProvider:YES];
     
     __weak typeof(self) weakSelf = self;
     [self.requestManager registerDeviceWithParams:params success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         if (response == nil) {
-            [sself _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
+            [sself _registerDeviceWithUserAlias:userAlias
+                                          token:token
+                                         locale:locale attempts:(attempts - 1)
+                              completionHandler:handler];
             return;
         }
         
@@ -243,15 +297,21 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [weakSelf _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
+            [weakSelf _registerDeviceWithUserAlias:userAlias
+                                          token:token
+                                         locale:locale
+                                          attempts:(attempts - 1)
+                              completionHandler:handler];
         });
     }];
 }
 
 
-- (void)_updateDeviceWithParams:(NSDictionary *)params
-                       attempts:(NSUInteger)attempts
-              completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)_updateDeviceWithUserAlias:(NSString *)alias
+                             token:(NSData *)token
+                            locale:(NSLocale *)locale
+                          attempts:(NSUInteger)attempts
+                 completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     if (attempts == 0){
         if(handler){
@@ -270,12 +330,21 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         }
         return;
     }
+
+    NSDictionary *params = [self _buildParametersForUserAlias:alias
+                                                        token:token
+                                                       locale:locale
+                                            includingProvider:NO];
     
     __weak typeof(self) weakSelf = self;
     [self.requestManager updateDeviceWithTokenId:self.deviceTokenId params:params success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         if (response == nil) {
-            [sself _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
+            [sself _registerDeviceWithUserAlias:alias
+                                          token:token
+                                         locale:locale
+                                       attempts:(attempts - 1)
+                              completionHandler:handler];
             return;
         }
         if(sself.debugLevel == FWTNotifiableLogLevelInfo)
@@ -297,7 +366,11 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [weakSelf _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
+            [weakSelf _registerDeviceWithUserAlias:alias
+                                             token:token
+                                            locale:locale
+                                          attempts:(attempts - 1)
+                                 completionHandler:handler];
         });
     }];
 }
@@ -324,8 +397,10 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         return;
     }
     
+    NSString *token = [self.deviceToken fwt_notificationTokenString];
+    
     __weak typeof(self) weakSelf = self;
-    [self.requestManager unregisterToken:self.deviceToken success:^(NSDictionary * _Nullable response) {
+    [self.requestManager unregisterToken:token success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         if (response == nil) {
             [sself _unregisterTokenWithAttempts:(attempts - 1) completionHandler:handler];

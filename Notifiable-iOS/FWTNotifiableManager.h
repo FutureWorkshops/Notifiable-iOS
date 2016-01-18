@@ -83,6 +83,21 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
                     withLocale:(NSLocale *)locale
              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
+/**
+ Register a device, without a user associated to it. If the token already exists in the server,
+ the device locale will be updated. Otherwise, a new device will be created with the token
+ and locale provided.
+ 
+ @param token               The device token.
+ @param locale              The locale of the device.
+ @param deviceInformation   Aditional information about the device
+ @param handler             Block called once that the operation is finished.
+*/
+- (void)registerAnonymousToken:(NSData *)token
+                    withLocale:(NSLocale *)locale
+             deviceInformation:(NSDictionary *)deviceInformation
+             completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+
 #pragma mark - Register device to a specific user
 /**
  Register a device with a user associated to it. If the token already exists in the server,
@@ -112,6 +127,23 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
             andLocale:(NSLocale *)locale
     completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
+/**
+ Register a device, with a user associated to it. If the token already exists in the server,
+ the device locale will be updated. Otherwise, a new device will be created with the token
+ and locale provided. If the user alias doesn't exist, a new user will be created.
+ 
+ @param token       The device token.
+ @param locale      The locale of the device.
+ @param userAlias   The alias of the user in the server.
+ @param deviceInformation   Aditional information about the device
+ @param handler     Block called once that the operation is finished.
+*/
+- (void)registerToken:(NSData *)token
+        withUserAlias:(NSString *)userAlias
+               locale:(NSLocale *)locale
+    deviceInformation:(NSDictionary *)deviceInformation
+    completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+
 #pragma mark - Update device information
 /**
  Update the token of the device
@@ -135,10 +167,21 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
  @param token   New device token.
  @param locale  New device locale.
  @param handler Block called once that the operation is finished.
- */
+*/
 - (void)updateDeviceToken:(NSData *)token
               andLocation:(NSLocale *)locale
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ @param token   New device token.
+ @param locale  New device locale.
+ @param deviceInformation   Aditional information about the device
+ @param handler Block called once that the operation is finished.
+*/
+- (void)updateDeviceToken:(NSData *)token
+              andLocation:(NSLocale *)locale
+        deviceInformation:(NSDictionary *)deviceInformation
+        completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Device/user relationship
 /**

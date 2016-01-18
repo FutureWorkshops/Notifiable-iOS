@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B7402BE416C26CE70014570E"
-               BuildableName = "PushNotificationsTesterAppTests.octest"
+               BuildableName = "PushNotificationsTesterAppTests.xctest"
                BlueprintName = "PushNotificationsTesterAppTests"
                ReferencedContainer = "container:PushNotificationsTesterApp.xcodeproj">
             </BuildableReference>

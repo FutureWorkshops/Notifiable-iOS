@@ -146,6 +146,17 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     [self _registerDeviceWithParams:p attempts:self.retryAttempts completionHandler:handler];
 }
 
+- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo
+{
+    [self anonymiseTokenWithUserInfo:userInfo completionHandler:nil];
+}
+
+- (void)anonymiseTokenWithUserInfo:(NSDictionary *)userInfo completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    self.deviceTokenId = nil;
+    [self registerTokenWithUserInfo:userInfo completionHandler:handler];
+}
+
 - (void)unregisterToken
 {
     [self unregisterTokenWithCompletionHandler:nil];

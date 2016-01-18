@@ -3,6 +3,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -32,24 +34,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="YL6-ch-eyg">
-                                <rect key="frame" x="20" y="83" width="280" height="248"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="YL6-ch-eyg">
+                                <rect key="frame" x="16" y="83" width="288" height="255"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="YL6-ch-eyg" secondAttribute="height" multiplier="35:31" id="MZm-hp-c9G"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="FAM-Mv-1Qc">
-                                <rect key="frame" x="20" y="395" width="280" height="124"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="FAM-Mv-1Qc">
+                                <rect key="frame" x="16" y="402" width="288" height="117"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="FAM-Mv-1Qc" secondAttribute="height" multiplier="32:13" id="L9W-vk-LaJ"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tap Register to begin" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8Q-U6-cd5">
-                                <rect key="frame" x="20" y="527" width="280" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap Register to begin" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8Q-U6-cd5">
+                                <rect key="frame" x="104" y="527" width="112" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="rNd-q6-gM1"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="FAM-Mv-1Qc" firstAttribute="top" secondItem="YL6-ch-eyg" secondAttribute="bottom" constant="64" id="1Ls-sR-Cd3"/>
+                            <constraint firstItem="YL6-ch-eyg" firstAttribute="leading" secondItem="SIq-nv-9tc" secondAttribute="leadingMargin" id="O5J-rO-0pH"/>
+                            <constraint firstItem="FAM-Mv-1Qc" firstAttribute="trailing" secondItem="SIq-nv-9tc" secondAttribute="trailingMargin" id="ZEc-dW-qnA"/>
+                            <constraint firstItem="r8Q-U6-cd5" firstAttribute="centerX" secondItem="SIq-nv-9tc" secondAttribute="centerX" id="b73-u4-LO4"/>
+                            <constraint firstItem="YL6-ch-eyg" firstAttribute="trailing" secondItem="SIq-nv-9tc" secondAttribute="trailingMargin" id="eic-b7-Deq"/>
+                            <constraint firstItem="zbk-OP-Qam" firstAttribute="top" secondItem="r8Q-U6-cd5" secondAttribute="bottom" constant="20" id="kjw-Fe-JID"/>
+                            <constraint firstItem="YL6-ch-eyg" firstAttribute="top" secondItem="4EY-N6-wd2" secondAttribute="bottom" constant="19" id="stM-Bb-PDI"/>
+                            <constraint firstItem="FAM-Mv-1Qc" firstAttribute="leading" secondItem="SIq-nv-9tc" secondAttribute="leadingMargin" id="x68-8d-ezL"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Push Notifications" id="Vhd-bG-ktP">
                         <barButtonItem key="rightBarButtonItem" title="Register" id="uLg-Rb-oiH">

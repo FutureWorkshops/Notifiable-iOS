@@ -8,9 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		643114F1A85F50781B1CAB02 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F32EEF152A833F2195D1AD2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		65D693E0184E292E00D9DF5B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */; };
-		65D693E2184E293B00D9DF5B /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */; };
+		65D693E0184E292E00D9DF5B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693DF184E292E00D9DF5B /* Main.storyboard */; };
 		65D693E5184E297200D9DF5B /* FWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D693E4184E297200D9DF5B /* FWViewController.m */; };
+		784222701C4D2989009D4638 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7842226F1C4D2989009D4638 /* Launch Screen.storyboard */; };
+		784222721C4D299A009D4638 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 784222711C4D299A009D4638 /* Images.xcassets */; };
 		B7402BC916C26CE70014570E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BC816C26CE70014570E /* UIKit.framework */; };
 		B7402BCB16C26CE70014570E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCA16C26CE70014570E /* Foundation.framework */; };
 		B7402BCD16C26CE70014570E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCC16C26CE70014570E /* CoreGraphics.framework */; };
@@ -39,11 +40,12 @@
 /* Begin PBXFileReference section */
 		0F32EEF152A833F2195D1AD2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.testing.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.testing.xcconfig"; sourceTree = "<group>"; };
-		65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
-		65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
+		65D693DF184E292E00D9DF5B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		65D693E3184E297200D9DF5B /* FWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWViewController.h; sourceTree = "<group>"; };
 		65D693E4184E297200D9DF5B /* FWViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWViewController.m; sourceTree = "<group>"; };
 		783F24AD3435454324BCE28A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		7842226F1C4D2989009D4638 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		784222711C4D299A009D4638 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B7402BC416C26CE70014570E /* PushNotificationsTesterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushNotificationsTesterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7402BC816C26CE70014570E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -129,9 +131,10 @@
 				B7402C2F16C2DD800014570E /* FWAppDelegate.m */,
 				65D693E3184E297200D9DF5B /* FWViewController.h */,
 				65D693E4184E297200D9DF5B /* FWViewController.m */,
-				65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */,
-				65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */,
+				65D693DF184E292E00D9DF5B /* Main.storyboard */,
 				B7402BCF16C26CE70014570E /* Supporting Files */,
+				7842226F1C4D2989009D4638 /* Launch Screen.storyboard */,
+				784222711C4D299A009D4638 /* Images.xcassets */,
 			);
 			path = PushNotificationsTesterApp;
 			sourceTree = "<group>";
@@ -268,11 +271,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7402BD316C26CE70014570E /* InfoPlist.strings in Resources */,
+				784222721C4D299A009D4638 /* Images.xcassets in Resources */,
 				B7402C1416C270FC0014570E /* Default-568h@2x.png in Resources */,
-				65D693E0184E292E00D9DF5B /* Main_iPhone.storyboard in Resources */,
+				65D693E0184E292E00D9DF5B /* Main.storyboard in Resources */,
 				B7402C1516C270FC0014570E /* Default.png in Resources */,
 				B7402C1616C270FC0014570E /* Default@2x.png in Resources */,
-				65D693E2184E293B00D9DF5B /* Main_iPad.storyboard in Resources */,
+				784222701C4D2989009D4638 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +435,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -526,6 +532,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -547,6 +555,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 783F24AD3435454324BCE28A /* Pods.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

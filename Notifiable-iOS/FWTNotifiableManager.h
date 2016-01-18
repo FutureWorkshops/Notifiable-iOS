@@ -55,28 +55,28 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
                andSecretKey:(NSString *)secretKey;
 
 #pragma mark - Register Anonymous device
-- (void)registerAnonymousToken:(NSString *)token
+- (void)registerAnonymousToken:(NSData *)token
              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
 
-- (void)registerAnonymousToken:(NSString *)token
+- (void)registerAnonymousToken:(NSData *)token
                     withLocale:(NSLocale *)locale
              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
 
 #pragma mark - Register device to a specific user
-- (void)registerToken:(NSString *)token
+- (void)registerToken:(NSData *)token
         withUserAlias:(NSString *)userAlias
     completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
 
-- (void)registerToken:(NSString *)token
+- (void)registerToken:(NSData *)token
         withUserAlias:(NSString *)userAlias
             andLocale:(NSLocale *)locale
     completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)hanlder;
 
 #pragma mark - Update device information
-- (void)updateDeviceToken:(NSString *)token;
+- (void)updateDeviceToken:(NSData *)token;
 - (void)updateDeviceLocale:(NSLocale *)locale
          completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;;
-- (void)updateDeviceToken:(NSString *)token
+- (void)updateDeviceToken:(NSData *)token
               andLocation:(NSLocale *)locale
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;;
 

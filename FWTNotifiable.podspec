@@ -11,17 +11,18 @@ Pod::Spec.new do |s|
   s.frameworks   = 'SystemConfiguration'
 
   s.description  = <<-DESC
-                   Utility classes to integrate with Notifiable-Rails gem
+                   Utility classes to integrate with Notifiable-Rails gem (https://github.com/FutureWorkshops/notifiable-rails).
                    DESC
 
   s.homepage     = "https://github.com/FutureWorkshops/Notifiable-iOS"
   s.license      = { :type => 'Apache License Version 2.0', :file => 'LICENSE' }
   s.author       = { "Daniel Phillips" => "daniel@futureworkshops.com" }
 
-  s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => s.version }
 
   s.source_files  = 'Notifiable-iOS/**/*.{h,m}'
   s.public_header_files = 'Notifiable-iOS/FWTNotifiableManager.h'
+  s.module_name = 'FWTNotifiable'
   s.requires_arc = true 
 
 end

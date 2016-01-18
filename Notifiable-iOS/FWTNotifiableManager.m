@@ -45,7 +45,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
         self->_requestManager = [[FWTRequestManager alloc] initWithBaseUrl:url andAuthenticator:authenticator];
         self->_retryAttempts = 5;
         self->_retryDelay = 60;
-        self->_debugLogging = NO;
+        self->_debugLevel = FWTNotifiableLogLevelError;
     }
     return self;
 }
@@ -130,7 +130,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if(!self.deviceToken)
     {
         if(handler)
-            handler(NO);
+            handler(NO, nil);
         return;
     }
     
@@ -213,7 +213,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO);
+                handler(NO, nil);
             });
         }
         return;
@@ -227,18 +227,18 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             return;
         }
         
-        if(sself.debugLogging)
+        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
             NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
         
         sself.deviceTokenId = response[@"id"];
         
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(YES);
+                handler(YES, nil);
             });
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        if(weakSelf.debugLogging)
+        if(weakSelf.debugLevel <= FWTNotifiableLogLevelError)
             NSLog(@"Failed to register device token: %@", error);
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
@@ -256,7 +256,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO);
+                handler(NO, nil);
             });
         }
         return;
@@ -265,7 +265,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if(!self.deviceTokenId){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO);
+                handler(NO, nil);
             });
         }
         return;
@@ -278,18 +278,18 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             [sself _registerDeviceWithParams:params attempts:(attempts - 1) completionHandler:handler];
             return;
         }
-        if(sself.debugLogging)
+        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
             NSLog(@"Did update device with deviceTokenId: %@", self.deviceTokenId);
         
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(YES);
+                handler(YES, nil);
             });
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         
         __strong typeof(weakSelf) sself = weakSelf;
-        if(sself.debugLogging)
+        if(sself.debugLevel <= FWTNotifiableLogLevelError)
             NSLog(@"Failed to update device with deviceTokenId %@: %@", sself.deviceTokenId, error);
         
         if (responseCode == 404)
@@ -309,7 +309,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO);
+                handler(NO, nil);
             });
         }
         return;
@@ -318,7 +318,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
     if(!self.deviceToken){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO);
+                handler(NO, nil);
             });
         }
         return;
@@ -332,17 +332,17 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             return;
         }
         
-        if(sself.debugLogging)
+        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
             NSLog(@"Did unregister for push notifications");
         
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(YES);
+                handler(YES, nil);
             });
         }
         
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        if(weakSelf.debugLogging)
+        if(weakSelf.debugLevel <= FWTNotifiableLogLevelError)
             NSLog(@"Failed to unregister for push notifications");
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
@@ -369,11 +369,11 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
             [sself _markNotificationAsOpenedWithParams:params attempts:(attempts - 1)];
             return;
         }
-        if(sself.debugLogging)
+        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
             NSLog(@"Notification flagged as opened");
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         __strong typeof(weakSelf) sself = weakSelf;
-        if(sself.debugLogging)
+        if(sself.debugLevel <= FWTNotifiableLogLevelError)
             NSLog(@"Failed to mark notification as opened");
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));

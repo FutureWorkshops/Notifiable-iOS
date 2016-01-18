@@ -130,7 +130,18 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _registerDeviceWithUserAlias:nil
                                  token:token
                                 locale:locale
+                     deviceInformation:nil
                               attempts:self.retryAttempts completionHandler:handler];
+}
+
+-(void)registerAnonymousToken:(NSData *)token withLocale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _registerDeviceWithUserAlias:nil
+                                 token:token
+                                locale:locale
+                     deviceInformation:deviceInformation
+                              attempts:self.retryAttempts
+                     completionHandler:handler];
 }
 
 - (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias completionHandler:(FWTNotifiableOperationCompletionHandler)handler
@@ -146,6 +157,17 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _registerDeviceWithUserAlias:userAlias
                                  token:token
                                 locale:locale
+                     deviceInformation:nil
+                              attempts:self.retryAttempts
+                     completionHandler:handler];
+}
+
+- (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias locale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _registerDeviceWithUserAlias:userAlias
+                                 token:token
+                                locale:locale
+                     deviceInformation:deviceInformation
                               attempts:self.retryAttempts
                      completionHandler:handler];
 }
@@ -155,6 +177,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _updateDeviceWithUserAlias:nil
                                token:nil
                               locale:locale
+                   deviceInformation:nil
                             attempts:self.retryAttempts
                    completionHandler:handler];
 }
@@ -164,6 +187,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _updateDeviceWithUserAlias:nil
                                token:token
                               locale:nil
+                   deviceInformation:nil
                             attempts:self.retryAttempts
                    completionHandler:handler];
 }
@@ -173,6 +197,17 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _updateDeviceWithUserAlias:nil
                                token:token
                               locale:locale
+                   deviceInformation:nil
+                            attempts:self.retryAttempts
+                   completionHandler:handler];
+}
+
+- (void)updateDeviceToken:(NSData *)token andLocation:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self _updateDeviceWithUserAlias:nil
+                               token:token
+                              locale:locale
+                   deviceInformation:deviceInformation
                             attempts:self.retryAttempts
                    completionHandler:handler];
 }
@@ -183,6 +218,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _registerDeviceWithUserAlias:nil
                                  token:self.deviceToken
                                 locale:nil
+                     deviceInformation:nil
                               attempts:self.retryAttempts
                      completionHandler:handler];
 }
@@ -193,6 +229,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     [self _updateDeviceWithUserAlias:userAlias
                                token:nil
                               locale:nil
+                   deviceInformation:nil
                             attempts:self.retryAttempts
                    completionHandler:handler];
 }
@@ -221,6 +258,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
 - (NSDictionary *)_buildParametersForUserAlias:(NSString *)userAlias
                                          token:(NSData *)token
                                         locale:(NSLocale *)locale
+                             deviceInformation:(NSDictionary *)deviceInformation
                              includingProvider:(BOOL)includeProvider
 {
     NSMutableDictionary *params;
@@ -238,12 +276,16 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     if (locale) {
         [params setObject:[locale localeIdentifier] forKey:FWTNotifiableLocaleKey];
     }
+    if (deviceInformation) {
+        [params addEntriesFromDictionary:deviceInformation];
+    }
     return [NSDictionary dictionaryWithDictionary:params];
 }
 
 - (void)_registerDeviceWithUserAlias:(NSString *)userAlias
                                token:(NSData *)token
                               locale:(NSLocale *)locale
+                   deviceInformation:(NSDictionary *)deviceInformation
                             attempts:(NSUInteger)attempts
                    completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
@@ -251,6 +293,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
         [self _updateDeviceWithUserAlias:userAlias
                                    token:token
                                   locale:locale
+                       deviceInformation:deviceInformation
                                 attempts:attempts
                        completionHandler:handler];
         return;
@@ -268,6 +311,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     NSDictionary *params = [self _buildParametersForUserAlias:userAlias
                                                         token:token
                                                        locale:locale
+                                            deviceInformation:deviceInformation
                                             includingProvider:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -276,7 +320,9 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
         if (response == nil) {
             [sself _registerDeviceWithUserAlias:userAlias
                                           token:token
-                                         locale:locale attempts:(attempts - 1)
+                                         locale:locale
+                              deviceInformation:deviceInformation
+                                       attempts:(attempts - 1)
                               completionHandler:handler];
             return;
         }
@@ -299,7 +345,8 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _registerDeviceWithUserAlias:userAlias
                                           token:token
-                                         locale:locale
+                                            locale:locale
+                                 deviceInformation:deviceInformation
                                           attempts:(attempts - 1)
                               completionHandler:handler];
         });
@@ -310,6 +357,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
 - (void)_updateDeviceWithUserAlias:(NSString *)alias
                              token:(NSData *)token
                             locale:(NSLocale *)locale
+                 deviceInformation:(NSDictionary *)deviceInformation
                           attempts:(NSUInteger)attempts
                  completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
@@ -334,6 +382,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     NSDictionary *params = [self _buildParametersForUserAlias:alias
                                                         token:token
                                                        locale:locale
+                                            deviceInformation:deviceInformation
                                             includingProvider:NO];
     
     __weak typeof(self) weakSelf = self;
@@ -343,6 +392,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
             [sself _registerDeviceWithUserAlias:alias
                                           token:token
                                          locale:locale
+                              deviceInformation:deviceInformation
                                        attempts:(attempts - 1)
                               completionHandler:handler];
             return;
@@ -369,6 +419,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
             [weakSelf _registerDeviceWithUserAlias:alias
                                              token:token
                                             locale:locale
+                                 deviceInformation:deviceInformation
                                           attempts:(attempts - 1)
                                  completionHandler:handler];
         });

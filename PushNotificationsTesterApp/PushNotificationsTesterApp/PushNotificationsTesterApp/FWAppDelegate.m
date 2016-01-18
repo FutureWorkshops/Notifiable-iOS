@@ -85,9 +85,7 @@
     FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:apnsHostURLString
                                                                      accessId:@"WyvxpyG9yuuj4kiZUsv6"
                                                                  andSecretKey:@"chEAmSqR1f9MumaRsd1oTIsibeJBcmrw213mHULEntK4WsUytgX3gPCmGM+hgUGcyBjikE7m2BQ6B3KqB7DoSg=="];
-    
-    [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-    [manager registerTokenWithUserInfo:nil];
+    [manager registerAnonymousToken:token completionHandler:nil];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {

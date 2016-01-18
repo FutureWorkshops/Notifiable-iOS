@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		65D693E0184E292E00D9DF5B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */; };
-		65D693E2184E293B00D9DF5B /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */; };
+		643114F1A85F50781B1CAB02 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F32EEF152A833F2195D1AD2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		65D693E0184E292E00D9DF5B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D693DF184E292E00D9DF5B /* Main.storyboard */; };
 		65D693E5184E297200D9DF5B /* FWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D693E4184E297200D9DF5B /* FWViewController.m */; };
+		784222701C4D2989009D4638 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7842226F1C4D2989009D4638 /* Launch Screen.storyboard */; };
+		784222721C4D299A009D4638 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 784222711C4D299A009D4638 /* Images.xcassets */; };
 		B7402BC916C26CE70014570E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BC816C26CE70014570E /* UIKit.framework */; };
 		B7402BCB16C26CE70014570E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCA16C26CE70014570E /* Foundation.framework */; };
 		B7402BCD16C26CE70014570E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCC16C26CE70014570E /* CoreGraphics.framework */; };
 		B7402BD316C26CE70014570E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7402BD116C26CE70014570E /* InfoPlist.strings */; };
 		B7402BD516C26CE70014570E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B7402BD416C26CE70014570E /* main.m */; };
-		B7402BE716C26CE70014570E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BE616C26CE70014570E /* SenTestingKit.framework */; };
 		B7402BE816C26CE70014570E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BC816C26CE70014570E /* UIKit.framework */; };
 		B7402BE916C26CE70014570E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCA16C26CE70014570E /* Foundation.framework */; };
 		B7402BF116C26CE70014570E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7402BEF16C26CE70014570E /* InfoPlist.strings */; };
@@ -23,10 +24,7 @@
 		B7402C1416C270FC0014570E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1116C270FC0014570E /* Default-568h@2x.png */; };
 		B7402C1516C270FC0014570E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1216C270FC0014570E /* Default.png */; };
 		B7402C1616C270FC0014570E /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1316C270FC0014570E /* Default@2x.png */; };
-		B7402C1816C275940014570E /* fw-shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1716C275930014570E /* fw-shared.xcconfig */; };
-		B7402C1916C275940014570E /* fw-shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B7402C1716C275930014570E /* fw-shared.xcconfig */; };
 		B7402C3016C2DD800014570E /* FWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B7402C2F16C2DD800014570E /* FWAppDelegate.m */; };
-		C142A001563B4061BFB52315 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE4CDCF46FB4989AB78A4AD /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,12 +38,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0EE4CDCF46FB4989AB78A4AD /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
-		65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
+		0F32EEF152A833F2195D1AD2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.testing.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.testing.xcconfig"; sourceTree = "<group>"; };
+		65D693DF184E292E00D9DF5B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		65D693E3184E297200D9DF5B /* FWViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWViewController.h; sourceTree = "<group>"; };
 		65D693E4184E297200D9DF5B /* FWViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWViewController.m; sourceTree = "<group>"; };
-		8A20C11230944E3A846EED0A /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = ../Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		783F24AD3435454324BCE28A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		7842226F1C4D2989009D4638 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		784222711C4D299A009D4638 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B7402BC416C26CE70014570E /* PushNotificationsTesterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushNotificationsTesterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7402BC816C26CE70014570E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B7402BCA16C26CE70014570E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -54,8 +55,7 @@
 		B7402BD216C26CE70014570E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B7402BD416C26CE70014570E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B7402BD616C26CE70014570E /* PushNotificationsTesterApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PushNotificationsTesterApp-Prefix.pch"; sourceTree = "<group>"; };
-		B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PushNotificationsTesterAppTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7402BE616C26CE70014570E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PushNotificationsTesterAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7402BEE16C26CE70014570E /* PushNotificationsTesterAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PushNotificationsTesterAppTests-Info.plist"; sourceTree = "<group>"; };
 		B7402BF016C26CE70014570E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B7402BFD16C26ED80014570E /* PushNotificationsTesterAppTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTesterAppTests.h; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 				B7402BC916C26CE70014570E /* UIKit.framework in Frameworks */,
 				B7402BCB16C26CE70014570E /* Foundation.framework in Frameworks */,
 				B7402BCD16C26CE70014570E /* CoreGraphics.framework in Frameworks */,
-				C142A001563B4061BFB52315 /* libPods.a in Frameworks */,
+				643114F1A85F50781B1CAB02 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +84,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7402BE716C26CE70014570E /* SenTestingKit.framework in Frameworks */,
 				B7402BE816C26CE70014570E /* UIKit.framework in Frameworks */,
 				B7402BE916C26CE70014570E /* Foundation.framework in Frameworks */,
 			);
@@ -101,7 +100,7 @@
 				B7402C0016C26F8F0014570E /* Resources */,
 				B7402BC716C26CE70014570E /* Frameworks */,
 				B7402BC516C26CE70014570E /* Products */,
-				8A20C11230944E3A846EED0A /* Pods.xcconfig */,
+				ED18B12FDE502BB5C7FD5626 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				B7402BC416C26CE70014570E /* PushNotificationsTesterApp.app */,
-				B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */,
+				B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,8 +119,7 @@
 				B7402BC816C26CE70014570E /* UIKit.framework */,
 				B7402BCA16C26CE70014570E /* Foundation.framework */,
 				B7402BCC16C26CE70014570E /* CoreGraphics.framework */,
-				B7402BE616C26CE70014570E /* SenTestingKit.framework */,
-				0EE4CDCF46FB4989AB78A4AD /* libPods.a */,
+				0F32EEF152A833F2195D1AD2 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -133,9 +131,10 @@
 				B7402C2F16C2DD800014570E /* FWAppDelegate.m */,
 				65D693E3184E297200D9DF5B /* FWViewController.h */,
 				65D693E4184E297200D9DF5B /* FWViewController.m */,
-				65D693DF184E292E00D9DF5B /* Main_iPhone.storyboard */,
-				65D693E1184E293B00D9DF5B /* Main_iPad.storyboard */,
+				65D693DF184E292E00D9DF5B /* Main.storyboard */,
 				B7402BCF16C26CE70014570E /* Supporting Files */,
+				7842226F1C4D2989009D4638 /* Launch Screen.storyboard */,
+				784222711C4D299A009D4638 /* Images.xcassets */,
 			);
 			path = PushNotificationsTesterApp;
 			sourceTree = "<group>";
@@ -181,6 +180,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		ED18B12FDE502BB5C7FD5626 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */,
+				218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */,
+				783F24AD3435454324BCE28A /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -194,6 +203,7 @@
 				B7402BC216C26CE70014570E /* Resources */,
 				B71B013B17280F78009B2A61 /* Log build environment */,
 				A182B8293D8048DCAB3BA7E4 /* Copy Pods Resources */,
+				9D85183C6AC4367A411BADF6 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -211,7 +221,6 @@
 				B7402BE016C26CE70014570E /* Sources */,
 				B7402BE116C26CE70014570E /* Frameworks */,
 				B7402BE216C26CE70014570E /* Resources */,
-				B7402BE316C26CE70014570E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -220,8 +229,8 @@
 			);
 			name = PushNotificationsTesterAppTests;
 			productName = PushNotificationsTesterAppTests;
-			productReference = B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -230,11 +239,11 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = FW;
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					B7402BC316C26CE70014570E = {
-						DevelopmentTeam = 49P53J9FGA;
+						DevelopmentTeam = BQHMJ2C6RL;
 					};
 				};
 			};
@@ -262,12 +271,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7402BD316C26CE70014570E /* InfoPlist.strings in Resources */,
+				784222721C4D299A009D4638 /* Images.xcassets in Resources */,
 				B7402C1416C270FC0014570E /* Default-568h@2x.png in Resources */,
-				65D693E0184E292E00D9DF5B /* Main_iPhone.storyboard in Resources */,
+				65D693E0184E292E00D9DF5B /* Main.storyboard in Resources */,
 				B7402C1516C270FC0014570E /* Default.png in Resources */,
 				B7402C1616C270FC0014570E /* Default@2x.png in Resources */,
-				65D693E2184E293B00D9DF5B /* Main_iPad.storyboard in Resources */,
-				B7402C1816C275940014570E /* fw-shared.xcconfig in Resources */,
+				784222701C4D2989009D4638 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,13 +285,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7402BF116C26CE70014570E /* InfoPlist.strings in Resources */,
-				B7402C1916C275940014570E /* fw-shared.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		9D85183C6AC4367A411BADF6 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A182B8293D8048DCAB3BA7E4 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -295,7 +318,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AE018AB755A846CB89078B7A /* Check Pods Manifest.lock */ = {
@@ -326,19 +349,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "LOG=\"$CONFIGURATION_BUILD_DIR/env.log\"\n[ -d `dirname $LOG` ] || mkdir -p `dirname $LOG`\n/bin/rm -f $LOG\necho >> $LOG\necho \"CODE_SIGN_IDENTITY: $CODE_SIGN_IDENTITY\" >> $LOG\necho \"WRAPPER_NAME: $WRAPPER_NAME\" >> $LOG\necho \"PRODUCT_NAME: $PRODUCT_NAME\" >> $LOG\necho \"ARCHIVE_PATH: $ARCHIVE_PATH\" >> $LOG\necho \"ARCHIVE_DSYMS_PATH: $ARCHIVE_DSYMS_PATH\" >> $LOG\necho \"ARCHIVE_PRODUCTS_PATH: $ARCHIVE_PRODUCTS_PATH\" >> $LOG\necho \"DWARF_DSYM_FILE_NAME: $DWARF_DSYM_FILE_NAME\" >> $LOG\necho \"INSTALL_PATH: $INSTALL_PATH\" >> $LOG\n";
-		};
-		B7402BE316C26CE70014570E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -414,7 +424,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -423,18 +433,22 @@
 		};
 		B71B013717280481009B2A61 /* Testing */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A20C11230944E3A846EED0A /* Pods.xcconfig */;
+			baseConfigurationReference = 218D66FF156F043F97B5C833 /* Pods.testing.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Info.plist";
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/PushNotificationsTesterApp/Supporting Files/info.plist.h";
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterApp;
-				PROVISIONING_PROFILE = "11CA6701-C2BB-421B-BF5D-7248A027D853";
+				PROVISIONING_PROFILE = "";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -447,13 +461,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
 				INFOPLIST_FILE = "PushNotificationsTesterAppTests/Supporting Files/PushNotificationsTesterAppTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.company-identifier.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterAppTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Testing;
 		};
@@ -469,6 +484,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -480,7 +496,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -503,7 +520,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -513,18 +530,22 @@
 		};
 		B7402BF816C26CE70014570E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A20C11230944E3A846EED0A /* Pods.xcconfig */;
+			baseConfigurationReference = AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Info.plist";
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/PushNotificationsTesterApp/Supporting Files/info.plist.h";
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterApp;
-				PROVISIONING_PROFILE = "11CA6701-C2BB-421B-BF5D-7248A027D853";
+				PROVISIONING_PROFILE = "";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
@@ -532,18 +553,22 @@
 		};
 		B7402BF916C26CE70014570E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8A20C11230944E3A846EED0A /* Pods.xcconfig */;
+			baseConfigurationReference = 783F24AD3435454324BCE28A /* Pods.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Info.plist";
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/PushNotificationsTesterApp/Supporting Files/info.plist.h";
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterApp;
-				PROVISIONING_PROFILE = "11CA6701-C2BB-421B-BF5D-7248A027D853";
+				PROVISIONING_PROFILE = "";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -556,13 +581,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
 				INFOPLIST_FILE = "PushNotificationsTesterAppTests/Supporting Files/PushNotificationsTesterAppTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.company-identifier.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterAppTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -573,13 +599,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
 				INFOPLIST_FILE = "PushNotificationsTesterAppTests/Supporting Files/PushNotificationsTesterAppTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.company-identifier.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterAppTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

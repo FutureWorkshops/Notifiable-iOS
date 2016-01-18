@@ -16,7 +16,6 @@
 		B7402BCD16C26CE70014570E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCC16C26CE70014570E /* CoreGraphics.framework */; };
 		B7402BD316C26CE70014570E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7402BD116C26CE70014570E /* InfoPlist.strings */; };
 		B7402BD516C26CE70014570E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B7402BD416C26CE70014570E /* main.m */; };
-		B7402BE716C26CE70014570E /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BE616C26CE70014570E /* SenTestingKit.framework */; };
 		B7402BE816C26CE70014570E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BC816C26CE70014570E /* UIKit.framework */; };
 		B7402BE916C26CE70014570E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCA16C26CE70014570E /* Foundation.framework */; };
 		B7402BF116C26CE70014570E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7402BEF16C26CE70014570E /* InfoPlist.strings */; };
@@ -54,8 +53,7 @@
 		B7402BD216C26CE70014570E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B7402BD416C26CE70014570E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B7402BD616C26CE70014570E /* PushNotificationsTesterApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PushNotificationsTesterApp-Prefix.pch"; sourceTree = "<group>"; };
-		B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PushNotificationsTesterAppTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7402BE616C26CE70014570E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PushNotificationsTesterAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7402BEE16C26CE70014570E /* PushNotificationsTesterAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PushNotificationsTesterAppTests-Info.plist"; sourceTree = "<group>"; };
 		B7402BF016C26CE70014570E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B7402BFD16C26ED80014570E /* PushNotificationsTesterAppTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotificationsTesterAppTests.h; sourceTree = "<group>"; };
@@ -84,7 +82,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7402BE716C26CE70014570E /* SenTestingKit.framework in Frameworks */,
 				B7402BE816C26CE70014570E /* UIKit.framework in Frameworks */,
 				B7402BE916C26CE70014570E /* Foundation.framework in Frameworks */,
 			);
@@ -109,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				B7402BC416C26CE70014570E /* PushNotificationsTesterApp.app */,
-				B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */,
+				B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,7 +117,6 @@
 				B7402BC816C26CE70014570E /* UIKit.framework */,
 				B7402BCA16C26CE70014570E /* Foundation.framework */,
 				B7402BCC16C26CE70014570E /* CoreGraphics.framework */,
-				B7402BE616C26CE70014570E /* SenTestingKit.framework */,
 				0F32EEF152A833F2195D1AD2 /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -222,7 +218,6 @@
 				B7402BE016C26CE70014570E /* Sources */,
 				B7402BE116C26CE70014570E /* Frameworks */,
 				B7402BE216C26CE70014570E /* Resources */,
-				B7402BE316C26CE70014570E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -231,8 +226,8 @@
 			);
 			name = PushNotificationsTesterAppTests;
 			productName = PushNotificationsTesterAppTests;
-			productReference = B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = B7402BE516C26CE70014570E /* PushNotificationsTesterAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -351,19 +346,6 @@
 			shellPath = /bin/sh;
 			shellScript = "LOG=\"$CONFIGURATION_BUILD_DIR/env.log\"\n[ -d `dirname $LOG` ] || mkdir -p `dirname $LOG`\n/bin/rm -f $LOG\necho >> $LOG\necho \"CODE_SIGN_IDENTITY: $CODE_SIGN_IDENTITY\" >> $LOG\necho \"WRAPPER_NAME: $WRAPPER_NAME\" >> $LOG\necho \"PRODUCT_NAME: $PRODUCT_NAME\" >> $LOG\necho \"ARCHIVE_PATH: $ARCHIVE_PATH\" >> $LOG\necho \"ARCHIVE_DSYMS_PATH: $ARCHIVE_DSYMS_PATH\" >> $LOG\necho \"ARCHIVE_PRODUCTS_PATH: $ARCHIVE_PRODUCTS_PATH\" >> $LOG\necho \"DWARF_DSYM_FILE_NAME: $DWARF_DSYM_FILE_NAME\" >> $LOG\necho \"INSTALL_PATH: $INSTALL_PATH\" >> $LOG\n";
 		};
-		B7402BE316C26CE70014570E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -473,6 +455,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
@@ -480,7 +463,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.company-identifier.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterAppTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Testing;
 		};
@@ -589,6 +571,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
@@ -596,7 +579,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.company-identifier.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterAppTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -607,6 +589,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PushNotificationsTesterApp/Supporting Files/PushNotificationsTesterApp-Prefix.pch";
@@ -614,7 +597,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.company-identifier.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = PushNotificationsTesterAppTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

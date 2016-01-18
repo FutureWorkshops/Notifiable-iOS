@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
 
-  s.name         = "Notifiable"
+  s.name         = "FWTNotifiable"
   s.version      = "0.0.13"
   s.platform     = :ios, '8.0'
   s.summary      = "Utility classes to integrate with Notifiable-Rails gem"
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Apache License Version 2.0', :file => 'LICENSE' }
   s.author       = { "Daniel Phillips" => "daniel@futureworkshops.com" }
 
-  s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => "0.0.13" }
+  s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => s.version.to_s }
 
   s.source_files  = 'Notifiable-iOS/**/*.{h,m}'
   s.public_header_files = 'Notifiable-iOS/FWTNotifiableManager.h'

@@ -24,6 +24,9 @@
                                                     accessId:@"WyvxpyG9yuuj4kiZUsv6"
                                                 andSecretKey:@"chEAmSqR1f9MumaRsd1oTIsibeJBcmrw213mHULEntK4WsUytgX3gPCmGM+hgUGcyBjikE7m2BQ6B3KqB7DoSg=="];
     
+    FWViewController *rootController = [self getMainController];
+    rootController.notifiableManager = self.manager;
+    
     UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge
                                                                                          categories:nil];
     [application registerUserNotificationSettings:notificationSettings];

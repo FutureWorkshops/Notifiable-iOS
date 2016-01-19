@@ -49,7 +49,7 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
                               withParams:(NSDictionary *)params
                        completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
-- (void)unregisterToken:(NSData *)deviceToken
+- (void)unregisterToken:(NSNumber *)tokenId
               userAlias:(NSString * _Nullable)userAlias
       completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 

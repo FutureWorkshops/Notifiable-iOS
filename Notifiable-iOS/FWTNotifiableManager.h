@@ -36,6 +36,10 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
 /** Current device. If the device is not registered, it will be nil. */
 @property (nonatomic, strong, readonly, nullable) FWTNotifiableDevice *currentDevice;
 
+/**
+ Checks if the user have allowed the application to use push notifications with a specific UIUserNotificationType
+ @param types   Notification setting that is expected to be registered
+*/
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 
 - (instancetype)init NS_UNAVAILABLE;

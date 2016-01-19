@@ -59,7 +59,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                        parameters:params
                          progress:nil
                           success:[self _defaultSuccessHandler:success]
-                          failure:[self _defaultFailureHandler:failure]];
+                          failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 - (void)updateDeviceWithTokenId:(NSNumber *)tokenId
@@ -72,15 +72,15 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     [self.httpSessionManager PUT:path
                       parameters:params
                          success:[self _defaultSuccessHandler:success]
-                         failure:[self _defaultFailureHandler:failure]];
+                         failure:[self _defaultFailureHandler:failure success:success]];
 }
 
-- (void)unregisterToken:(NSString *)token
+- (void)unregisterToken:(NSNumber *)tokenId
               userAlias:(NSString *)userAlias
                 success:(FWTRequestManagerSuccessBlock)success
                 failure:(FWTRequestManagerFailureBlock)failure
 {
-    NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, token];
+    NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, tokenId];
     if (userAlias) {
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
         path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -89,7 +89,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     [self.httpSessionManager DELETE:path
                          parameters:nil
                             success:[self _defaultSuccessHandler:success]
-                            failure:[self _defaultFailureHandler:failure]];
+                            failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 - (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
@@ -100,7 +100,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     [self.httpSessionManager PUT:FWTNotificationOpenPath
                       parameters:params
                          success:[self _defaultSuccessHandler:success]
-                         failure:[self _defaultFailureHandler:failure]];
+                         failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 - (void)listDevicesOfUser:(NSString *)userAlias
@@ -118,7 +118,9 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
         } else {
             success(@[]);
         }
-    } failure:[self _defaultFailureHandler:failure]];
+    } failure:[self _defaultFailureHandler:failure success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
+        success(@[]);
+    }]];
 }
 
 #pragma mark - Private Methods
@@ -133,11 +135,17 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     };
 }
 
-- (FWTAFNetworkingFailureBlock) _defaultFailureHandler:(FWTRequestManagerFailureBlock)failure
+- (FWTAFNetworkingFailureBlock) _defaultFailureHandler:(FWTRequestManagerFailureBlock)failure success:(FWTRequestManagerSuccessBlock)success
 {
     return ^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSHTTPURLResponse* response = (NSHTTPURLResponse*)task.response;
-        failure(response.statusCode, error);
+        if (response.statusCode == 200) {
+            if (success) {
+                success(nil);
+            }
+        } else if(failure) {
+            failure(response.statusCode, error);
+        }
     };
 }
 

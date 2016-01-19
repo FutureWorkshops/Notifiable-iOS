@@ -82,11 +82,11 @@ NSString * const FWTNotifiableProvider          = @"apns";
           previousError:nil completionHandler:handler];
 }
 
-- (void)unregisterToken:(NSData *)deviceToken
+- (void)unregisterToken:(NSNumber *)deviceTokenId
               userAlias:(NSString *)userAlias
       completionHandler:(FWTSimpleRequestResponse)handler
 {
-    [self _unregisterToken:deviceToken
+    [self _unregisterToken:deviceTokenId
                  userAlias:userAlias
               withAttempts:self.retryAttempts
              previousError:nil
@@ -285,7 +285,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
 }
 
 
-- (void)_unregisterToken:(NSData *)deviceToken
+- (void)_unregisterToken:(NSNumber *)deviceTokenId
                userAlias:(NSString *)userAlias
             withAttempts:(NSUInteger)attempts
            previousError:(NSError *)error
@@ -300,7 +300,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
         return;
     }
     
-    if(!deviceToken){
+    if(!deviceTokenId){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
@@ -309,22 +309,10 @@ NSString * const FWTNotifiableProvider          = @"apns";
         return;
     }
     
-    NSString *token = [deviceToken fwt_notificationTokenString];
-    
     __weak typeof(self) weakSelf = self;
-    [self.requester unregisterToken:token userAlias:userAlias success:^(NSDictionary * _Nullable response) {
+    [self.requester unregisterToken:deviceTokenId userAlias:userAlias success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
-        if (response == nil) {
-            [sself _unregisterToken:deviceToken
-                          userAlias:userAlias
-                       withAttempts:(attempts - 1)
-                      previousError:error
-                  completionHandler:handler];
-            return;
-        }
-        
         [sself.logger logMessage:@"Did unregister for push notifications"];
-        
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(YES, nil);
@@ -336,7 +324,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [weakSelf _unregisterToken:deviceToken
+            [weakSelf _unregisterToken:deviceTokenId
                              userAlias:userAlias
                           withAttempts:(attempts - 1)
                          previousError:error

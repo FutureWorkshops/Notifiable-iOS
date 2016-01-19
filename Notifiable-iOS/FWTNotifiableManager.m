@@ -43,23 +43,29 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
 
 - (FWTNotifiableDevice *)currentDevice
 {
-    if (!self->_currentDevice) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        self->_currentDevice = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    @synchronized(self) {
+        if (!self->_currentDevice) {
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            NSData *deviceData = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+            self->_currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
+        }
+        return self->_currentDevice;
     }
-    return self->_currentDevice;
 }
 
 - (void)setCurrentDevice:(FWTNotifiableDevice *)currentDevice
 {
-    self->_currentDevice = currentDevice;
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    if (self->_currentDevice) {
-        [ud setObject:self->_currentDevice forKey:FWTUserInfoNotifiableCurrentDeviceKey];
-    } else {
-        [ud removeObjectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    @synchronized(self) {
+        self->_currentDevice = currentDevice;
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        if (self->_currentDevice) {
+            NSData *deviceData = [NSKeyedArchiver archivedDataWithRootObject:self->_currentDevice];
+            [ud setObject:deviceData forKey:FWTUserInfoNotifiableCurrentDeviceKey];
+        } else {
+            [ud removeObjectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+        }
+        [ud synchronize];
     }
-    [ud synchronize];
 }
 
 - (NSInteger)retryAttempts
@@ -305,9 +311,15 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
 {
     NSAssert(self.currentDevice.token, @"This device is not registered.");
     
-    [self.requestManager unregisterToken:self.currentDevice.token
+    __weak typeof(self) weakSelf = self;
+    [self.requestManager unregisterToken:self.currentDevice.tokenId
                                userAlias:self.currentDevice.user
-                       completionHandler:handler];
+                       completionHandler:^(BOOL success, NSError * _Nullable error) {
+                           if (success) {
+                               weakSelf.currentDevice = nil;
+                           }
+                           handler(success, error);
+                       }];
 }
 
 - (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo

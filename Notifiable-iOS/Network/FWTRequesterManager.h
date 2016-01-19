@@ -30,6 +30,7 @@ typedef void (^FWTDeviceTokenIdResponse)(NSNumber * _Nullable deviceTokenId, NSE
 
 - (void)registerDeviceWithUserAlias:(NSString * _Nullable)userAlias
                               token:(NSData *)token
+                               name:(NSString * _Nullable)name
                              locale:(NSLocale * _Nullable)locale
                   deviceInformation:(NSDictionary * _Nullable)deviceInformation
                   completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;
@@ -37,6 +38,7 @@ typedef void (^FWTDeviceTokenIdResponse)(NSNumber * _Nullable deviceTokenId, NSE
 - (void)updateDevice:(NSNumber *)deviceTokenId
        withUserAlias:(NSString * _Nullable)alias
                token:(NSData * _Nullable)token
+                name:(NSString * _Nullable)name
               locale:(NSLocale * _Nullable)locale
    deviceInformation:(NSDictionary * _Nullable)deviceInformation
    completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;

@@ -11,16 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, FWTNotifiableLogLevel) {
-    FWTNotifiableLogLevelNone,
-    FWTNotifiableLogLevelInfo,
-    FWTNotifiableLogLevelError
-};
-
 extern NSString * const FWTNotifiableDidRegisterWithAPNSNotification;
 extern NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification;
 
 typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * _Nullable error);
+
+@protocol FWTNotifiableLogger;
 
 /**
  The FWTNotifiableManager is the interface between the iOS application and a Notifiable-Rails gem server
@@ -36,7 +32,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 /** Delay between retries  */
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 /** Level of the informations that will be logged by the manager */
-@property (nonatomic, assign) FWTNotifiableLogLevel debugLevel;
+@property (nonatomic, assign) id<FWTNotifiableLogger> logger;
 /** Token associated with the current device  */
 @property (nonatomic, readonly) NSData *deviceToken;
 
@@ -57,7 +53,7 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 */
 - (instancetype)initWithUrl:(NSString *)url
                    accessId:(NSString *)accessId
-               andSecretKey:(NSString *)secretKey;
+               andSecretKey:(NSString *)secretKey NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Register Anonymous device
 /**

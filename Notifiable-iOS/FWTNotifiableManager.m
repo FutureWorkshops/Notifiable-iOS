@@ -11,22 +11,20 @@
 #import "FWTHTTPRequester.h"
 #import "FWTNotifiableAuthenticator.h"
 #import "FWTRequesterManager.h"
+#import "FWTNotifiableDevice+Private.h"
 
-NSString * const FWTUserInfoNotifiableTokenKey          = @"FWTNotifiableTokenKey";
-NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
+NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 
 @interface FWTNotifiableManager ()
 
 @property (nonatomic, strong) FWTRequesterManager *requestManager;
-@property (nonatomic, readwrite, strong) NSData *deviceToken;
-@property (nonatomic, readwrite, strong) NSNumber *deviceTokenId;
+@property (nonatomic, strong, readwrite, nullable) FWTNotifiableDevice *currentDevice;
 
 @end
 
 @implementation FWTNotifiableManager
 
-@synthesize deviceToken = _deviceToken;
-@synthesize deviceTokenId = _deviceTokenId;
+@synthesize currentDevice = _currentDevice;
 
 - (instancetype)initWithUrl:(NSString *)url
                    accessId:(NSString *)accessId
@@ -42,48 +40,25 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
     return self;
 }
 
-- (NSData *)deviceToken
+- (FWTNotifiableDevice *)currentDevice
 {
-    if(!self->_deviceToken){
-        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        self->_deviceToken = [ud objectForKey:FWTUserInfoNotifiableTokenKey];
+    if (!self->_currentDevice) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        self->_currentDevice = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
     }
-    
-    return self->_deviceToken;
+    return self->_currentDevice;
 }
 
-- (void)setDeviceToken:(NSData *)deviceToken
+- (void)setCurrentDevice:(FWTNotifiableDevice *)currentDevice
 {
-    self->_deviceToken = deviceToken;
-    
+    self->_currentDevice = currentDevice;
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    if (deviceToken) {
-        [ud setObject:deviceToken forKey:FWTUserInfoNotifiableTokenKey];
+    if (self->_currentDevice) {
+        [ud setObject:self->_currentDevice forKey:FWTUserInfoNotifiableCurrentDeviceKey];
     } else {
-        [ud removeObjectForKey:FWTUserInfoNotifiableTokenKey];
+        [ud removeObjectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
     }
-}
-
-- (NSNumber *)deviceTokenId
-{
-    if(!self->_deviceTokenId){
-        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        self->_deviceTokenId = [ud objectForKey:FWTUserInfoNotifiableTokenIdKey];
-    }
-    
-    return self->_deviceTokenId;
-}
-
-- (void)setDeviceTokenId:(NSNumber *)deviceTokenId
-{
-    self->_deviceTokenId = deviceTokenId;
-    
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    if (deviceTokenId) {
-        [ud setObject:deviceTokenId forKey:FWTUserInfoNotifiableTokenIdKey];
-    } else {
-        [ud removeObjectForKey:FWTUserInfoNotifiableTokenIdKey];
-    }
+    [ud synchronize];
 }
 
 - (NSInteger)retryAttempts
@@ -161,7 +136,7 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 {
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     
-    if (self.deviceTokenId) {
+    if (self.currentDevice.tokenId) {
         [self updateDeviceToken:token
                      deviceName:nil
                        location:locale
@@ -173,7 +148,7 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
                                                     name:name
                                                   locale:locale
                                        deviceInformation:deviceInformation
-                                       completionHandler:[self _defaultRegisterResponseWithToken:token completionHandler:handler]];
+                                       completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:handler]];
     }
 }
 
@@ -209,7 +184,7 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     NSAssert(userAlias.length > 0, @"To register a non anonymous device, a user alias need to be provided!");
     
-    if (self.deviceTokenId) {
+    if (self.currentDevice.tokenId) {
         [self updateDeviceToken:token
                      deviceName:nil
                       userAlias:userAlias
@@ -217,19 +192,25 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
               deviceInformation:deviceInformation
               completionHandler:handler];
     } else {
+        __weak typeof(self) weakSelf = self;
         [self.requestManager registerDeviceWithUserAlias:userAlias
                                                    token:token
                                                     name:name
                                                   locale:locale
                                        deviceInformation:deviceInformation
-                                       completionHandler:[self _defaultRegisterResponseWithToken:token completionHandler:handler]];
+                                       completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:^(BOOL success, NSError * _Nullable error) {
+            if (success) {
+                __strong typeof(weakSelf) sself = weakSelf;
+                sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
+            }
+        }]];
     }
 }
 
 - (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:nil
-                 deviceName:nil
+                 deviceName:self.currentDevice.name
                    location:locale
           deviceInformation:nil
           completionHandler:handler];
@@ -238,7 +219,7 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 - (void)updateDeviceToken:(NSData *)token completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
-                 deviceName:nil
+                 deviceName:self.currentDevice.name
                    location:nil
           deviceInformation:nil
           completionHandler:handler];
@@ -247,7 +228,7 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 - (void)updateDeviceToken:(NSData *)token andLocation:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
-                 deviceName:nil
+                 deviceName:self.currentDevice.name
                    location:locale
           deviceInformation:nil
           completionHandler:handler];
@@ -285,20 +266,26 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     NSAssert(token != nil || userAlias != nil || locale != nil || deviceInformation != nil, @"The update method was called without any information to update.");
-    NSAssert(self.deviceToken != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:deviceInformation:completionHandler: instead");
+    NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:deviceInformation:completionHandler: instead");
     
-    [self.requestManager updateDevice:self.deviceTokenId
+    __weak typeof(self) weakSelf = self;
+    [self.requestManager updateDevice:self.currentDevice.tokenId
                         withUserAlias:userAlias
                                 token:token
                                  name:name
                                locale:locale
                     deviceInformation:deviceInformation
-                    completionHandler:[self _defaultRegisterResponseWithToken:token completionHandler:handler]];
+                    completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if (success && userAlias != nil) {
+            __strong typeof(weakSelf) sself = weakSelf;
+            sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
+        }
+    }]];
 }
 
 -(void)anonymiseTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self registerAnonymousToken:self.deviceToken
+    [self registerAnonymousToken:self.currentDevice.token
                completionHandler:handler];
 }
 
@@ -306,18 +293,18 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
             completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     NSAssert(userAlias.length > 0, @"To associate a device, a user alias need to be provided");
-    NSAssert(self.deviceToken != nil, @"This device is not registered, please use the method registerToken:withUserAlias:completionHandler: instead.");
+    NSAssert(self.currentDevice.token != nil, @"This device is not registered, please use the method registerToken:withUserAlias:completionHandler: instead.");
     
-    [self registerToken:self.deviceToken
+    [self registerToken:self.currentDevice.token
           withUserAlias:userAlias
       completionHandler:handler];
 }
 
 - (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    NSAssert(self.deviceToken, @"This device is not registered.");
+    NSAssert(self.currentDevice.token, @"This device is not registered.");
     
-    [self.requestManager unregisterToken:self.deviceToken
+    [self.requestManager unregisterToken:self.currentDevice.token
                        completionHandler:handler];
 }
 
@@ -331,22 +318,26 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
     if(notificationID)
         requestParameters[@"notification_id"] = notificationID;
     
-    [self.requestManager markNotificationAsOpenedOnDevice:self.deviceToken
+    [self.requestManager markNotificationAsOpenedOnDevice:self.currentDevice.token
                                                withParams:requestParameters
                                           completionHandler:nil];
 }
 
 #pragma mark - Private
-- (FWTDeviceTokenIdResponse) _defaultRegisterResponseWithToken:(NSData *)token completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (FWTDeviceTokenIdResponse) _defaultRegisterResponseWithToken:(NSData *)token
+                                                          name:(NSString *)name
+                                             completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     __weak typeof(self) weakSelf = self;
     return ^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
         if (error == nil) {
             __strong typeof(weakSelf) sself = weakSelf;
-            sself.deviceTokenId = deviceTokenId;
-            if (token) {
-                sself.deviceToken = token;
+            if (sself.currentDevice == nil) {
+                sself.currentDevice = [[FWTNotifiableDevice alloc] initWithToken:token tokenId:deviceTokenId];
+            } else {
+                sself.currentDevice = [sself.currentDevice deviceWithToken:token];
             }
+            sself.currentDevice = [sself.currentDevice deviceWithName:name];
         }
         if (handler) {
             handler(error == nil, error);

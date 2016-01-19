@@ -17,6 +17,7 @@ extern NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification;
 typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * _Nullable error);
 
 @protocol FWTNotifiableLogger;
+@class FWTNotifiableDevice;
 
 /**
  The FWTNotifiableManager is the interface between the iOS application and a Notifiable-Rails gem server
@@ -31,6 +32,8 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 /** Level of the informations that will be logged by the manager */
 @property (nonatomic, strong) id<FWTNotifiableLogger> logger;
+/** Current device. If the device is not registered, it will be nil. */
+@property (nonatomic, strong, readonly, nullable) FWTNotifiableDevice *currentDevice;
 
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 

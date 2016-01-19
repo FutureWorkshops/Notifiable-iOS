@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSInteger const FWTInvalidOperationError;
 NSInteger const FWTUserAliasMissingError;
 NSInteger const FWTForbiddenError;
@@ -21,3 +23,5 @@ NSInteger const FWTForbiddenError;
 + (instancetype) fwt_forbiddenErrorWithUnderlyingError:(NSError * _Nullable)underlyingError;
 
 @end
+
+NS_ASSUME_NONNULL_END

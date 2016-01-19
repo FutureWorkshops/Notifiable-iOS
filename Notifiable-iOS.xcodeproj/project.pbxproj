@@ -107,6 +107,7 @@
 		7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTNotifiableAuthenticator.m; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.m"; sourceTree = SOURCE_ROOT; };
 		78843C661C4E55360044CE25 /* FWTRequesterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTRequesterManager.h; path = "Notifiable-iOS/Network/FWTRequesterManager.h"; sourceTree = SOURCE_ROOT; };
 		78843C671C4E55360044CE25 /* FWTRequesterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTRequesterManager.m; path = "Notifiable-iOS/Network/FWTRequesterManager.m"; sourceTree = SOURCE_ROOT; };
+		78843C6B1C4E657B0044CE25 /* FWTNotifiableLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTNotifiableLogger.h"; sourceTree = SOURCE_ROOT; };
 		78CC4C421C47E62A0048A3A2 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Framework/module.modulemap; sourceTree = SOURCE_ROOT; };
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -232,6 +233,14 @@
 			name = Security;
 			sourceTree = "<group>";
 		};
+		78843C6A1C4E65610044CE25 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				78843C6B1C4E657B0044CE25 /* FWTNotifiableLogger.h */,
+			);
+			name = Logger;
+			sourceTree = "<group>";
+		};
 		8E4119C017E9B9D1000CD6F3 = {
 			isa = PBXGroup;
 			children = (
@@ -264,6 +273,7 @@
 		8E4119CE17E9B9D1000CD6F3 /* Notifiable-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				78843C6A1C4E65610044CE25 /* Logger */,
 				7837C7BB1C4D637E007B2F61 /* Category */,
 				7879F7231C49546900C6176C /* Security */,
 				7879F6ED1C494EED00C6176C /* AFNetworking */,

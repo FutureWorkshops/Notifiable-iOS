@@ -12,6 +12,8 @@
 #import "FWTNotifiableAuthenticator.h"
 #import "NSData+FWTNotifiable.h"
 #import "NSError+FWTNotifiable.h"
+#import "FWTRequesterManager.h"
+#import "FWTNotifiableLogger.h"
 
 NSString * const FWTNotifiableUserInfoKey       = @"user";
 NSString * const FWTNotifiableDeviceTokenKey    = @"token";
@@ -48,7 +50,6 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
         self->_requestManager = [[FWTHTTPRequester alloc] initWithBaseUrl:url andAuthenticator:authenticator];
         self->_retryAttempts = 5;
         self->_retryDelay = 60;
-        self->_debugLevel = FWTNotifiableLogLevelError;
     }
     return self;
 }
@@ -327,9 +328,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
                               completionHandler:handler];
             return;
         }
-        
-        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
-            NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
+        NSLog(@"Did register for push notifications with token: %@", self.deviceToken);
         
         sself.deviceTokenId = response[@"id"];
         
@@ -339,8 +338,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
             });
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        if(weakSelf.debugLevel <= FWTNotifiableLogLevelError)
-            NSLog(@"Failed to register device token: %@", error);
+        NSLog(@"Failed to register device token: %@", error);
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -398,8 +396,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
                               completionHandler:handler];
             return;
         }
-        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
-            NSLog(@"Did update device with deviceTokenId: %@", self.deviceTokenId);
+        NSLog(@"Did update device with deviceTokenId: %@", self.deviceTokenId);
         
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -409,8 +406,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         
         __strong typeof(weakSelf) sself = weakSelf;
-        if(sself.debugLevel <= FWTNotifiableLogLevelError)
-            NSLog(@"Failed to update device with deviceTokenId %@: %@", sself.deviceTokenId, error);
+        NSLog(@"Failed to update device with deviceTokenId %@: %@", sself.deviceTokenId, error);
         
         if (responseCode == 404)
             sself.deviceTokenId = nil;
@@ -459,8 +455,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
             return;
         }
         
-        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
-            NSLog(@"Did unregister for push notifications");
+        NSLog(@"Did unregister for push notifications");
         
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -469,8 +464,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
         }
         
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        if(weakSelf.debugLevel <= FWTNotifiableLogLevelError)
-            NSLog(@"Failed to unregister for push notifications");
+        NSLog(@"Failed to unregister for push notifications");
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -496,12 +490,10 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
             [sself _markNotificationAsOpenedWithParams:params attempts:(attempts - 1)];
             return;
         }
-        if(sself.debugLevel == FWTNotifiableLogLevelInfo)
-            NSLog(@"Notification flagged as opened");
+        NSLog(@"Notification flagged as opened");
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         __strong typeof(weakSelf) sself = weakSelf;
-        if(sself.debugLevel <= FWTNotifiableLogLevelError)
-            NSLog(@"Failed to mark notification as opened");
+        NSLog(@"Failed to mark notification as opened");
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

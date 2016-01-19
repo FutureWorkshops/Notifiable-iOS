@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 NSInteger const FWTInvalidOperationError;
 NSInteger const FWTUserAliasMissingError;
 NSInteger const FWTForbiddenError;
+NSInteger const FWTInvalidDeviceInformationError;
 
 @interface NSError (FWTNotifiable)
 
@@ -21,6 +22,9 @@ NSInteger const FWTForbiddenError;
 + (instancetype) fwt_userAliasErrorWithUnderlyingError:(NSError * _Nullable)underlyingError;
 + (instancetype) fwt_invalidOperationErrorWithUnderlyingError:(NSError * _Nullable)underlyingError;
 + (instancetype) fwt_forbiddenErrorWithUnderlyingError:(NSError * _Nullable)underlyingError;
++ (instancetype) fwt_invalidDeviceInformationError:(NSError * _Nullable)underlyingError;
+
+- (NSString *) fwt_debugMessage;
 
 @end
 

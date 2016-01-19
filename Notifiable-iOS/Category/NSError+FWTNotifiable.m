@@ -13,6 +13,7 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
 NSInteger const FWTInvalidOperationError = -1001;
 NSInteger const FWTUserAliasMissingError = -1002;
 NSInteger const FWTForbiddenError = -1003;
+NSInteger const FWTInvalidDeviceInformationError = -1004;
 
 @implementation NSError (FWTNotifiable)
 
@@ -52,6 +53,13 @@ NSInteger const FWTForbiddenError = -1003;
                 andUnderlyingError:underlyingError];
 }
 
++ (instancetype) fwt_invalidDeviceInformationError:(NSError * _Nullable)underlyingError
+{
+    return [self fwt_errorWithCode:FWTInvalidDeviceInformationError
+                       description:@"Check the device token id and device token and try again."
+                andUnderlyingError:underlyingError];
+}
+
 #pragma mark - Private methods
 
 + (instancetype) fwt_errorWithCode:(NSInteger)code
@@ -63,6 +71,17 @@ NSInteger const FWTForbiddenError = -1003;
     return error;
 }
 
-
+- (NSString *)fwt_debugMessage
+{
+    NSString *message = self.debugDescription;
+    if (message == nil) {
+        message = self.localizedDescription;
+    }
+    
+    if (self.localizedFailureReason) {
+        message = [message stringByAppendingFormat:@"\n%@", self.localizedFailureReason];
+    }
+    return message;
+}
 
 @end

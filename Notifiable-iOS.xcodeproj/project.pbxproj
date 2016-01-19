@@ -29,6 +29,7 @@
 		7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */; };
 		78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C671C4E55360044CE25 /* FWTRequesterManager.m */; };
 		78843C6F1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C6E1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m */; };
+		78843C731C4E9B090044CE25 /* FWTNotifiableDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
 		8E4119DB17E9B9D1000CD6F3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */; };
 		8E4119DC17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
@@ -111,6 +112,8 @@
 		78843C6B1C4E657B0044CE25 /* FWTNotifiableLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTNotifiableLogger.h"; sourceTree = SOURCE_ROOT; };
 		78843C6D1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTDefaultNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTDefaultNotifiableLogger.h"; sourceTree = SOURCE_ROOT; };
 		78843C6E1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTDefaultNotifiableLogger.m; path = "Notifiable-iOS/Logger/FWTDefaultNotifiableLogger.m"; sourceTree = SOURCE_ROOT; };
+		78843C711C4E9B090044CE25 /* FWTNotifiableDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableDevice.h; path = "Notifiable-iOS/Model/FWTNotifiableDevice.h"; sourceTree = SOURCE_ROOT; };
+		78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTNotifiableDevice.m; path = "Notifiable-iOS/Model/FWTNotifiableDevice.m"; sourceTree = SOURCE_ROOT; };
 		78CC4C421C47E62A0048A3A2 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Framework/module.modulemap; sourceTree = SOURCE_ROOT; };
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -246,6 +249,15 @@
 			name = Logger;
 			sourceTree = "<group>";
 		};
+		78843C701C4E9AF00044CE25 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				78843C711C4E9B090044CE25 /* FWTNotifiableDevice.h */,
+				78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		8E4119C017E9B9D1000CD6F3 = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +290,7 @@
 		8E4119CE17E9B9D1000CD6F3 /* Notifiable-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				78843C701C4E9AF00044CE25 /* Model */,
 				78843C6A1C4E65610044CE25 /* Logger */,
 				7837C7BB1C4D637E007B2F61 /* Category */,
 				7879F7231C49546900C6176C /* Security */,
@@ -402,6 +415,7 @@
 			files = (
 				7879F7201C494EED00C6176C /* UIProgressView+AFNetworking.m in Sources */,
 				7879F7131C494EED00C6176C /* AFHTTPSessionManager.m in Sources */,
+				78843C731C4E9B090044CE25 /* FWTNotifiableDevice.m in Sources */,
 				7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */,
 				7879F7221C494EED00C6176C /* UIWebView+AFNetworking.m in Sources */,
 				7879F71F1C494EED00C6176C /* UIImageView+AFNetworking.m in Sources */,

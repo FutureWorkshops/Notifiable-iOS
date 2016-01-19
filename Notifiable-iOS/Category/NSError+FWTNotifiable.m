@@ -10,11 +10,6 @@
 
 static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNotifiable.error";
 
-NSInteger const FWTInvalidOperationError = -1001;
-NSInteger const FWTUserAliasMissingError = -1002;
-NSInteger const FWTForbiddenError = -1003;
-NSInteger const FWTInvalidDeviceInformationError = -1004;
-
 @implementation NSError (FWTNotifiable)
 
 + (instancetype) fwt_errorWithCode:(NSInteger)code
@@ -34,28 +29,28 @@ NSInteger const FWTInvalidDeviceInformationError = -1004;
 
 + (instancetype) fwt_userAliasErrorWithUnderlyingError:(NSError *)underlyingError
 {
-    return [self fwt_errorWithCode:FWTUserAliasMissingError
+    return [self fwt_errorWithCode:FWTErrorUserAliasMissing
                        description:@"To perform this operation, you need to inform the user alias."
                 andUnderlyingError:underlyingError];
 }
 
 + (instancetype) fwt_invalidOperationErrorWithUnderlyingError:(NSError *)underlyingError
 {
-    return [self fwt_errorWithCode:FWTUserAliasMissingError
+    return [self fwt_errorWithCode:FWTErrorInvalidOperation
                        description:@"Operation not available."
                 andUnderlyingError:underlyingError];
 }
 
 + (instancetype) fwt_forbiddenErrorWithUnderlyingError:(NSError *)underlyingError
 {
-    return [self fwt_errorWithCode:FWTUserAliasMissingError
+    return [self fwt_errorWithCode:FWTErrorForbidden
                        description:@"Check the access ID and secret Key and try again."
                 andUnderlyingError:underlyingError];
 }
 
 + (instancetype) fwt_invalidDeviceInformationError:(NSError * _Nullable)underlyingError
 {
-    return [self fwt_errorWithCode:FWTInvalidDeviceInformationError
+    return [self fwt_errorWithCode:FWTErrorInvalidDeviceInformation
                        description:@"Check the device token id and device token and try again."
                 andUnderlyingError:underlyingError];
 }

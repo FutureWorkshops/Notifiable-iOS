@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@import FWTNotifiable;
 
 @interface FWViewController : UIViewController
+
+@property (weak, nonatomic) FWTNotifiableManager *notifiableManager;
 
 @property (weak, nonatomic) IBOutlet UILabel *notificationOutputLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tokenLabel;

@@ -27,12 +27,6 @@
     self.pasteboardStatusLabel.text = @"";
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (IBAction)registerForPushNotifications:(id)sender {
 #if TARGET_IPHONE_SIMULATOR
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"You need to run this app on a real device." preferredStyle:UIAlertControllerStyleAlert];
@@ -42,6 +36,15 @@
 #else
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 #endif
+}
+
+- (IBAction)unregister:(id)sender {
+}
+
+- (IBAction)changeUser:(id)sender {
+}
+
+- (IBAction)toggleOnSite:(id)sender {
 }
 
 @end

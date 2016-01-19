@@ -15,7 +15,7 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
 
 @class FWTNotifiableAuthenticator;
 
-@interface FWTRequestManager : NSObject
+@interface FWTHTTPRequester : NSObject
 
 @property (nonatomic, readonly, strong) NSURL* baseUrl;
 

@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */; };
 		7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
-		7879F6EC1C494D8E00C6176C /* FWTRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTRequestManager.m */; };
+		7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
+		7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */; };
 		7879F7131C494EED00C6176C /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6F01C494EED00C6176C /* AFHTTPSessionManager.m */; };
 		7879F7141C494EED00C6176C /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6F31C494EED00C6176C /* AFNetworkReachabilityManager.m */; };
 		7879F7151C494EED00C6176C /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6F51C494EED00C6176C /* AFSecurityPolicy.m */; };
@@ -26,6 +27,7 @@
 		7879F7211C494EED00C6176C /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7101C494EED00C6176C /* UIRefreshControl+AFNetworking.m */; };
 		7879F7221C494EED00C6176C /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7121C494EED00C6176C /* UIWebView+AFNetworking.m */; };
 		7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */; };
+		78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C671C4E55360044CE25 /* FWTRequesterManager.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
 		8E4119DB17E9B9D1000CD6F3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */; };
 		8E4119DC17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
@@ -62,8 +64,10 @@
 		65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTNotifiableManager.m; path = "Notifiable-iOS/FWTNotifiableManager.m"; sourceTree = SOURCE_ROOT; };
 		7837C7BC1C4D63A4007B2F61 /* NSData+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
 		7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
-		7879F6EA1C494D8E00C6176C /* FWTRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTRequestManager.h; path = "Notifiable-iOS/Network/FWTRequestManager.h"; sourceTree = SOURCE_ROOT; };
-		7879F6EB1C494D8E00C6176C /* FWTRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTRequestManager.m; path = "Notifiable-iOS/Network/FWTRequestManager.m"; sourceTree = SOURCE_ROOT; };
+		7837C7BF1C4D7258007B2F61 /* NSError+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSError+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
+		7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSError+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
+		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
+		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; };
 		7879F6EF1C494EED00C6176C /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		7879F6F01C494EED00C6176C /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
 		7879F6F11C494EED00C6176C /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
@@ -101,6 +105,8 @@
 		7879F7121C494EED00C6176C /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
 		7879F7241C49549400C6176C /* FWTNotifiableAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableAuthenticator.h; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.h"; sourceTree = SOURCE_ROOT; };
 		7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTNotifiableAuthenticator.m; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.m"; sourceTree = SOURCE_ROOT; };
+		78843C661C4E55360044CE25 /* FWTRequesterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTRequesterManager.h; path = "Notifiable-iOS/Network/FWTRequesterManager.h"; sourceTree = SOURCE_ROOT; };
+		78843C671C4E55360044CE25 /* FWTRequesterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTRequesterManager.m; path = "Notifiable-iOS/Network/FWTRequesterManager.m"; sourceTree = SOURCE_ROOT; };
 		78CC4C421C47E62A0048A3A2 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Framework/module.modulemap; sourceTree = SOURCE_ROOT; };
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,6 +147,8 @@
 			children = (
 				7837C7BC1C4D63A4007B2F61 /* NSData+FWTNotifiable.h */,
 				7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */,
+				7837C7BF1C4D7258007B2F61 /* NSError+FWTNotifiable.h */,
+				7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -148,8 +156,10 @@
 		7879F6E91C494CF000C6176C /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				7879F6EA1C494D8E00C6176C /* FWTRequestManager.h */,
-				7879F6EB1C494D8E00C6176C /* FWTRequestManager.m */,
+				78843C661C4E55360044CE25 /* FWTRequesterManager.h */,
+				78843C671C4E55360044CE25 /* FWTRequesterManager.m */,
+				7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */,
+				7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -377,6 +387,7 @@
 			files = (
 				7879F7201C494EED00C6176C /* UIProgressView+AFNetworking.m in Sources */,
 				7879F7131C494EED00C6176C /* AFHTTPSessionManager.m in Sources */,
+				7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */,
 				7879F7221C494EED00C6176C /* UIWebView+AFNetworking.m in Sources */,
 				7879F71F1C494EED00C6176C /* UIImageView+AFNetworking.m in Sources */,
 				7879F7181C494EED00C6176C /* AFURLSessionManager.m in Sources */,
@@ -387,11 +398,12 @@
 				7879F7161C494EED00C6176C /* AFURLRequestSerialization.m in Sources */,
 				7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */,
 				7879F71A1C494EED00C6176C /* AFAutoPurgingImageCache.m in Sources */,
+				78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */,
 				7879F7141C494EED00C6176C /* AFNetworkReachabilityManager.m in Sources */,
 				7879F71C1C494EED00C6176C /* AFNetworkActivityIndicatorManager.m in Sources */,
 				7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */,
 				7879F7171C494EED00C6176C /* AFURLResponseSerialization.m in Sources */,
-				7879F6EC1C494D8E00C6176C /* FWTRequestManager.m in Sources */,
+				7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */,
 				7879F71B1C494EED00C6176C /* AFImageDownloader.m in Sources */,
 				7879F71D1C494EED00C6176C /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 			);

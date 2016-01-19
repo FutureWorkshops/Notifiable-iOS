@@ -8,9 +8,10 @@
 
 #import "FWTNotifiableManager.h"
 
-#import "FWTRequestManager.h"
+#import "FWTHTTPRequester.h"
 #import "FWTNotifiableAuthenticator.h"
 #import "NSData+FWTNotifiable.h"
+#import "NSError+FWTNotifiable.h"
 
 NSString * const FWTNotifiableUserInfoKey       = @"user";
 NSString * const FWTNotifiableDeviceTokenKey    = @"token";
@@ -27,7 +28,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
 
 @property (nonatomic, readwrite, strong) NSData *deviceToken;
 @property (nonatomic, readwrite, strong) NSNumber *deviceTokenId;
-@property (nonatomic, strong) FWTRequestManager *requestManager;
+@property (nonatomic, strong) FWTHTTPRequester *requestManager;
 
 @end
 
@@ -44,7 +45,7 @@ NSString * const FWTNotifiableTokenIdKey        = @"FWTNotifiableTokenIdKey";
     if (self) {
         FWTNotifiableAuthenticator *authenticator = [[FWTNotifiableAuthenticator alloc] initWithAccessId:accessId
                                                                                             andSecretKey:secretKey];
-        self->_requestManager = [[FWTRequestManager alloc] initWithBaseUrl:url andAuthenticator:authenticator];
+        self->_requestManager = [[FWTHTTPRequester alloc] initWithBaseUrl:url andAuthenticator:authenticator];
         self->_retryAttempts = 5;
         self->_retryDelay = 60;
         self->_debugLevel = FWTNotifiableLogLevelError;

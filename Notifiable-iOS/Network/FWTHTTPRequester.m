@@ -6,9 +6,10 @@
 //  Copyright © 2016 Future Workshops. All rights reserved.
 //
 
-#import "FWTRequestManager.h"
+#import "FWTHTTPRequester.h"
 #import "AFNetworking.h"
 #import "FWTNotifiableAuthenticator.h"
+#import "NSError+FWTNotifiable.h"
 
 typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
 typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
@@ -16,14 +17,14 @@ typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task
 NSString * const FWTDeviceTokensPath = @"user_api/v1/device_tokens";
 NSString * const FWTNotificationOpenPath = @"user_api/v1/notification_statuses/opened";
 
-@interface FWTRequestManager ()
+@interface FWTHTTPRequester ()
 
 @property (nonatomic, strong) AFHTTPSessionManager *httpSessionManager;
 @property (nonatomic, strong) FWTNotifiableAuthenticator *authenticator;
 
 @end
 
-@implementation FWTRequestManager
+@implementation FWTHTTPRequester
 
 - (instancetype)initWithBaseUrl:(NSString*)baseUrl
                andAuthenticator:(FWTNotifiableAuthenticator*)authenticator
@@ -124,5 +125,19 @@ NSString * const FWTNotificationOpenPath = @"user_api/v1/notification_statuses/o
     }
 }
 
+- (NSError *) _errorForStatusCode:(NSInteger)statusCode withUnderlyingError:(NSError *)underlyingError
+{
+    switch (statusCode) {
+        case 401:
+            return [NSError fwt_userAliasErrorWithUnderlyingError:underlyingError];
+        case 403:
+            return [NSError fwt_forbiddenErrorWithUnderlyingError:underlyingError];
+        case 404:
+            return [NSError fwt_invalidOperationErrorWithUnderlyingError:underlyingError];
+        default:
+            return underlyingError;
+            break;
+    }
+}
 
 @end

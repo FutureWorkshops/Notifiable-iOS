@@ -31,6 +31,7 @@
 		78843C6F1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C6E1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m */; };
 		78843C731C4E9B090044CE25 /* FWTNotifiableDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */; };
 		78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */; };
+		78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
 		8E4119DB17E9B9D1000CD6F3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */; };
 		8E4119DC17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
@@ -117,6 +118,8 @@
 		78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTNotifiableDevice.m; path = "Notifiable-iOS/Model/FWTNotifiableDevice.m"; sourceTree = SOURCE_ROOT; };
 		78843C771C4E9D130044CE25 /* FWTNotifiableDevice+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FWTNotifiableDevice+Private.h"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Private.h"; sourceTree = SOURCE_ROOT; };
 		78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "FWTNotifiableDevice+Private.m"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Private.m"; sourceTree = SOURCE_ROOT; };
+		78843C831C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FWTNotifiableDevice+Parser.h"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Parser.h"; sourceTree = SOURCE_ROOT; };
+		78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "FWTNotifiableDevice+Parser.m"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Parser.m"; sourceTree = SOURCE_ROOT; };
 		78CC4C421C47E62A0048A3A2 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Framework/module.modulemap; sourceTree = SOURCE_ROOT; };
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -259,6 +262,8 @@
 				78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */,
 				78843C771C4E9D130044CE25 /* FWTNotifiableDevice+Private.h */,
 				78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */,
+				78843C831C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.h */,
+				78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -422,6 +427,7 @@
 				7879F7131C494EED00C6176C /* AFHTTPSessionManager.m in Sources */,
 				78843C731C4E9B090044CE25 /* FWTNotifiableDevice.m in Sources */,
 				7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */,
+				78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */,
 				78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */,
 				7879F7221C494EED00C6176C /* UIWebView+AFNetworking.m in Sources */,
 				7879F71F1C494EED00C6176C /* UIImageView+AFNetworking.m in Sources */,

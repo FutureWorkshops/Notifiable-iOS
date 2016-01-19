@@ -10,11 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FWTHTTPRequester;
+@class FWTNotifiableDevice;
+@protocol FWTNotifiableLogger;
+
 typedef void (^FWTSimpleRequestResponse)(BOOL success, NSError * _Nullable error);
 typedef void (^FWTDeviceTokenIdResponse)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
-
-@class FWTHTTPRequester;
-@protocol FWTNotifiableLogger;
+typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, NSError * _Nullable error);
 
 @interface FWTRequesterManager : NSObject
 
@@ -48,7 +50,11 @@ typedef void (^FWTDeviceTokenIdResponse)(NSNumber * _Nullable deviceTokenId, NSE
                        completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
 - (void)unregisterToken:(NSData *)deviceToken
+              userAlias:(NSString * _Nullable)userAlias
       completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
+
+- (void)listDevicesOfUser:(NSString *)userAlias
+        completionHandler:(_Nullable FWTDeviceListResponse)handler;
 
 @end
 

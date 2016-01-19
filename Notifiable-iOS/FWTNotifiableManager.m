@@ -12,6 +12,7 @@
 #import "FWTNotifiableAuthenticator.h"
 #import "FWTRequesterManager.h"
 #import "FWTNotifiableDevice+Private.h"
+#import "NSError+FWTNotifiable.h"
 
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 
@@ -305,6 +306,7 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
     NSAssert(self.currentDevice.token, @"This device is not registered.");
     
     [self.requestManager unregisterToken:self.currentDevice.token
+                               userAlias:self.currentDevice.user
                        completionHandler:handler];
 }
 
@@ -321,6 +323,26 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
     [self.requestManager markNotificationAsOpenedOnDevice:self.currentDevice.token
                                                withParams:requestParameters
                                           completionHandler:nil];
+}
+
+- (void)listDevicesRelatedToUserWithCompletionHandler:(FWTNotifiableListOperationCompletionHandler)handler
+{
+    NSAssert(self.currentDevice != nil, @"The device need to be registered to perform this method.");
+    
+    if (self.currentDevice == nil) {
+        if (handler) {
+            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return;
+    }
+    
+    if (self.currentDevice.user.length == 0) {
+        if (handler) {
+            handler(@[self.currentDevice], nil);
+        }
+        return;
+    }
+    
 }
 
 #pragma mark - Private

@@ -150,16 +150,27 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 
 -(void)registerAnonymousToken:(NSData *)token withLocale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
+    [self registerAnonymousToken:token
+                      deviceName:nil
+                      withLocale:locale
+               deviceInformation:deviceInformation
+               completionHandler:handler];
+}
+
+-(void)registerAnonymousToken:(NSData *)token deviceName:(NSString *)name withLocale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     
     if (self.deviceTokenId) {
         [self updateDeviceToken:token
-                    andLocation:locale
+                     deviceName:nil
+                       location:locale
               deviceInformation:deviceInformation
               completionHandler:handler];
     } else {
         [self.requestManager registerDeviceWithUserAlias:nil
                                                    token:token
+                                                    name:name
                                                   locale:locale
                                        deviceInformation:deviceInformation
                                        completionHandler:[self _defaultRegisterResponseWithToken:token completionHandler:handler]];
@@ -185,18 +196,30 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 
 - (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias locale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
+    [self registerToken:token
+             deviceName:nil
+          withUserAlias:userAlias
+                 locale:locale
+      deviceInformation:deviceInformation
+      completionHandler:handler];
+}
+
+- (void)registerToken:(NSData *)token deviceName:(NSString *)name withUserAlias:(NSString *)userAlias locale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     NSAssert(userAlias.length > 0, @"To register a non anonymous device, a user alias need to be provided!");
     
     if (self.deviceTokenId) {
         [self updateDeviceToken:token
+                     deviceName:nil
                       userAlias:userAlias
-                    andLocation:locale
+                       location:locale
               deviceInformation:deviceInformation
               completionHandler:handler];
     } else {
         [self.requestManager registerDeviceWithUserAlias:userAlias
                                                    token:token
+                                                    name:name
                                                   locale:locale
                                        deviceInformation:deviceInformation
                                        completionHandler:[self _defaultRegisterResponseWithToken:token completionHandler:handler]];
@@ -206,7 +229,8 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 - (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:nil
-                andLocation:locale
+                 deviceName:nil
+                   location:locale
           deviceInformation:nil
           completionHandler:handler];
 }
@@ -214,7 +238,8 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 - (void)updateDeviceToken:(NSData *)token completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
-                andLocation:nil
+                 deviceName:nil
+                   location:nil
           deviceInformation:nil
           completionHandler:handler];
 }
@@ -222,22 +247,40 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
 - (void)updateDeviceToken:(NSData *)token andLocation:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
-                andLocation:locale
+                 deviceName:nil
+                   location:locale
+          deviceInformation:nil
+          completionHandler:handler];
+}
+
+- (void)updateDeviceName:(NSString *)name
+       completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self updateDeviceToken:nil
+                 deviceName:name
+                   location:nil
           deviceInformation:nil
           completionHandler:handler];
 }
 
 - (void)updateDeviceToken:(NSData *)token
-              andLocation:(NSLocale *)locale
+               deviceName:(NSString *)name
+                 location:(NSLocale *)locale
         deviceInformation:(NSDictionary *)deviceInformation
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    [self updateDeviceToken:token userAlias:nil andLocation:locale deviceInformation:deviceInformation completionHandler:handler];
+    [self updateDeviceToken:token
+                 deviceName:name
+                  userAlias:nil
+                   location:locale
+          deviceInformation:deviceInformation
+          completionHandler:handler];
 }
 
 - (void)updateDeviceToken:(NSData *)token
+               deviceName:(NSString *)name
                 userAlias:(NSString *)userAlias
-              andLocation:(NSLocale *)locale
+                 location:(NSLocale *)locale
         deviceInformation:(NSDictionary *)deviceInformation
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
@@ -247,6 +290,7 @@ NSString * const FWTUserInfoNotifiableTokenIdKey        = @"FWTNotifiableTokenId
     [self.requestManager updateDevice:self.deviceTokenId
                         withUserAlias:userAlias
                                 token:token
+                                 name:name
                                locale:locale
                     deviceInformation:deviceInformation
                     completionHandler:[self _defaultRegisterResponseWithToken:token completionHandler:handler]];

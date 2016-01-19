@@ -11,6 +11,7 @@
 #import "NSError+FWTNotifiable.h"
 #import "FWTDefaultNotifiableLogger.h"
 #import "NSData+FWTNotifiable.h"
+#import "FWTNotifiableDevice+Parser.h"
 
 NSString * const FWTNotifiableUserInfoKey       = @"user";
 NSString * const FWTNotifiableDeviceTokenKey    = @"token";
@@ -82,9 +83,11 @@ NSString * const FWTNotifiableProvider          = @"apns";
 }
 
 - (void)unregisterToken:(NSData *)deviceToken
+              userAlias:(NSString *)userAlias
       completionHandler:(FWTSimpleRequestResponse)handler
 {
     [self _unregisterToken:deviceToken
+                 userAlias:userAlias
               withAttempts:self.retryAttempts
              previousError:nil
          completionHandler:handler];
@@ -97,6 +100,15 @@ NSString * const FWTNotifiableProvider          = @"apns";
     [self _markNotificationAsOpenedWithParams:params
                                      attempts:self.retryAttempts
                                 previousError:nil completionHandler:handler];
+}
+
+- (void)listDevicesOfUser:(NSString *)userAlias
+        completionHandler:(FWTDeviceListResponse)handler
+{
+    [self _listDevicesOfUser:userAlias
+                    attempts:self.retryAttempts
+               previousError:nil
+           completionHandler:handler];
 }
 
 #pragma mark - Private
@@ -274,6 +286,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
 
 
 - (void)_unregisterToken:(NSData *)deviceToken
+               userAlias:(NSString *)userAlias
             withAttempts:(NSUInteger)attempts
            previousError:(NSError *)error
        completionHandler:(FWTSimpleRequestResponse)handler
@@ -299,10 +312,11 @@ NSString * const FWTNotifiableProvider          = @"apns";
     NSString *token = [deviceToken fwt_notificationTokenString];
     
     __weak typeof(self) weakSelf = self;
-    [self.requester unregisterToken:token success:^(NSDictionary * _Nullable response) {
+    [self.requester unregisterToken:token userAlias:userAlias success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         if (response == nil) {
             [sself _unregisterToken:deviceToken
+                          userAlias:userAlias
                        withAttempts:(attempts - 1)
                       previousError:error
                   completionHandler:handler];
@@ -323,6 +337,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _unregisterToken:deviceToken
+                             userAlias:userAlias
                           withAttempts:(attempts - 1)
                          previousError:error
                      completionHandler:handler];
@@ -359,7 +374,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         __strong typeof(weakSelf) sself = weakSelf;
-        [weakSelf.logger logMessage:@"Failed to mark notification as opened"];
+        [sself.logger logMessage:@"Failed to mark notification as opened"];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -369,6 +384,60 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                         completionHandler:handler];
         });
     }];
+}
+
+- (void)_listDevicesOfUser:(NSString *)userAlias
+                  attempts:(NSUInteger)attempts
+             previousError:(NSError *)error
+        completionHandler:(FWTDeviceListResponse)handler
+{
+    if (attempts == 0) {
+        if (handler) {
+            handler(@[], error);
+        }
+        return;
+    }
+    
+    if (userAlias.length == 0) {
+        if (handler) {
+            handler(@[], [NSError fwt_invalidDeviceInformationError:error]);
+        }
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.requester listDevicesOfUser:userAlias success:^(NSArray * _Nonnull response) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        
+        NSMutableArray *parsedResponse = [[NSMutableArray alloc] initWithCapacity:response.count];
+        
+        for (NSDictionary *element in response) {
+            FWTNotifiableDevice *device = [[FWTNotifiableDevice alloc] initWithUserName:userAlias dictionary:element];
+            if (device) {
+                [parsedResponse addObject:device];
+            } else {
+                [sself.logger logMessage:@"Received an invalid device: %@", element];
+            }
+        }
+        
+        [sself.logger logMessage:@"Got the list of devices"];
+        if (handler) {
+            handler([NSArray arrayWithArray:parsedResponse], nil);
+        }
+        
+    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself.logger logMessage:@"Failed to list devices"];
+        
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^{
+            [weakSelf _listDevicesOfUser:userAlias
+                                attempts:(attempts - 1)
+                           previousError:error
+                       completionHandler:handler];
+        });
+    }];
+    
 }
 
 @end

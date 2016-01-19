@@ -14,10 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString * const FWTNotifiableDidRegisterWithAPNSNotification;
 extern NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification;
 
-typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * _Nullable error);
-
 @protocol FWTNotifiableLogger;
 @class FWTNotifiableDevice;
+
+typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * _Nullable error);
+typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiableDevice*> * _Nullable devices, NSError * _Nullable error);
 
 /**
  The FWTNotifiableManager is the interface between the iOS application and a Notifiable-Rails gem server
@@ -258,6 +259,16 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 */
 - (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
+#pragma mark - Device list
+/**
+ List the devices related to the current device user.
+ 
+ @warning If the device is not registered, the server will not be called and the list will return empty.
+ @warning If the device is anonymous, the server will not be called and only the current device will be included in the list.
+ 
+ @param handler Block called once that the operation is finished.
+*/
+- (void)listDevicesRelatedToUserWithCompletionHandler:(_Nullable FWTNotifiableListOperationCompletionHandler)handler;
 
 #pragma mark - Read receipts can be delivered back to server via this method
 /**

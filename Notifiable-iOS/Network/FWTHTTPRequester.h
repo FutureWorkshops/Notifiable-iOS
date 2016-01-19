@@ -10,7 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^FWTRequestManagerSuccessBlock)(NSDictionary * _Nullable response);
+typedef void(^FWTRequestManagerSuccessBlock)(NSDictionary<NSString *, NSObject *>* _Nullable response);
+typedef void(^FWTRequestManagerArraySuccessBlock)(NSArray* response);
 typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * error);
 
 @class FWTNotifiableAuthenticator;
@@ -30,11 +31,15 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                         success:(_Nullable FWTRequestManagerSuccessBlock)success
                         failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 - (void)unregisterToken:(NSString *)token
+              userAlias:(NSString * _Nullable)userAlias
                 success:(FWTRequestManagerSuccessBlock)success
                 failure:(FWTRequestManagerFailureBlock)failure;
 - (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
                                    success:(FWTRequestManagerSuccessBlock)success
                                    failure:(FWTRequestManagerFailureBlock)failure;
+- (void)listDevicesOfUser:(NSString *)userAlias
+                  success:(FWTRequestManagerArraySuccessBlock)success
+                  failure:(FWTRequestManagerFailureBlock)failure;
 @end
 
 NS_ASSUME_NONNULL_END

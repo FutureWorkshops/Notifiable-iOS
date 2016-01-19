@@ -10,10 +10,20 @@
 #import "FWViewController.h"
 @import FWTNotifiable;
 
+@interface FWAppDelegate ()
+
+@property (nonatomic, strong) FWTNotifiableManager *manager;
+
+@end
+
 @implementation FWAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.manager = [[FWTNotifiableManager alloc] initWithUrl:@"http://fw-notifiable-staging.herokuapp.com"
+                                                    accessId:@"WyvxpyG9yuuj4kiZUsv6"
+                                                andSecretKey:@"chEAmSqR1f9MumaRsd1oTIsibeJBcmrw213mHULEntK4WsUytgX3gPCmGM+hgUGcyBjikE7m2BQ6B3KqB7DoSg=="];
+    
     UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge
                                                                                          categories:nil];
     [application registerUserNotificationSettings:notificationSettings];
@@ -69,8 +79,6 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
-    NSString *apnsHostURLString = @"http://fw-notifiable-staging.herokuapp.com";
-    
     NSString *token = [[deviceToken.description stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
 
     FWViewController *rootController = [self getMainController];
@@ -82,10 +90,8 @@
     
     rootController.pasteboardStatusLabel.text = @"Token copied to pasteboard";
 
-    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:apnsHostURLString
-                                                                     accessId:@"WyvxpyG9yuuj4kiZUsv6"
-                                                                 andSecretKey:@"chEAmSqR1f9MumaRsd1oTIsibeJBcmrw213mHULEntK4WsUytgX3gPCmGM+hgUGcyBjikE7m2BQ6B3KqB7DoSg=="];
-    [manager registerAnonymousToken:deviceToken completionHandler:nil];
+    
+    [self.manager registerAnonymousToken:deviceToken completionHandler:nil];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {

@@ -25,16 +25,12 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
 */
 @interface FWTNotifiableManager : NSObject
 
-/** Notifiable-Rails gem server URL */
-@property (nonatomic, readonly) NSURL *baseUrl;
 /** Number of times that the manager will try to resend the informations in case of error */
 @property (nonatomic, assign) NSInteger retryAttempts;
 /** Delay between retries  */
 @property (nonatomic, assign) NSTimeInterval retryDelay;
 /** Level of the informations that will be logged by the manager */
-@property (nonatomic, assign) id<FWTNotifiableLogger> logger;
-/** Token associated with the current device  */
-@property (nonatomic, readonly) NSData *deviceToken;
+@property (nonatomic, strong) id<FWTNotifiableLogger> logger;
 
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
 
@@ -169,20 +165,24 @@ typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * 
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
+ Update the informations of the device without change the user.
+ 
  @param token   New device token.
  @param locale  New device locale.
  @param deviceInformation   Aditional information about the device
  @param handler Block called once that the operation is finished.
 */
-- (void)updateDeviceToken:(NSData *)token
-              andLocation:(NSLocale *)locale
-        deviceInformation:(NSDictionary *)deviceInformation
+- (void)updateDeviceToken:(NSData * _Nullable)token
+              andLocation:(NSLocale * _Nullable)locale
+        deviceInformation:(NSDictionary * _Nullable)deviceInformation
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Device/user relationship
 /**
  Associate an anonymous device to a user. If the user alias doesn't exist, 
  a new user will be created.
+ 
+ @warning   The device id will remain the same on the server, but associated with another user.
  
  @param userAlias   The alias of the user in the server.
  @param handler     Block called once that the operation is finished.

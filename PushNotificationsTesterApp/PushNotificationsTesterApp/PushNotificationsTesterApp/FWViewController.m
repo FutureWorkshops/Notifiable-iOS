@@ -39,6 +39,15 @@
 }
 
 - (IBAction)unregister:(id)sender {
+    if (self.notifiableManager.currentDevice) {
+        [self.notifiableManager unregisterTokenWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error on unregister: %@", error);
+            } else {
+                NSLog(@"Success");
+            }
+        }];
+    }
 }
 
 - (IBAction)changeUser:(id)sender {

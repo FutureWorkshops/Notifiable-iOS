@@ -143,20 +143,12 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
 {
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     
-    if (self.currentDevice.tokenId) {
-        [self updateDeviceToken:token
-                     deviceName:nil
-                       location:locale
-              deviceInformation:deviceInformation
-              completionHandler:handler];
-    } else {
-        [self.requestManager registerDeviceWithUserAlias:nil
-                                                   token:token
-                                                    name:name
-                                                  locale:locale
-                                       deviceInformation:deviceInformation
-                                       completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:handler]];
-    }
+    [self.requestManager registerDeviceWithUserAlias:nil
+                                               token:token
+                                                name:name
+                                              locale:locale
+                                   deviceInformation:deviceInformation
+                                   completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:handler]];
 }
 
 - (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias completionHandler:(FWTNotifiableOperationCompletionHandler)handler
@@ -191,27 +183,18 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     NSAssert(userAlias.length > 0, @"To register a non anonymous device, a user alias need to be provided!");
     
-    if (self.currentDevice.tokenId) {
-        [self updateDeviceToken:token
-                     deviceName:nil
-                      userAlias:userAlias
-                       location:locale
-              deviceInformation:deviceInformation
-              completionHandler:handler];
-    } else {
-        __weak typeof(self) weakSelf = self;
-        [self.requestManager registerDeviceWithUserAlias:userAlias
-                                                   token:token
-                                                    name:name
-                                                  locale:locale
-                                       deviceInformation:deviceInformation
-                                       completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:^(BOOL success, NSError * _Nullable error) {
-            if (success) {
-                __strong typeof(weakSelf) sself = weakSelf;
-                sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
-            }
-        }]];
-    }
+    __weak typeof(self) weakSelf = self;
+    [self.requestManager registerDeviceWithUserAlias:userAlias
+                                               token:token
+                                                name:name
+                                              locale:locale
+                                   deviceInformation:deviceInformation
+                                   completionHandler:[self _defaultRegisterResponseWithToken:token name:name completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if (success) {
+            __strong typeof(weakSelf) sself = weakSelf;
+            sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
+        }
+    }]];
 }
 
 - (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler

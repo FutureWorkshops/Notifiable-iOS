@@ -12,7 +12,7 @@
 
 - (NSString *)fwt_notificationTokenString
 {
-    NSString *tokenString = [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
+    NSString *tokenString = self.description;
     NSString *clearToken = [[tokenString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
     return clearToken;
 }

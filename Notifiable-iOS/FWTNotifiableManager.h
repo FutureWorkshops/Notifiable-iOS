@@ -11,8 +11,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const FWTNotifiableDidRegisterWithAPNSNotification;
-extern NSString * const FWTNotifiableFailedToRegisterWithAPNSNotification;
+extern NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification;
+extern NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification;
+
+extern NSString * const FWTNotifiableNotificationDevice;
+extern NSString * const FWTNotifiableNotificationError;
 
 @protocol FWTNotifiableLogger;
 @class FWTNotifiableDevice;
@@ -219,13 +222,22 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
+ Update the device aditional informations
+ 
+ @param deviceInformation   Aditional information about the device
+ @param handler             Block called once that the operation is finished.
+*/
+- (void)updateDeviceInformation:(NSDictionary *)deviceInformation
+              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
  Update the informations of the device without change the user.
  
  @param token               New device token.
  @param deviceName          The name of the device
  @param locale              New device locale.
  @param deviceInformation   Aditional information about the device
- @param handler Block called once that the operation is finished.
+ @param handler             Block called once that the operation is finished.
 */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
@@ -247,7 +259,8 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
- Remove a token from a specific user and anonymise it.
+ Remove a token from a specific user and anonymise it. 
+ It has a similar effect as registering the device as anonymous.
  
  @warning   The device id and configuration will remain the same in the server.
  

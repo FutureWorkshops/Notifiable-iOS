@@ -9,7 +9,10 @@
 #import "FWViewController.h"
 @import SVProgressHUD;
 
+NSString * const FWOnSiteKey = @"onsite";
+
 @interface FWViewController ()
+@property (weak, nonatomic) IBOutlet UISwitch *onSiteSwitch;
 
 @end
 
@@ -20,9 +23,24 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    if (self.notifiableManager.currentDevice) {
+        self.message = [self.notifiableManager.currentDevice.token fwt_notificationTokenString];
+        NSNumber *onSite = self.notifiableManager.currentDevice.information[FWOnSiteKey];
+        self.onSiteSwitch.on = [onSite boolValue];
+    }
+    
     if(self.message){
         self.notificationOutputLabel.text = self.message;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_registerNewDeviceResponseNotification:)
+                                                 name:FWTNotifiableDidRegisterDeviceWithAPNSNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_registerNewDeviceResponseNotification:)
+                                                 name:FWTNotifiableFailedToRegisterDeviceWithAPNSNotification
+                                               object:nil];
     
     self.tokenLabel.text = @"Tap Register to see Token";
     self.pasteboardStatusLabel.text = @"";
@@ -35,19 +53,15 @@
     [alertController addAction:dismissAction];
     [self presentViewController:alertController animated:YES completion:nil];
 #else
+    [SVProgressHUD showWithStatus:@"Registering new device"];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 #endif
 }
 
 - (IBAction)unregister:(id)sender {
     if (self.notifiableManager.currentDevice) {
-        [self.notifiableManager unregisterTokenWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"Error on unregister: %@", error);
-            } else {
-                NSLog(@"Success");
-            }
-        }];
+        [SVProgressHUD showWithStatus:@"Unregister device"];
+        [self.notifiableManager unregisterTokenWithCompletionHandler:[self _defaultCompletionHandler]];
     }
 }
 
@@ -92,7 +106,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [SVProgressHUD showWithStatus:@"Register as anonymous device"];
         });
-        [sself.notifiableManager anonymiseTokenWithCompletionHandler:[sself _defaultCompletionHandler]];
+        [sself.notifiableManager anonymiseTokenWithCompletionHandler:nil];
     }];
     UIAlertAction *specificUser = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *textField = [alertController.textFields firstObject];
@@ -110,6 +124,17 @@
     return alertController;
 }
 
+- (void) _registerNewDeviceResponseNotification:(NSNotification *)notification
+{
+    if ([notification.name isEqualToString:FWTNotifiableDidRegisterDeviceWithAPNSNotification]) {
+        FWTNotifiableDevice *device = (FWTNotifiableDevice *)notification.userInfo[FWTNotifiableNotificationDevice];
+        [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"Device ID: %@", device.tokenId]];
+    } else {
+        NSError *error = (NSError *)notification.userInfo[FWTNotifiableNotificationError];
+        [SVProgressHUD showErrorWithStatus:[error fwt_debugMessage]];
+    }
+}
+
 - (void(^)(BOOL success, NSError * _Nullable error)) _defaultCompletionHandler
 {
     return ^(BOOL success, NSError * _Nullable error) {
@@ -117,13 +142,28 @@
             if (success) {
                 [SVProgressHUD showSuccessWithStatus:@""];
             } else {
-                [SVProgressHUD showErrorWithStatus:[error localizedDescription]];
+                [SVProgressHUD showErrorWithStatus:[error fwt_debugMessage]];
             }
         });
     };
 }
 
-- (IBAction)toggleOnSite:(id)sender {
+- (IBAction)toggleOnSite:(UISwitch *)sender {
+    
+    if (self.notifiableManager == nil) {
+        UIAlertController *alertController = [self _invalidDeviceStateAlert];
+        [self presentViewController:alertController animated:YES completion:nil];
+        return;
+    }
+    
+    if (self.notifiableManager.currentDevice) {
+        NSNumber *onSite = self.notifiableManager.currentDevice.information[FWOnSiteKey];
+        if(sender.on == [onSite boolValue]) return;
+    }
+    
+    NSDictionary *userInfo = @{FWOnSiteKey:[NSNumber numberWithBool:sender.on]};
+    [SVProgressHUD showWithStatus:@"Change on site"];
+    [self.notifiableManager updateDeviceInformation:userInfo completionHandler:[self _defaultCompletionHandler]];
 }
 
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2MR-PF-Kcm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2MR-PF-Kcm">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -94,7 +94,7 @@
                                     <constraint firstAttribute="height" constant="21" id="NVa-qy-JqH"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -130,6 +130,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="notificationOutputLabel" destination="YL6-ch-eyg" id="KWE-cv-rCY"/>
+                        <outlet property="onSiteSwitch" destination="Eqa-Ju-FQT" id="JT7-Iq-8ZC"/>
                         <outlet property="pasteboardStatusLabel" destination="r8Q-U6-cd5" id="8qX-UU-zBQ"/>
                         <outlet property="tokenLabel" destination="FAM-Mv-1Qc" id="zys-un-0AN"/>
                     </connections>

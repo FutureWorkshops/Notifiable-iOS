@@ -7,6 +7,7 @@
 //
 
 #import "FWViewController.h"
+@import SVProgressHUD;
 
 @interface FWViewController ()
 
@@ -87,18 +88,39 @@
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:nil];
     UIAlertAction *anonymousUser = [UIAlertAction actionWithTitle:@"Anonymous" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [weakSelf.notifiableManager anonymiseTokenWithCompletionHandler:nil];
+        __strong typeof(weakSelf) sself = weakSelf;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD showWithStatus:@"Register as anonymous device"];
+        });
+        [sself.notifiableManager anonymiseTokenWithCompletionHandler:[sself _defaultCompletionHandler]];
     }];
     UIAlertAction *specificUser = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *textField = [alertController.textFields firstObject];
         NSString *userAlias = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [weakSelf.notifiableManager associateDeviceToUser:userAlias completionHandler:nil];
+        __strong typeof(weakSelf) sself = weakSelf;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [SVProgressHUD showWithStatus:[NSString stringWithFormat:@"Register as %@", userAlias]];
+        });
+        [sself.notifiableManager associateDeviceToUser:userAlias completionHandler:[sself _defaultCompletionHandler]];
     }];
     [alertController addAction:cancelAction];
     [alertController addAction:anonymousUser];
     [alertController addAction:specificUser];
     
     return alertController;
+}
+
+- (void(^)(BOOL success, NSError * _Nullable error)) _defaultCompletionHandler
+{
+    return ^(BOOL success, NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:@""];
+            } else {
+                [SVProgressHUD showErrorWithStatus:[error localizedDescription]];
+            }
+        });
+    };
 }
 
 - (IBAction)toggleOnSite:(id)sender {

@@ -3,3 +3,4 @@ platform :ios, '8.0'
 use_frameworks!
 
 pod 'FWTNotifiable', :path => '..'
+pod 'SVProgressHUD', '~> 1.1'

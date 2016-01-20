@@ -20,7 +20,7 @@
     [dict setValue:nil forKey:@"id"];
     [dict setValue:nil forKey:@"name"];
     
-    return [self initWithToken:[[NSData alloc] init] tokenId:tokenId user:userName name:name information:dict];
+    return [self initWithToken:[[NSData alloc] init] tokenId:tokenId locale:[NSLocale autoupdatingCurrentLocale] user:userName name:name information:dict];
 }
 
 @end

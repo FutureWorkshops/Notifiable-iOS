@@ -194,6 +194,7 @@ NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoN
             __strong typeof(weakSelf) sself = weakSelf;
             sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
         }
+        handler(success, error);
     }]];
 }
 

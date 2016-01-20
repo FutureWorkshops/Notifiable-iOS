@@ -12,6 +12,7 @@
 		65D693E5184E297200D9DF5B /* FWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D693E4184E297200D9DF5B /* FWViewController.m */; };
 		784222701C4D2989009D4638 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7842226F1C4D2989009D4638 /* Launch Screen.storyboard */; };
 		784222721C4D299A009D4638 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 784222711C4D299A009D4638 /* Images.xcassets */; };
+		7879B5B11C500581002F78E9 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879B5B01C500581002F78E9 /* MBProgressHUD.m */; };
 		B7402BC916C26CE70014570E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BC816C26CE70014570E /* UIKit.framework */; };
 		B7402BCB16C26CE70014570E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCA16C26CE70014570E /* Foundation.framework */; };
 		B7402BCD16C26CE70014570E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7402BCC16C26CE70014570E /* CoreGraphics.framework */; };
@@ -46,6 +47,8 @@
 		783F24AD3435454324BCE28A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		7842226F1C4D2989009D4638 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		784222711C4D299A009D4638 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7879B5AF1C500581002F78E9 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		7879B5B01C500581002F78E9 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		AB83D0ABDCFDCD07007BCC3C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B7402BC416C26CE70014570E /* PushNotificationsTesterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushNotificationsTesterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7402BC816C26CE70014570E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -92,6 +95,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7879B5AD1C500580002F78E9 /* 3rd party */ = {
+			isa = PBXGroup;
+			children = (
+				7879B5AE1C500581002F78E9 /* MBProgressHUD */,
+			);
+			path = "3rd party";
+			sourceTree = "<group>";
+		};
+		7879B5AE1C500581002F78E9 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				7879B5AF1C500581002F78E9 /* MBProgressHUD.h */,
+				7879B5B01C500581002F78E9 /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		B7402BB916C26CE70014570E = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +147,7 @@
 		B7402BCE16C26CE70014570E /* PushNotificationsTesterApp */ = {
 			isa = PBXGroup;
 			children = (
+				7879B5AD1C500580002F78E9 /* 3rd party */,
 				B7402C2E16C2DD800014570E /* FWAppDelegate.h */,
 				B7402C2F16C2DD800014570E /* FWAppDelegate.m */,
 				65D693E3184E297200D9DF5B /* FWViewController.h */,
@@ -360,6 +381,7 @@
 				B7402BD516C26CE70014570E /* main.m in Sources */,
 				B7402C3016C2DD800014570E /* FWAppDelegate.m in Sources */,
 				65D693E5184E297200D9DF5B /* FWViewController.m in Sources */,
+				7879B5B11C500581002F78E9 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

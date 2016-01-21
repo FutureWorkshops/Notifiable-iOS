@@ -17,10 +17,15 @@
     NSNumber *tokenId = mutableElement[@"id"];
     NSString *name = mutableElement[@"name"];
     
-    [dict setValue:nil forKey:@"id"];
-    [dict setValue:nil forKey:@"name"];
+    [mutableElement removeObjectForKey:@"id"];
+    [mutableElement removeObjectForKey:@"name"];
     
-    return [self initWithToken:[[NSData alloc] init] tokenId:tokenId locale:[NSLocale autoupdatingCurrentLocale] user:userName name:name information:dict];
+    return [self initWithToken:[[NSData alloc] init]
+                       tokenId:tokenId
+                        locale:[NSLocale autoupdatingCurrentLocale]
+                          user:userName
+                          name:name
+                   information:[NSDictionary dictionaryWithDictionary:mutableElement]];
 }
 
 @end

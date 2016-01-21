@@ -32,14 +32,14 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                         failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 - (void)unregisterTokenId:(NSNumber *)tokenId
                 userAlias:(NSString * _Nullable)userAlias
-                  success:(FWTRequestManagerSuccessBlock)success
-                  failure:(FWTRequestManagerFailureBlock)failure;
+                  success:(_Nullable FWTRequestManagerSuccessBlock)success
+                  failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 - (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
-                                   success:(FWTRequestManagerSuccessBlock)success
-                                   failure:(FWTRequestManagerFailureBlock)failure;
+                                   success:(_Nullable FWTRequestManagerSuccessBlock)success
+                                   failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 - (void)listDevicesOfUser:(NSString *)userAlias
-                  success:(FWTRequestManagerArraySuccessBlock)success
-                  failure:(FWTRequestManagerFailureBlock)failure;
+                  success:(_Nullable FWTRequestManagerArraySuccessBlock)success
+                  failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 @end
 
 NS_ASSUME_NONNULL_END

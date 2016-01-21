@@ -112,6 +112,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
         path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
     }
+    [self _updateAuthenticationForPath:path];
     [self.httpSessionManager GET:path parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSArray class]]) {
             success(responseObject != nil ? responseObject : @[]);

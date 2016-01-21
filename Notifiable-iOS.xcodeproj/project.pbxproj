@@ -20,6 +20,7 @@
 		787632701C50ED370074DE3F /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632681C50ED370074DE3F /* AFURLRequestSerialization.m */; };
 		787632711C50ED370074DE3F /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876326A1C50ED370074DE3F /* AFURLResponseSerialization.m */; };
 		787632721C50ED370074DE3F /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876326C1C50ED370074DE3F /* AFURLSessionManager.m */; };
+		787632F51C50EEAC0074DE3F /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632F21C50EE950074DE3F /* OCMock.framework */; };
 		7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */; };
 		7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */; };
 		78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C671C4E55360044CE25 /* FWTRequesterManager.m */; };
@@ -45,6 +46,48 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8E4119C817E9B9D1000CD6F3;
 			remoteInfo = "Notifiable-iOS";
+		};
+		787632E91C50EE950074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 030EF0A814632FD000B04273;
+			remoteInfo = OCMock;
+		};
+		787632EB1C50EE950074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03565A3118F0566E003AE91E;
+			remoteInfo = OCMockTests;
+		};
+		787632ED1C50EE950074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 030EF0DC14632FF700B04273;
+			remoteInfo = OCMockLib;
+		};
+		787632EF1C50EE950074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D31108AD1828DB8700737925;
+			remoteInfo = OCMockLibTests;
+		};
+		787632F11C50EE950074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F0B950F11B0080BE00942C38;
+			remoteInfo = "OCMock iOS";
+		};
+		787632F31C50EE950074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 817EB1621BD765130047E85A;
+			remoteInfo = "OCMock tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -86,6 +129,7 @@
 		7876326A1C50ED370074DE3F /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		7876326B1C50ED370074DE3F /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		7876326C1C50ED370074DE3F /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
+		787632E01C50EE950074DE3F /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = "Support Libraries/OCMock/Source/OCMock.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
 		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; };
 		7879F7241C49549400C6176C /* FWTNotifiableAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableAuthenticator.h; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.h"; sourceTree = SOURCE_ROOT; };
@@ -114,6 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				787632F51C50EEAC0074DE3F /* OCMock.framework in Frameworks */,
 				7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +197,7 @@
 		787632461C50EC220074DE3F /* Notifiable-iOSUnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				787632E01C50EE950074DE3F /* OCMock.xcodeproj */,
 				787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */,
 				787632491C50EC220074DE3F /* Info.plist */,
 			);
@@ -187,6 +233,19 @@
 			name = AFNetworking;
 			path = "Support Libraries/AFNetworking/AFNetworking";
 			sourceTree = SOURCE_ROOT;
+		};
+		787632E11C50EE950074DE3F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				787632EA1C50EE950074DE3F /* OCMock.framework */,
+				787632EC1C50EE950074DE3F /* OCMockTests.xctest */,
+				787632EE1C50EE950074DE3F /* libOCMock.a */,
+				787632F01C50EE950074DE3F /* OCMockLibTests.xctest */,
+				787632F21C50EE950074DE3F /* OCMock.framework */,
+				787632F41C50EE950074DE3F /* OCMock.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
 		};
 		7879F6E91C494CF000C6176C /* Network */ = {
 			isa = PBXGroup;
@@ -371,6 +430,12 @@
 			mainGroup = 8E4119C017E9B9D1000CD6F3;
 			productRefGroup = 8E4119CA17E9B9D1000CD6F3 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 787632E11C50EE950074DE3F /* Products */;
+					ProjectRef = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8E4119C817E9B9D1000CD6F3 /* Notifiable-iOS */,
@@ -379,6 +444,51 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		787632EA1C50EE950074DE3F /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 787632E91C50EE950074DE3F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		787632EC1C50EE950074DE3F /* OCMockTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OCMockTests.xctest;
+			remoteRef = 787632EB1C50EE950074DE3F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		787632EE1C50EE950074DE3F /* libOCMock.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOCMock.a;
+			remoteRef = 787632ED1C50EE950074DE3F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		787632F01C50EE950074DE3F /* OCMockLibTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OCMockLibTests.xctest;
+			remoteRef = 787632EF1C50EE950074DE3F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		787632F21C50EE950074DE3F /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 787632F11C50EE950074DE3F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		787632F41C50EE950074DE3F /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 787632F31C50EE950074DE3F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		787632431C50EC220074DE3F /* Resources */ = {

@@ -158,19 +158,29 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
     
+    __weak typeof(self) weakSelf = self;
     [self.requestManager registerDeviceWithUserAlias:nil
                                                token:token
                                                 name:name
                                               locale:locale
                                    deviceInformation:deviceInformation
-                                   completionHandler:[self _defaultRegisterResponseWithToken:token locale:locale name:name completionHandler:handler]];
+                                   completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                                       __strong typeof(weakSelf) sself = weakSelf;
+                                       [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
+                                       sself.currentDevice = [sself.currentDevice deviceWithInformation:deviceInformation];
+                                       if (handler) {
+                                           handler(error == nil, error);
+                                       }
+                                   }];
 }
 
 - (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self registerToken:token
+             deviceName:nil
           withUserAlias:userAlias
-              andLocale:[NSLocale autoupdatingCurrentLocale]
+                 locale:[NSLocale autoupdatingCurrentLocale]
+      deviceInformation:@{}
       completionHandler:handler];
 }
 
@@ -187,6 +197,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias andLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self registerToken:token
+             deviceName:nil
           withUserAlias:userAlias
                  locale:locale
       deviceInformation:@{}
@@ -206,7 +217,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void)registerToken:(NSData *)token deviceName:(NSString *)name withUserAlias:(NSString *)userAlias locale:(NSLocale *)locale deviceInformation:(NSDictionary *)deviceInformation completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     NSAssert(token != nil, @"To register a device, a token need to be provided!");
-    NSAssert(userAlias.length > 0, @"To register a non anonymous device, a user alias need to be provided!");
+    NSAssert(userAlias != nil && userAlias.length > 0, @"To register a non anonymous device, a user alias need to be provided!");
     
     __weak typeof(self) weakSelf = self;
     [self.requestManager registerDeviceWithUserAlias:userAlias
@@ -214,15 +225,14 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                                 name:name
                                               locale:locale
                                    deviceInformation:deviceInformation
-                                   completionHandler:[self _defaultRegisterResponseWithToken:token locale:locale name:name completionHandler:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-            __strong typeof(weakSelf) sself = weakSelf;
-            sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
-        }
-        if (handler) {
-            handler(success, error);
-        }
-    }]];
+                                   completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                                       __strong typeof(weakSelf) sself = weakSelf;
+                                       [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
+                                       sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name andInformation:deviceInformation];
+                                       if (handler) {
+                                           handler(error == nil, error);
+                                       }
+                                   }];
 }
 
 - (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler

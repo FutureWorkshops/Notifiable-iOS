@@ -10,6 +10,10 @@
 		65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */; };
 		7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
 		7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
+		787632481C50EC220074DE3F /* Notifiable_iOSUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */; };
+		7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
+		787632571C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */; };
+		787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
 		7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */; };
 		7879F7131C494EED00C6176C /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6F01C494EED00C6176C /* AFHTTPSessionManager.m */; };
 		7879F7141C494EED00C6176C /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6F31C494EED00C6176C /* AFNetworkReachabilityManager.m */; };
@@ -33,21 +37,23 @@
 		78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */; };
 		78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
-		8E4119DB17E9B9D1000CD6F3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */; };
-		8E4119DC17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
-		8E4119E117E9B9D1000CD6F3 /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
-		8E4119E717E9B9D1000CD6F3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E4119E517E9B9D1000CD6F3 /* InfoPlist.strings */; };
-		8E4119E917E9B9D1000CD6F3 /* Notifiable-iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4119E817E9B9D1000CD6F3 /* Notifiable-iOSTests.m */; };
 		8E4119F617E9BC53000CD6F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119F517E9BC53000CD6F3 /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8E4119DF17E9B9D1000CD6F3 /* PBXContainerItemProxy */ = {
+		7876324B1C50EC220074DE3F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8E4119C117E9B9D1000CD6F3 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 8E4119C817E9B9D1000CD6F3;
-			remoteInfo = FWTPushNotifications;
+			remoteInfo = "Notifiable-iOS";
+		};
+		7876325A1C50EC360074DE3F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8E4119C117E9B9D1000CD6F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E4119C817E9B9D1000CD6F3;
+			remoteInfo = "Notifiable-iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -70,6 +76,12 @@
 		7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
 		7837C7BF1C4D7258007B2F61 /* NSError+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSError+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
 		7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSError+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
+		787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSUnitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Notifiable_iOSUnitTests.m; sourceTree = "<group>"; };
+		787632491C50EC220074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		787632541C50EC360074DE3F /* Notifiable-iOSIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSIntegrationTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Notifiable_iOSIntegrationTests.m; sourceTree = "<group>"; };
+		787632581C50EC360074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
 		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; };
 		7879F6EF1C494EED00C6176C /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
@@ -124,31 +136,33 @@
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		8E4119D917E9B9D1000CD6F3 /* Notifiable-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		8E4119E417E9B9D1000CD6F3 /* Notifiable-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Notifiable-iOSTests-Info.plist"; path = "Notifiable-iOSTests/Notifiable-iOSTests-Info.plist"; sourceTree = "<group>"; };
-		8E4119E617E9B9D1000CD6F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		8E4119E817E9B9D1000CD6F3 /* Notifiable-iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "Notifiable-iOSTests.m"; path = "Notifiable-iOSTests/Notifiable-iOSTests.m"; sourceTree = "<group>"; };
 		8E4119F517E9BC53000CD6F3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		787632421C50EC220074DE3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787632511C50EC360074DE3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8E4119C617E9B9D1000CD6F3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				8E4119F617E9BC53000CD6F3 /* UIKit.framework in Frameworks */,
 				8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8E4119D617E9B9D1000CD6F3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8E4119DB17E9B9D1000CD6F3 /* XCTest.framework in Frameworks */,
-				8E4119E117E9B9D1000CD6F3 /* libFWTNotifiable.a in Frameworks */,
-				8E4119DC17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +178,24 @@
 				7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */,
 			);
 			name = Category;
+			sourceTree = "<group>";
+		};
+		787632461C50EC220074DE3F /* Notifiable-iOSUnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */,
+				787632491C50EC220074DE3F /* Info.plist */,
+			);
+			path = "Notifiable-iOSUnitTests";
+			sourceTree = "<group>";
+		};
+		787632551C50EC360074DE3F /* Notifiable-iOSIntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */,
+				787632581C50EC360074DE3F /* Info.plist */,
+			);
+			path = "Notifiable-iOSIntegrationTests";
 			sourceTree = "<group>";
 		};
 		7879F6E91C494CF000C6176C /* Network */ = {
@@ -272,7 +304,8 @@
 			isa = PBXGroup;
 			children = (
 				8E4119CE17E9B9D1000CD6F3 /* Notifiable-iOS */,
-				8E4119E217E9B9D1000CD6F3 /* Notifiable-iOSTests */,
+				787632461C50EC220074DE3F /* Notifiable-iOSUnitTests */,
+				787632551C50EC360074DE3F /* Notifiable-iOSIntegrationTests */,
 				8E4119CB17E9B9D1000CD6F3 /* Frameworks */,
 				8E4119CA17E9B9D1000CD6F3 /* Products */,
 			);
@@ -282,7 +315,8 @@
 			isa = PBXGroup;
 			children = (
 				8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */,
-				8E4119D917E9B9D1000CD6F3 /* Notifiable-iOSTests.xctest */,
+				787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */,
+				787632541C50EC360074DE3F /* Notifiable-iOSIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,28 +357,45 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		8E4119E217E9B9D1000CD6F3 /* Notifiable-iOSTests */ = {
-			isa = PBXGroup;
-			children = (
-				8E4119E817E9B9D1000CD6F3 /* Notifiable-iOSTests.m */,
-				8E4119E317E9B9D1000CD6F3 /* Supporting Files */,
-			);
-			name = "Notifiable-iOSTests";
-			path = FWTPushNotificationsTests;
-			sourceTree = "<group>";
-		};
-		8E4119E317E9B9D1000CD6F3 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				8E4119E417E9B9D1000CD6F3 /* Notifiable-iOSTests-Info.plist */,
-				8E4119E517E9B9D1000CD6F3 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		787632441C50EC220074DE3F /* Notifiable-iOSUnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7876324D1C50EC220074DE3F /* Build configuration list for PBXNativeTarget "Notifiable-iOSUnitTests" */;
+			buildPhases = (
+				787632411C50EC220074DE3F /* Sources */,
+				787632421C50EC220074DE3F /* Frameworks */,
+				787632431C50EC220074DE3F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7876324C1C50EC220074DE3F /* PBXTargetDependency */,
+			);
+			name = "Notifiable-iOSUnitTests";
+			productName = "Notifiable-iOSUnitTests";
+			productReference = 787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		787632531C50EC360074DE3F /* Notifiable-iOSIntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7876325C1C50EC360074DE3F /* Build configuration list for PBXNativeTarget "Notifiable-iOSIntegrationTests" */;
+			buildPhases = (
+				787632501C50EC360074DE3F /* Sources */,
+				787632511C50EC360074DE3F /* Frameworks */,
+				787632521C50EC360074DE3F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7876325B1C50EC360074DE3F /* PBXTargetDependency */,
+			);
+			name = "Notifiable-iOSIntegrationTests";
+			productName = "Notifiable-iOSIntegrationTests";
+			productReference = 787632541C50EC360074DE3F /* Notifiable-iOSIntegrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		8E4119C817E9B9D1000CD6F3 /* Notifiable-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8E4119EC17E9B9D1000CD6F3 /* Build configuration list for PBXNativeTarget "Notifiable-iOS" */;
@@ -362,24 +413,6 @@
 			productReference = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		8E4119D817E9B9D1000CD6F3 /* Notifiable-iOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8E4119EF17E9B9D1000CD6F3 /* Build configuration list for PBXNativeTarget "Notifiable-iOSTests" */;
-			buildPhases = (
-				8E4119D517E9B9D1000CD6F3 /* Sources */,
-				8E4119D617E9B9D1000CD6F3 /* Frameworks */,
-				8E4119D717E9B9D1000CD6F3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8E4119E017E9B9D1000CD6F3 /* PBXTargetDependency */,
-			);
-			name = "Notifiable-iOSTests";
-			productName = FWTPushNotificationsTests;
-			productReference = 8E4119D917E9B9D1000CD6F3 /* Notifiable-iOSTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -388,6 +421,14 @@
 			attributes = {
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Future Workshops";
+				TargetAttributes = {
+					787632441C50EC220074DE3F = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					787632531C50EC360074DE3F = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
 			};
 			buildConfigurationList = 8E4119C417E9B9D1000CD6F3 /* Build configuration list for PBXProject "Notifiable-iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -402,23 +443,46 @@
 			projectRoot = "";
 			targets = (
 				8E4119C817E9B9D1000CD6F3 /* Notifiable-iOS */,
-				8E4119D817E9B9D1000CD6F3 /* Notifiable-iOSTests */,
+				787632441C50EC220074DE3F /* Notifiable-iOSUnitTests */,
+				787632531C50EC360074DE3F /* Notifiable-iOSIntegrationTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8E4119D717E9B9D1000CD6F3 /* Resources */ = {
+		787632431C50EC220074DE3F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E4119E717E9B9D1000CD6F3 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787632521C50EC360074DE3F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		787632411C50EC220074DE3F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787632481C50EC220074DE3F /* Notifiable_iOSUnitTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		787632501C50EC360074DE3F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				787632571C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8E4119C517E9B9D1000CD6F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -451,37 +515,96 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8E4119D517E9B9D1000CD6F3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8E4119E917E9B9D1000CD6F3 /* Notifiable-iOSTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		8E4119E017E9B9D1000CD6F3 /* PBXTargetDependency */ = {
+		7876324C1C50EC220074DE3F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8E4119C817E9B9D1000CD6F3 /* Notifiable-iOS */;
-			targetProxy = 8E4119DF17E9B9D1000CD6F3 /* PBXContainerItemProxy */;
+			targetProxy = 7876324B1C50EC220074DE3F /* PBXContainerItemProxy */;
+		};
+		7876325B1C50EC360074DE3F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E4119C817E9B9D1000CD6F3 /* Notifiable-iOS */;
+			targetProxy = 7876325A1C50EC360074DE3F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		8E4119E517E9B9D1000CD6F3 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8E4119E617E9B9D1000CD6F3 /* en */,
-			);
-			name = InfoPlist.strings;
-			path = "Notifiable-iOSTests";
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
+		7876324E1C50EC220074DE3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Notifiable-iOSUnitTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.Notifiable-iOSUnitTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7876324F1C50EC220074DE3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Notifiable-iOSUnitTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.Notifiable-iOSUnitTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7876325D1C50EC360074DE3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Notifiable-iOSIntegrationTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.Notifiable-iOSIntegrationTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7876325E1C50EC360074DE3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Notifiable-iOSIntegrationTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.futureworkshops.Notifiable-iOSIntegrationTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		8E4119EA17E9B9D1000CD6F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -591,45 +714,25 @@
 			};
 			name = Release;
 		};
-		8E4119F017E9B9D1000CD6F3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FWTPushNotifications/FWTPushNotifications-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "FWTPushNotificationsTests/Notifiable-iOSTests-Info.plist";
-				PRODUCT_NAME = "Notifiable-iOSTests";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		8E4119F117E9B9D1000CD6F3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FWTPushNotifications/FWTPushNotifications-Prefix.pch";
-				INFOPLIST_FILE = "FWTPushNotificationsTests/Notifiable-iOSTests-Info.plist";
-				PRODUCT_NAME = "Notifiable-iOSTests";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7876324D1C50EC220074DE3F /* Build configuration list for PBXNativeTarget "Notifiable-iOSUnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7876324E1C50EC220074DE3F /* Debug */,
+				7876324F1C50EC220074DE3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		7876325C1C50EC360074DE3F /* Build configuration list for PBXNativeTarget "Notifiable-iOSIntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7876325D1C50EC360074DE3F /* Debug */,
+				7876325E1C50EC360074DE3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		8E4119C417E9B9D1000CD6F3 /* Build configuration list for PBXProject "Notifiable-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -644,15 +747,6 @@
 			buildConfigurations = (
 				8E4119ED17E9B9D1000CD6F3 /* Debug */,
 				8E4119EE17E9B9D1000CD6F3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		8E4119EF17E9B9D1000CD6F3 /* Build configuration list for PBXNativeTarget "Notifiable-iOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8E4119F017E9B9D1000CD6F3 /* Debug */,
-				8E4119F117E9B9D1000CD6F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

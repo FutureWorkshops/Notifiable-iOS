@@ -83,7 +83,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, tokenId];
     if (userAlias) {
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
     }
     [self _updateAuthenticationForPath:path];
     [self.httpSessionManager DELETE:path
@@ -110,7 +110,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     NSString *path = FWTListDevicesPath;
     if (userAlias) {
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
     }
     [self.httpSessionManager GET:path parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSArray class]]) {

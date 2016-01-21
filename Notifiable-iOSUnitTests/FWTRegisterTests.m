@@ -6,7 +6,7 @@
 //  Copyright © 2016 Future Workshops. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
+#import "FWTTestCase.h"
 #import <OCMock/OCMock.h>
 #import "FWTRequesterManager.h"
 #import "FWTNotifiableManager.h"
@@ -14,7 +14,7 @@
 #import "FWTNotifiableDevice+Private.h"
 #import "NSData+FWTNotifiable.h"
 
-@interface FWTRegisterTests : XCTestCase
+@interface FWTRegisterTests : FWTTestCase
 
 @property (nonatomic, strong) id requesterManagerMock;
 @property (nonatomic, strong) id httpRequestMock;
@@ -44,16 +44,11 @@
 
 - (void)setUp {
     [super setUp];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWTUserInfoNotifiableCurrentDeviceKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self mockRequester];
     [self mockHttpRequest];
 }
 
 - (void)tearDown {
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWTUserInfoNotifiableCurrentDeviceKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
     [self->_requesterManagerMock stopMocking];
     self->_requesterManagerMock = nil;
     

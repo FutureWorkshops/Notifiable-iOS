@@ -75,10 +75,10 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                          failure:[self _defaultFailureHandler:failure success:success]];
 }
 
-- (void)unregisterToken:(NSNumber *)tokenId
-              userAlias:(NSString *)userAlias
-                success:(FWTRequestManagerSuccessBlock)success
-                failure:(FWTRequestManagerFailureBlock)failure
+- (void)unregisterTokenId:(NSNumber *)tokenId
+                userAlias:(NSString *)userAlias
+                  success:(FWTRequestManagerSuccessBlock)success
+                  failure:(FWTRequestManagerFailureBlock)failure
 {
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, tokenId];
     if (userAlias) {

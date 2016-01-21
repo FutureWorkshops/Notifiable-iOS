@@ -31,6 +31,8 @@
 		787633031C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
 		787633041C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
 		787633051C5115B50074DE3F /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
+		787633081C51330A0074DE3F /* FWTRequesterManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787633071C51330A0074DE3F /* FWTRequesterManagerTests.m */; };
+		787633101C51383B0074DE3F /* FWTTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876330F1C51383B0074DE3F /* FWTTestCase.m */; };
 		7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */; };
 		7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */; };
 		78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C671C4E55360044CE25 /* FWTRequesterManager.m */; };
@@ -143,6 +145,9 @@
 		787632F61C50FD440074DE3F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		787632F81C50FD490074DE3F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		787632FC1C50FD9E0074DE3F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		787633071C51330A0074DE3F /* FWTRequesterManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTRequesterManagerTests.m; sourceTree = "<group>"; };
+		7876330E1C51383B0074DE3F /* FWTTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FWTTestCase.h; sourceTree = "<group>"; };
+		7876330F1C51383B0074DE3F /* FWTTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTTestCase.m; sourceTree = "<group>"; };
 		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
 		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; };
 		7879F7241C49549400C6176C /* FWTNotifiableAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableAuthenticator.h; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.h"; sourceTree = SOURCE_ROOT; };
@@ -212,9 +217,13 @@
 		787632461C50EC220074DE3F /* Notifiable-iOSUnitTests */ = {
 			isa = PBXGroup;
 			children = (
-				787632E01C50EE950074DE3F /* OCMock.xcodeproj */,
+				7876330A1C5137990074DE3F /* Libraries */,
+				787633091C51378C0074DE3F /* Categories */,
 				787632471C50EC220074DE3F /* FWTRegisterTests.m */,
 				787632491C50EC220074DE3F /* Info.plist */,
+				787633071C51330A0074DE3F /* FWTRequesterManagerTests.m */,
+				7876330E1C51383B0074DE3F /* FWTTestCase.h */,
+				7876330F1C51383B0074DE3F /* FWTTestCase.m */,
 			);
 			path = "Notifiable-iOSUnitTests";
 			sourceTree = "<group>";
@@ -260,6 +269,21 @@
 				787632F41C50EE950074DE3F /* OCMock.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		787633091C51378C0074DE3F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		7876330A1C5137990074DE3F /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				787632E01C50EE950074DE3F /* OCMock.xcodeproj */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 		7879F6E91C494CF000C6176C /* Network */ = {
@@ -532,8 +556,10 @@
 			files = (
 				787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
 				787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */,
+				787633101C51383B0074DE3F /* FWTTestCase.m in Sources */,
 				787633031C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */,
 				787632FE1C51158C0074DE3F /* FWTNotifiableDevice+Private.m in Sources */,
+				787633081C51330A0074DE3F /* FWTRequesterManagerTests.m in Sources */,
 				787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

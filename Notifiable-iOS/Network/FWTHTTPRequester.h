@@ -30,10 +30,10 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                          params:(NSDictionary *)params
                         success:(_Nullable FWTRequestManagerSuccessBlock)success
                         failure:(_Nullable FWTRequestManagerFailureBlock)failure;
-- (void)unregisterToken:(NSNumber *)tokenId
-              userAlias:(NSString * _Nullable)userAlias
-                success:(FWTRequestManagerSuccessBlock)success
-                failure:(FWTRequestManagerFailureBlock)failure;
+- (void)unregisterTokenId:(NSNumber *)tokenId
+                userAlias:(NSString * _Nullable)userAlias
+                  success:(FWTRequestManagerSuccessBlock)success
+                  failure:(FWTRequestManagerFailureBlock)failure;
 - (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
                                    success:(FWTRequestManagerSuccessBlock)success
                                    failure:(FWTRequestManagerFailureBlock)failure;

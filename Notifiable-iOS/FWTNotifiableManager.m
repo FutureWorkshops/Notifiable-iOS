@@ -126,6 +126,17 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                completionHandler:handler];
 }
 
+- (void)registerAnonymousToken:(NSData *)token
+                    deviceName:(NSString *)deviceName
+             completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self registerAnonymousToken:token
+                      deviceName:deviceName
+                      withLocale:[NSLocale autoupdatingCurrentLocale]
+               deviceInformation:@{}
+               completionHandler:handler];
+}
+
 -(void)registerAnonymousToken:(NSData *)token withLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self registerAnonymousToken:token
@@ -160,6 +171,16 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     [self registerToken:token
           withUserAlias:userAlias
               andLocale:[NSLocale autoupdatingCurrentLocale]
+      completionHandler:handler];
+}
+
+- (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias deviceName:(NSString *)deviceName completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self registerToken:token
+             deviceName:deviceName
+          withUserAlias:userAlias
+                 locale:[NSLocale autoupdatingCurrentLocale]
+      deviceInformation:@{}
       completionHandler:handler];
 }
 

@@ -74,6 +74,18 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
+ Register a device without a user associated to it. If the token already exists in the server,
+ the device configuration in the server will not change, otherwise, a new device will be created.
+ 
+ @param token       The device token.
+ @param deviceName  A label for the device.
+ @param handler     Block called once that the operation is finished.
+ */
+- (void)registerAnonymousToken:(NSData *)token
+                    deviceName:(NSString *)deviceName
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
  Register a device, without a user associated to it. If the token already exists in the server,
  the device locale will be updated. Otherwise, a new device will be created with the token 
  and locale provided.
@@ -130,6 +142,21 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
 */
 - (void)registerToken:(NSData *)token
         withUserAlias:(NSString *)userAlias
+    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Register a device with a user associated to it. If the token already exists in the server,
+ the device configuration in the server will not change, otherwise, a new device will be created.
+ If the user alias doesn't exist, a new user will be created.
+ 
+ @param token       The device token.
+ @param userAlias   The alias of the user in the server.
+ @param deviceName  A label for the device.
+ @param handler     Block called once that the operation is finished.
+ */
+- (void)registerToken:(NSData *)token
+        withUserAlias:(NSString *)userAlias
+           deviceName:(NSString *)deviceName
     completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**

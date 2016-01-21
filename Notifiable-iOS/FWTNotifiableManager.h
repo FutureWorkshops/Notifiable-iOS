@@ -111,7 +111,7 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
 - (void)registerAnonymousToken:(NSData *)token
                     withLocale:(NSLocale *)locale
              deviceInformation:(NSDictionary *)deviceInformation
-             completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Register a device, without a user associated to it, but with a name to represent the device.
@@ -128,7 +128,7 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
                    deviceName:(NSString * _Nullable)deviceName
                    withLocale:(NSLocale *)locale
             deviceInformation:(NSDictionary *)deviceInformation
-            completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+            completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
 /**
@@ -189,7 +189,7 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
         withUserAlias:(NSString *)userAlias
                locale:(NSLocale *)locale
     deviceInformation:(NSDictionary *)deviceInformation
-    completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Register a device, with a user associated to it, but with a name to represent the device. 
@@ -209,7 +209,7 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
         withUserAlias:(NSString *)userAlias
                locale:(NSLocale *)locale
     deviceInformation:(NSDictionary *)deviceInformation
-    completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Update device information
 /**
@@ -270,7 +270,7 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
                deviceName:(NSString * _Nullable)deviceName
                  location:(NSLocale * _Nullable)locale
         deviceInformation:(NSDictionary * _Nullable)deviceInformation
-        completionHandler:(FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Device/user relationship
 /**

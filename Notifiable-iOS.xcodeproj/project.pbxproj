@@ -10,7 +10,7 @@
 		65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */; };
 		7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
 		7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
-		787632481C50EC220074DE3F /* Notifiable_iOSUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */; };
+		787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* FWTRegisterTests.m */; };
 		7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
 		787632571C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */; };
 		787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
@@ -21,6 +21,16 @@
 		787632711C50ED370074DE3F /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876326A1C50ED370074DE3F /* AFURLResponseSerialization.m */; };
 		787632721C50ED370074DE3F /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876326C1C50ED370074DE3F /* AFURLSessionManager.m */; };
 		787632F51C50EEAC0074DE3F /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632F21C50EE950074DE3F /* OCMock.framework */; };
+		787632FA1C50FD610074DE3F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632F61C50FD440074DE3F /* MobileCoreServices.framework */; };
+		787632FD1C50FD9E0074DE3F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632FC1C50FD9E0074DE3F /* SystemConfiguration.framework */; };
+		787632FE1C51158C0074DE3F /* FWTNotifiableDevice+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */; };
+		787632FF1C51158D0074DE3F /* FWTNotifiableDevice+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */; };
+		787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */; };
+		787633011C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */; };
+		787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
+		787633031C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
+		787633041C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
+		787633051C5115B50074DE3F /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
 		7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */; };
 		7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */; };
 		78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C671C4E55360044CE25 /* FWTRequesterManager.m */; };
@@ -111,7 +121,7 @@
 		7837C7BF1C4D7258007B2F61 /* NSError+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSError+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
 		7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSError+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
 		787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSUnitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Notifiable_iOSUnitTests.m; sourceTree = "<group>"; };
+		787632471C50EC220074DE3F /* FWTRegisterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTRegisterTests.m; sourceTree = "<group>"; };
 		787632491C50EC220074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		787632541C50EC360074DE3F /* Notifiable-iOSIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSIntegrationTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Notifiable_iOSIntegrationTests.m; sourceTree = "<group>"; };
@@ -130,6 +140,9 @@
 		7876326B1C50ED370074DE3F /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		7876326C1C50ED370074DE3F /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
 		787632E01C50EE950074DE3F /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = "Support Libraries/OCMock/Source/OCMock.xcodeproj"; sourceTree = SOURCE_ROOT; };
+		787632F61C50FD440074DE3F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		787632F81C50FD490074DE3F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		787632FC1C50FD9E0074DE3F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
 		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; };
 		7879F7241C49549400C6176C /* FWTNotifiableAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableAuthenticator.h; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.h"; sourceTree = SOURCE_ROOT; };
@@ -158,6 +171,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				787632FD1C50FD9E0074DE3F /* SystemConfiguration.framework in Frameworks */,
+				787632FA1C50FD610074DE3F /* MobileCoreServices.framework in Frameworks */,
 				787632F51C50EEAC0074DE3F /* OCMock.framework in Frameworks */,
 				7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */,
 			);
@@ -198,7 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				787632E01C50EE950074DE3F /* OCMock.xcodeproj */,
-				787632471C50EC220074DE3F /* Notifiable_iOSUnitTests.m */,
+				787632471C50EC220074DE3F /* FWTRegisterTests.m */,
 				787632491C50EC220074DE3F /* Info.plist */,
 			);
 			path = "Notifiable-iOSUnitTests";
@@ -314,6 +329,9 @@
 		8E4119CB17E9B9D1000CD6F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				787632FC1C50FD9E0074DE3F /* SystemConfiguration.framework */,
+				787632F81C50FD490074DE3F /* CoreGraphics.framework */,
+				787632F61C50FD440074DE3F /* MobileCoreServices.framework */,
 				8E4119F517E9BC53000CD6F3 /* UIKit.framework */,
 				8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */,
 				8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */,
@@ -512,7 +530,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				787632481C50EC220074DE3F /* Notifiable_iOSUnitTests.m in Sources */,
+				787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
+				787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */,
+				787633031C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */,
+				787632FE1C51158C0074DE3F /* FWTNotifiableDevice+Private.m in Sources */,
+				787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,7 +542,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				787633011C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
+				787632FF1C51158D0074DE3F /* FWTNotifiableDevice+Private.m in Sources */,
+				787633041C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */,
 				787632571C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m in Sources */,
+				787633051C5115B50074DE3F /* NSData+FWTNotifiable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

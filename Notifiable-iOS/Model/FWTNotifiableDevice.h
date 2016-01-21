@@ -13,17 +13,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWTNotifiableDevice : NSObject
 
 /** The registered token for this device */
-@property (nonatomic, strong, readonly) NSData *token;
+@property (nonatomic, copy, readonly) NSData *token;
 /** The id of this device on the server */
-@property (nonatomic, strong, readonly) NSNumber *tokenId;
+@property (nonatomic, copy, readonly) NSNumber *tokenId;
 /** The device locale */
-@property (nonatomic, strong, readonly) NSLocale *locale;
+@property (nonatomic, copy, readonly) NSLocale *locale;
 /** The user associated with this device. If the device is anonymous, the user will be nil */
-@property (nonatomic, strong, readonly, nullable) NSString *user;
+@property (nonatomic, copy, readonly, nullable) NSString *user;
 /** The name of the this device on the server */
-@property (nonatomic, strong, readonly, nullable) NSString *name;
+@property (nonatomic, copy, readonly, nullable) NSString *name;
 /** Other saved informations about the device */
-@property (nonatomic, strong, readonly, nullable) NSDictionary *information;
+@property (nonatomic, copy, readonly, nullable) NSDictionary *information;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithToken:(NSData *)deviceToken

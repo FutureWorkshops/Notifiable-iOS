@@ -37,6 +37,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
 
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester retryAttempts:(NSInteger)attempts andRetryDelay:(NSTimeInterval)delay
 {
+    NSAssert(requester != nil, @"The manager need a requester");
     self = [super init];
     if (self) {
         self->_requester = requester;
@@ -79,12 +80,13 @@ NSString * const FWTNotifiableProvider          = @"apns";
                  locale:locale
       deviceInformation:deviceInformation
                attempts:self.retryAttempts
-          previousError:nil completionHandler:handler];
+          previousError:nil
+      completionHandler:handler];
 }
 
-- (void)unregisterToken:(NSNumber *)deviceTokenId
-              userAlias:(NSString *)userAlias
-      completionHandler:(FWTSimpleRequestResponse)handler
+- (void)unregisterTokenId:(NSNumber *)deviceTokenId
+                userAlias:(NSString *)userAlias
+        completionHandler:(FWTSimpleRequestResponse)handler
 {
     [self _unregisterToken:deviceTokenId
                  userAlias:userAlias
@@ -93,9 +95,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
          completionHandler:handler];
 }
 
-- (void)markNotificationAsOpenedOnDevice:(NSData *)deviceToken
-                              withParams:(NSDictionary *)params
-                       completionHandler:(FWTSimpleRequestResponse)handler
+- (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
+                         completionHandler:(FWTSimpleRequestResponse)handler
 {
     [self _markNotificationAsOpenedWithParams:params
                                      attempts:self.retryAttempts
@@ -152,6 +153,14 @@ NSString * const FWTNotifiableProvider          = @"apns";
                        previousError:(NSError *)error
                    completionHandler:(FWTDeviceTokenIdResponse)handler
 {
+    NSAssert(token != nil, @"To register a device, a token need to be provided");
+    
+    if (token == nil) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(nil, [NSError fwt_invalidDeviceInformationError:nil]);
+        });
+    }
+    
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -217,6 +226,14 @@ NSString * const FWTNotifiableProvider          = @"apns";
         previousError:(NSError *)error
     completionHandler:(FWTDeviceTokenIdResponse)handler
 {
+    NSAssert(deviceTokenId != nil, @"To update a device, a device token in need to be provided.");
+    
+    NSAssert(alias != nil ||
+             token != nil ||
+             name != nil ||
+             locale != nil ||
+             deviceInformation != nil, @"You need provid at least one updated parameter.");
+    
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -310,7 +327,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requester unregisterToken:deviceTokenId userAlias:userAlias success:^(NSDictionary * _Nullable response) {
+    [self.requester unregisterTokenId:deviceTokenId userAlias:userAlias success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself.logger logMessage:@"Did unregister for push notifications"];
         if(handler){

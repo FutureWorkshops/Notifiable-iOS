@@ -368,14 +368,14 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     NSAssert(self.currentDevice.token, @"This device is not registered.");
     
     __weak typeof(self) weakSelf = self;
-    [self.requestManager unregisterToken:self.currentDevice.tokenId
-                               userAlias:self.currentDevice.user
-                       completionHandler:^(BOOL success, NSError * _Nullable error) {
-                           if (success) {
-                               weakSelf.currentDevice = nil;
-                           }
-                           handler(success, error);
-                       }];
+    [self.requestManager unregisterTokenId:self.currentDevice.tokenId
+                                 userAlias:self.currentDevice.user
+                         completionHandler:^(BOOL success, NSError * _Nullable error) {
+                             if (success) {
+                                 weakSelf.currentDevice = nil;
+                             }
+                             handler(success, error);
+                         }];
 }
 
 - (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
@@ -388,8 +388,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     if(notificationID)
         requestParameters[@"notification_id"] = notificationID;
     
-    [self.requestManager markNotificationAsOpenedOnDevice:self.currentDevice.token
-                                               withParams:requestParameters
+    [self.requestManager markNotificationAsOpenedWithParams:requestParameters
                                           completionHandler:nil];
 }
 

@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FWTNotifiableDevice (Private)
 
 - (instancetype) deviceWithToken:(NSData *)token;
+- (instancetype) deviceWithToken:(NSData *)token
+                       andLocale:(NSLocale *)locale;
 
 - (instancetype) deviceWithUser:(NSString * _Nullable)user
                            name:(NSString * _Nullable)name

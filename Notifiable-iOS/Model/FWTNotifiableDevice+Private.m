@@ -20,6 +20,17 @@
                                           information:self.information];
 }
 
+- (instancetype) deviceWithToken:(NSData *)token
+                       andLocale:(NSLocale *)locale
+{
+    return [[FWTNotifiableDevice alloc] initWithToken:token
+                                              tokenId:self.tokenId
+                                               locale:locale
+                                                 user:self.user
+                                                 name:self.name
+                                          information:self.information];
+}
+
 - (instancetype) deviceWithUser:(NSString *)user
                            name:(NSString *)name
                  andInformation:(NSDictionary *)deviceInformation

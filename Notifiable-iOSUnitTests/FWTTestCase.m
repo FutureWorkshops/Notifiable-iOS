@@ -8,7 +8,10 @@
 
 #import "FWTTestCase.h"
 #import "FWTRequesterManager.h"
+#import "FWTNotifiableManager.h"
 #import <OCMock/OCMock.h>
+
+typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
 
 @implementation FWTTestCase
 
@@ -93,6 +96,35 @@
     if (block) {
         block();
     }
+}
+
+- (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
+{
+    [self _registerDeviceWithTokenId:tokenId onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
+        [manager registerAnonymousToken:token completionHandler:^(BOOL success, NSError * _Nullable error) {
+            registerBlock(success, error);
+        }];
+    }];
+}
+
+- (void) registerDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
+{
+    [self _registerDeviceWithTokenId:tokenId onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
+        [manager registerToken:token withUserAlias:userAlias completionHandler:^(BOOL success, NSError * _Nullable error) {
+            registerBlock(success, error);
+        }];
+    }];
+}
+
+- (void) _registerDeviceWithTokenId:(NSNumber *)tokenId onMock:(id)requesterManagerMock andBlock:(void(^)(FWTTestRegisterBlock registerBlock))block
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Register device"];
+    [self mockDeviceRegisterResponse:tokenId onMock:requesterManagerMock withBlock:^{
+        block(^(BOOL success, NSError * _Nullable error) {
+            [expectation fulfill];
+        });
+    }];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
 @end

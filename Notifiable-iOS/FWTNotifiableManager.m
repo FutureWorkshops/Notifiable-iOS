@@ -303,7 +303,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
         deviceInformation:(NSDictionary *)deviceInformation
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    NSAssert(token != nil || userAlias != nil || locale != nil || deviceInformation != nil, @"The update method was called without any information to update.");
+    NSAssert(token != nil || name != nil || userAlias != nil || locale != nil || deviceInformation != nil, @"The update method was called without any information to update.");
     NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:deviceInformation:completionHandler: instead");
     
     __weak typeof(self) weakSelf = self;
@@ -440,7 +440,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
         if (self.currentDevice == nil) {
             self.currentDevice = [[FWTNotifiableDevice alloc] initWithToken:token tokenId:deviceTokenId andLocale:locale];
         } else {
-            self.currentDevice = [self.currentDevice deviceWithToken:token];
+            self.currentDevice = [self.currentDevice deviceWithToken:token andLocale:locale];
         }
         self.currentDevice = [self.currentDevice deviceWithName:name];
     }

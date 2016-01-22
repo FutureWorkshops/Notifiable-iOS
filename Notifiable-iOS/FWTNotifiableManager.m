@@ -23,7 +23,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 @interface FWTNotifiableManager ()
 
 @property (nonatomic, strong) FWTRequesterManager *requestManager;
-@property (nonatomic, strong, readwrite, nullable) FWTNotifiableDevice *currentDevice;
+@property (nonatomic, copy, readwrite, nullable) FWTNotifiableDevice *currentDevice;
 
 @end
 

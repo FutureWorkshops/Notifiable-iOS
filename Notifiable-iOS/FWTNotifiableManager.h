@@ -37,7 +37,7 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
 /** Level of the informations that will be logged by the manager */
 @property (nonatomic, strong) id<FWTNotifiableLogger> logger;
 /** Current device. If the device is not registered, it will be nil. */
-@property (nonatomic, strong, readonly, nullable) FWTNotifiableDevice *currentDevice;
+@property (nonatomic, copy, readonly, nullable) FWTNotifiableDevice *currentDevice;
 
 /**
  Checks if the user have allowed the application to use push notifications with a specific UIUserNotificationType
@@ -268,6 +268,23 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
 */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
+                 location:(NSLocale * _Nullable)locale
+        deviceInformation:(NSDictionary * _Nullable)deviceInformation
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Update the informations of the device and change the user.
+ 
+ @param token               New device token.
+ @param deviceName          The name of the device
+ @param locale              New device locale.
+ @param deviceInformation   Aditional information about the device.
+ @param userAlias   The alias of the user in the server.
+ @param handler             Block called once that the operation is finished.
+ */
+- (void)updateDeviceToken:(NSData * _Nullable)token
+               deviceName:(NSString * _Nullable)name
+                userAlias:(NSString * _Nullable)userAlias
                  location:(NSLocale * _Nullable)locale
         deviceInformation:(NSDictionary * _Nullable)deviceInformation
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;

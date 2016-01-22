@@ -187,6 +187,55 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
+- (void) testFailOnRegisterAnonymousDevice
+{
+    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+                                                                     accessId:OCMOCK_ANY
+                                                                 andSecretKey:OCMOCK_ANY];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Fail unregister"];
+    [self stubDeviceRegisterResponse:nil andError:[NSError errorWithDomain:@"domain" code:404 userInfo:nil] onMock:self.requesterManagerMock withBlock:^{
+        [manager registerAnonymousToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
+                             deviceName:@"name"
+                             withLocale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
+                      deviceInformation:@{@"test":@YES}
+                      completionHandler:^(BOOL success, NSError * _Nullable error) {
+                          
+                          XCTAssertFalse(success);
+                          XCTAssertNotNil(error);
+                          
+                          [expectation fulfill];
+                      }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+    XCTAssertNil(manager.currentDevice);
+}
+
+- (void) testFailOnRegisterDevice
+{
+    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+                                                                     accessId:OCMOCK_ANY
+                                                                 andSecretKey:OCMOCK_ANY];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Fail unregister"];
+    [self stubDeviceRegisterResponse:nil andError:[NSError errorWithDomain:@"domain" code:404 userInfo:nil] onMock:self.requesterManagerMock withBlock:^{
+        [manager registerToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
+                    deviceName:@"name"
+                 withUserAlias:@"user"
+                        locale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
+             deviceInformation:@{@"test":@YES}
+             completionHandler:^(BOOL success, NSError * _Nullable error) {
+                          
+                          XCTAssertFalse(success);
+                          XCTAssertNotNil(error);
+                          
+                          [expectation fulfill];
+             }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+    XCTAssertNil(manager.currentDevice);
+}
+
 - (void) _expectUserAliasRegisterOnManager:(FWTNotifiableManager *)manager withBlock:(void(^)(void))block
 {
     id managerMock = [self _userAliasMockWithManager:manager];

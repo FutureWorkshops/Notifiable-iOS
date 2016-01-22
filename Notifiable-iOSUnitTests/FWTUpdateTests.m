@@ -354,6 +354,7 @@
 {
     [self registerAnonymousDeviceWithToken:token
                                    tokenId:self.deviceTokenId
+                                  andError:nil
                                  onManager:self.manager
                            andRquesterMock:self.requesterManagerMock];
 }
@@ -362,6 +363,7 @@
 {
     [self registerDeviceWithToken:token
                           tokenId:self.deviceTokenId
+                            error:nil
                      andUserAlias:userAlias
                         onManager:self.manager
                   andRquesterMock:self.requesterManagerMock];

@@ -96,7 +96,7 @@
     NSData* token = [@"token" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *deviceName = @"deviceName";
     
-    [self mockDeviceRegisterResponse:@42 onMock:self.requesterManagerMock withBlock:^{
+    [self stubDeviceRegisterResponse:@42 andError:nil onMock:self.requesterManagerMock withBlock:^{
         [manager registerAnonymousToken:token
                              deviceName:deviceName
                              withLocale:locale
@@ -163,7 +163,7 @@
     NSData* token = [@"token" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *deviceName = @"deviceName";
     
-    [self mockDeviceRegisterResponse:@42 onMock:self.requesterManagerMock withBlock:^{
+    [self stubDeviceRegisterResponse:@42 andError:nil onMock:self.requesterManagerMock withBlock:^{
         [manager registerToken:token
                     deviceName:deviceName
                  withUserAlias:userAlias

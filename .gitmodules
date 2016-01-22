@@ -1,0 +1,6 @@
+[submodule "Support Libraries/AFNetworking"]
+	path = Support Libraries/AFNetworking
+	url = git@github.com:AFNetworking/AFNetworking.git
+[submodule "Support Libraries/OCMock"]
+	path = Support Libraries/OCMock
+	url = git@github.com:erikdoe/ocmock.git

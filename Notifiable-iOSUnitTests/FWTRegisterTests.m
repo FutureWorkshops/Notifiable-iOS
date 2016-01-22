@@ -96,7 +96,7 @@
     NSData* token = [@"token" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *deviceName = @"deviceName";
     
-    [self _mockDeviceResponseWithBlock:^{
+    [self mockDeviceRegisterResponse:@42 onMock:self.requesterManagerMock withBlock:^{
         [manager registerAnonymousToken:token
                              deviceName:deviceName
                              withLocale:locale
@@ -163,7 +163,7 @@
     NSData* token = [@"token" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *deviceName = @"deviceName";
     
-    [self _mockDeviceResponseWithBlock:^{
+    [self mockDeviceRegisterResponse:@42 onMock:self.requesterManagerMock withBlock:^{
         [manager registerToken:token
                     deviceName:deviceName
                  withUserAlias:userAlias
@@ -185,24 +185,6 @@
     }];
     
     [self waitForExpectationsWithTimeout:1 handler:nil];
-}
-
-- (void) _mockDeviceResponseWithBlock:(void(^)(void))block
-{
-    void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
-        void (^passedBlock)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
-        [invocation getArgument:&passedBlock atIndex:7];
-        if (passedBlock) {
-            passedBlock(@42, nil);
-        }
-    };
-    OCMStub([self.requesterManagerMock registerDeviceWithUserAlias:[OCMArg any]
-                                                             token:[OCMArg any]
-                                                              name:[OCMArg any]
-                                                            locale:[OCMArg any]
-                                                 deviceInformation:[OCMArg any]
-                                                 completionHandler:[OCMArg any]]).andDo(postProxyBlock);
-    block();
 }
 
 - (void) _expectUserAliasRegisterOnManager:(FWTNotifiableManager *)manager withBlock:(void(^)(void))block

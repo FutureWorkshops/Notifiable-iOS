@@ -37,6 +37,7 @@
 		787633151C51653A0074DE3F /* FWTNSDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787633141C51653A0074DE3F /* FWTNSDataTests.m */; };
 		787633171C5165E10074DE3F /* FWTDeviceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787633161C5165E10074DE3F /* FWTDeviceTests.m */; };
 		787633191C5169D10074DE3F /* FWTHTTPRequesterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787633181C5169D10074DE3F /* FWTHTTPRequesterTests.m */; };
+		7876331B1C51739E0074DE3F /* FWTUpdateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7876331A1C51739E0074DE3F /* FWTUpdateTests.m */; };
 		7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */; };
 		7879F7261C49549500C6176C /* FWTNotifiableAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */; };
 		78843C681C4E55360044CE25 /* FWTRequesterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C671C4E55360044CE25 /* FWTRequesterManager.m */; };
@@ -156,6 +157,7 @@
 		787633141C51653A0074DE3F /* FWTNSDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTNSDataTests.m; sourceTree = "<group>"; };
 		787633161C5165E10074DE3F /* FWTDeviceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTDeviceTests.m; sourceTree = "<group>"; };
 		787633181C5169D10074DE3F /* FWTHTTPRequesterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTHTTPRequesterTests.m; sourceTree = "<group>"; };
+		7876331A1C51739E0074DE3F /* FWTUpdateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTUpdateTests.m; sourceTree = "<group>"; };
 		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
 		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; };
 		7879F7241C49549400C6176C /* FWTNotifiableAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiableAuthenticator.h; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.h"; sourceTree = SOURCE_ROOT; };
@@ -236,6 +238,7 @@
 				787633141C51653A0074DE3F /* FWTNSDataTests.m */,
 				787633161C5165E10074DE3F /* FWTDeviceTests.m */,
 				787633181C5169D10074DE3F /* FWTHTTPRequesterTests.m */,
+				7876331A1C51739E0074DE3F /* FWTUpdateTests.m */,
 			);
 			path = "Notifiable-iOSUnitTests";
 			sourceTree = "<group>";
@@ -572,6 +575,7 @@
 				787633031C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */,
 				787633151C51653A0074DE3F /* FWTNSDataTests.m in Sources */,
 				787632FE1C51158C0074DE3F /* FWTNotifiableDevice+Private.m in Sources */,
+				7876331B1C51739E0074DE3F /* FWTUpdateTests.m in Sources */,
 				787633081C51330A0074DE3F /* FWTRequesterManagerTests.m in Sources */,
 				787633171C5165E10074DE3F /* FWTDeviceTests.m in Sources */,
 				787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */,
@@ -824,6 +828,7 @@
 				7876324F1C50EC220074DE3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7876325C1C50EC360074DE3F /* Build configuration list for PBXNativeTarget "Notifiable-iOSIntegrationTests" */ = {
 			isa = XCConfigurationList;
@@ -832,6 +837,7 @@
 				7876325E1C50EC360074DE3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E4119C417E9B9D1000CD6F3 /* Build configuration list for PBXProject "Notifiable-iOS" */ = {
 			isa = XCConfigurationList;

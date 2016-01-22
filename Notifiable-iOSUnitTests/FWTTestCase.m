@@ -46,18 +46,23 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
     }
 }
 
-- (void) mockDeviceRegisterResponse:(NSNumber *)deviceTokenId onMock:(id)mock
+- (void) stubDeviceRegisterResponse:(NSNumber *)deviceTokenId onMock:(id)mock
 {
-    [self mockDeviceRegisterResponse:deviceTokenId onMock:mock withBlock:nil];
+    [self stubDeviceRegisterResponse:deviceTokenId andError:nil onMock:mock withBlock:nil];
 }
 
-- (void) mockDeviceRegisterResponse:(NSNumber *)deviceTokenId onMock:(id)mock withBlock:(void(^)(void))block
+- (void) stubDeviceRegisterResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock
+{
+    [self stubDeviceRegisterResponse:deviceTokenId andError:error onMock:mock withBlock:nil];
+}
+
+- (void) stubDeviceRegisterResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock withBlock:(void(^)(void))block
 {
     void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
         FWTDeviceTokenIdResponse passedBlock;
         [invocation getArgument:&passedBlock atIndex:7];
         if (passedBlock) {
-            passedBlock(deviceTokenId, nil);
+            passedBlock(deviceTokenId, error);
         }
     };
     OCMStub([mock registerDeviceWithUserAlias:[OCMArg any]
@@ -73,10 +78,15 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
 
 - (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId onMock:(id)mock
 {
-    [self stubDeviceUpdateResponse:deviceTokenId onMock:mock withBlock:nil];
+    [self stubDeviceUpdateResponse:deviceTokenId andError:nil onMock:mock withBlock:nil];
 }
 
-- (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId onMock:(id)mock withBlock:(void(^)(void))block
+- (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock
+{
+    [self stubDeviceRegisterResponse:deviceTokenId andError:error onMock:mock withBlock:nil];
+}
+
+- (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock withBlock:(void(^)(void))block
 {
     void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
         FWTDeviceTokenIdResponse passedBlock;
@@ -98,28 +108,28 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
     }
 }
 
-- (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
+- (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
 {
-    [self _registerDeviceWithTokenId:tokenId onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
+    [self _registerDeviceWithTokenId:tokenId andError:error onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
         [manager registerAnonymousToken:token completionHandler:^(BOOL success, NSError * _Nullable error) {
             registerBlock(success, error);
         }];
     }];
 }
 
-- (void) registerDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
+- (void) registerDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId error:(NSError *)error andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
 {
-    [self _registerDeviceWithTokenId:tokenId onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
+    [self _registerDeviceWithTokenId:tokenId andError:error onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
         [manager registerToken:token withUserAlias:userAlias completionHandler:^(BOOL success, NSError * _Nullable error) {
             registerBlock(success, error);
         }];
     }];
 }
 
-- (void) _registerDeviceWithTokenId:(NSNumber *)tokenId onMock:(id)requesterManagerMock andBlock:(void(^)(FWTTestRegisterBlock registerBlock))block
+- (void) _registerDeviceWithTokenId:(NSNumber *)tokenId andError:(NSError *)error onMock:(id)requesterManagerMock andBlock:(void(^)(FWTTestRegisterBlock registerBlock))block
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Register device"];
-    [self mockDeviceRegisterResponse:tokenId onMock:requesterManagerMock withBlock:^{
+    [self stubDeviceRegisterResponse:tokenId andError:error onMock:requesterManagerMock withBlock:^{
         block(^(BOOL success, NSError * _Nullable error) {
             [expectation fulfill];
         });

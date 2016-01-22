@@ -334,6 +334,15 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 
 -(void)anonymiseTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
+    NSAssert(self.currentDevice.token != nil, @"To anonymise the device, first, you need to register it.");
+    
+    if (self.currentDevice.token == nil) {
+        if (handler) {
+            handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return;
+    }
+    
     [self registerAnonymousToken:self.currentDevice.token
                completionHandler:handler];
 }
@@ -343,6 +352,13 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     NSAssert(userAlias.length > 0, @"To associate a device, a user alias need to be provided");
     NSAssert(self.currentDevice.token != nil, @"This device is not registered, please use the method registerToken:withUserAlias:completionHandler: instead.");
+    
+    if (userAlias.length == 0 || self.currentDevice.token == nil) {
+        if (handler) {
+            handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return;
+    }
     
     __weak typeof(self) weakSelf = self;
     [self updateDeviceToken:nil deviceName:nil userAlias:userAlias location:nil deviceInformation:nil completionHandler:^(BOOL success, NSError * _Nullable error) {
@@ -367,6 +383,13 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     NSAssert(self.currentDevice.token, @"This device is not registered.");
     
+    if (self.currentDevice.token == nil) {
+        if (handler) {
+            handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return;
+    }
+    
     __weak typeof(self) weakSelf = self;
     [self.requestManager unregisterTokenId:self.currentDevice.tokenId
                                  userAlias:self.currentDevice.user
@@ -381,7 +404,6 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
     NSString *notificationID = notificationInfo[@"notification_id"];
-    NSAssert(notificationID.length > 0, @"The notification received does not have an id");
     
     NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
     

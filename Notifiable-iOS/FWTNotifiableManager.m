@@ -431,6 +431,11 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
         return;
     }
     
+    [self.requestManager listDevicesOfUser:self.currentDevice.user completionHandler:^(NSArray<FWTNotifiableDevice *> * _Nonnull devices, NSError * _Nullable error) {
+        if(handler) {
+            handler(devices, error);
+        }
+    }];
 }
 
 #pragma mark - Private

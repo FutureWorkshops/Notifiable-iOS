@@ -18,7 +18,7 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
 - (void)setUp
 {
     [super setUp];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWTUserInfoNotifiableCurrentDeviceKey"];;
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FWTUserInfoNotifiableCurrentDeviceKey"];
 }
 
 - (void)tearDown

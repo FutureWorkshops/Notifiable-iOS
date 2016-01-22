@@ -166,6 +166,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                    deviceInformation:deviceInformation
                                    completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                                        __strong typeof(weakSelf) sself = weakSelf;
+                                       sself.currentDevice = nil;
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
                                        sself.currentDevice = [sself.currentDevice deviceWithInformation:deviceInformation];
                                        if (handler) {
@@ -227,6 +228,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                    deviceInformation:deviceInformation
                                    completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                                        __strong typeof(weakSelf) sself = weakSelf;
+                                       sself.currentDevice = nil;
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
                                        sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name andInformation:deviceInformation];
                                        if (handler) {
@@ -374,9 +376,6 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
         handler(error == nil, error);
         
     }];
-    [self registerToken:self.currentDevice.token
-          withUserAlias:userAlias
-      completionHandler:handler];
 }
 
 - (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler

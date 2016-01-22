@@ -46,6 +46,7 @@
 		78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */; };
 		78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */; };
 		788ED7171C527A2600694DC7 /* FWTUnregisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */; };
+		78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
 		8E4119F617E9BC53000CD6F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119F517E9BC53000CD6F3 /* UIKit.framework */; };
 /* End PBXBuildFile section */
@@ -177,6 +178,7 @@
 		788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTUnregisterTests.m; sourceTree = "<group>"; };
 		78CC4C421C47E62A0048A3A2 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Framework/module.modulemap; sourceTree = SOURCE_ROOT; };
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
+		78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTUserOperationTests.m; sourceTree = "<group>"; };
 		8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFWTNotifiable.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -242,6 +244,7 @@
 				787633181C5169D10074DE3F /* FWTHTTPRequesterTests.m */,
 				7876331A1C51739E0074DE3F /* FWTUpdateTests.m */,
 				788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */,
+				78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */,
 			);
 			path = "Notifiable-iOSUnitTests";
 			sourceTree = "<group>";
@@ -572,6 +575,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */,
 				787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
 				787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */,
 				787633101C51383B0074DE3F /* FWTTestCase.m in Sources */,

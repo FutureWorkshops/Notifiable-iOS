@@ -1,13 +1,25 @@
 # Notifiable-iOS
 
-<b>Notifiable-iOS</b> is a set of utility classes to easily integrate with
-<a href="https://github.com/FutureWorkshops/Notifiable-Rails">Notifiable-Rails</a>.
+**Notifiable-iOS** is a set of utility classes to easily integrate with
+[Notifiable-Rails](https://github.com/FutureWorkshops/Notifiable-Rails).
 
 It handles device token registration and takes care of retrying failed requests and avoiding duplicate registrations.
 
 Registering existing token for different user will result in token being reassigned.
 
 ## Setup
+
+### Project integration
+
+The `FWTNotifiable` for iOS is avaliable on [Cocoapods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
+
+`pod 'FWTNotifiable'`
+
+If you are not using Cocoapods, you clone this project and import the files into your project. This libraries uses [AFNetworking](https://github.com/AFNetworking/AFNetworking) as a dependency and is configured as a [submodule](https://git-scm.com/docs/git-submodule).
+
+You can see an example of the implementation in the [Sample folder](Sample).
+
+### Use
 
 You should add the following to your application delegate:
 
@@ -66,36 +78,110 @@ override func viewDidLoad() {
 }
 ```
 
-## Registering a user
+## Registering a device
 
-A notification is triggered (`FWTNotifiableDidRegisterWithAPNSNotification`) upon the `FWTNotifiableManager` registering the device token, you should proceed to register your user with your service at this point.
+After the `application:didRegisterForRemoteNotificationsWithDeviceToken:` you can use the device token to register this device in the `Notifiable-Rails` server.
 
-UserInfo would be some data used to identify the user of the device (user ID, nickname etc...), the extended parameters should represent metadata about the device, here you could send a locale for example along with an application identifier for your app.
+You can register an anonymous device:
 
+```swift
+override func viewDidLoad() {
+	super.viewDidLoad()
+	NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
+}
+ 
+ func registerForRemoteNotification(notification:NSNotification) {
+	guard let token = notification.userInfo?[FWTNotifiableNotificationDeviceToken] as? NSData else {
+		return
+	}
+	
+	notifiableManager.registerAnonymousToken(token, deviceName: "iPhone", withLocale: NSLocale.autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+        	...
+	}
+}
 ```
-[[FWTNotifiableManager sharedManager] registerTokenWithUserInfo:@{ @"username" : someUsername } 
-											 extendedParameters:@{ @"app_id" : @1 }
-											  completionHandler:nil];
 
+Or register a device associated to a user:
+
+```swift
+override func viewDidLoad() {
+	super.viewDidLoad()
+	NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
+}
+ 
+ func registerForRemoteNotification(notification:NSNotification) {
+	guard let token = notification.userInfo?[FWTNotifiableNotificationDeviceToken] as? NSData else {
+		return
+	}
+	
+	notifiableManager.registerToken(token, deviceName: "device", withUserAlias: "user", locale: NSLocale.autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+        	...
+	}
+}
 ```
+
+The `deviceInformation` dictionary would some extended parameters that represents the metadata about the device, here you could send the latitude and longitude of the device, for example.
+
+A notification is triggered (`FWTNotifiableDidRegisterWithAPNSNotification`) upon the `FWTNotifiableManager` registering the device token.
+
+## Updating the device informations
+
+Once that the device is registered, you can update the device informations:
+
+```swift
+notifiableManager.updateDeviceToken(nil, deviceName: "device", userAlias: "user", location: NSLocale.currentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+	...
+}
+```
+
+You can, also, associate the device to other user:
+
+```swift
+notifiableManager.associateDeviceToUser(user, completionHandler: { (device, error) -> Void in
+	...
+}
+```
+
+Or anonymise the token:
+
+```swift
+notifiableManager.anonymiseTokenWithCompletionHandler { (device, error) -> Void in
+	...
+}
+```
+
+## Unregister a device
 
 You may wish to unregister a device token (on user logout or in-app opt out perhaps).
 
-```
-FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
-[manager unregisterToken];
+```swift
+notifiableManager.unregisterTokenWithCompletionHandler { (device, error) -> Void in
+	...
+}
 ```
 
 ## Marking a notification as opened
 When the application is launched or has received a remote notification, you can relay the fact it was opened by the user to <a href="https://github.com/FutureWorkshops/Notifiable-Rails">Notifiable-Rails</a>.
 
-The `userInfo` here should provide the necessary data to identify your user on the server (usually you would send the same information as was used during registration), the `notificationInfo` is the payload received from the notification.
+The `userInfo` here should be the payload received from the notification.
 
-```       
- [[FWTNotifiableManager sharedManager] applicationDidReceiveRemoteNotification:notificationInfo forUserInfo:userInfo];
- 
+```swift
+func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {       
+	notifiableManager.applicationDidReceiveRemoteNotification(userInfo);
+}
 ```
 
+## List devices associated to user
+
+Once that the device is registered, you can request a list of devices registered for the user:
+
+```swift
+notifiableManager.listDevicesRelatedToUserWithCompletionHandler { [weak self] (devices, error) -> Void in
+	...
+}
+```
+
+*If the device is registered as anonymous, the list will contain only the current device.*
 
 ## LICENSE
 

@@ -59,6 +59,9 @@ extension ViewController {
     func registeredForNotificationsWithToken(token:NSData) {
         self.token = token
         self.registerCompleted?(token: token)
+        self.manager.updateDeviceToken(token, deviceName: "device", userAlias: "user", location: NSLocale.currentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+            
+        }
     }
     
     @IBAction func registerAnonymous(sender: AnyObject) {

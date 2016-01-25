@@ -19,10 +19,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         let keys = SampleKeys()
-        notifiableManager = FWTNotifiableManager(url: "http://fw-notifiable-staging2.herokuapp.com/", accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
+        self.notifiableManager = FWTNotifiableManager(url: "http://fw-notifiable-staging2.herokuapp.com/", accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
+        
+        self.getMainViewController()?.manager = self.notifiableManager
+        
         return true
     }
 
-
+    func getMainViewController() -> ViewController?
+    {
+        guard let navigationController = window?.rootViewController as? UINavigationController else {
+            return nil
+        }
+        
+        if let mainViewController = navigationController.viewControllers[0] as? ViewController {
+            return mainViewController
+        } else {
+            return nil
+        }
+    }
 }
-

@@ -25,19 +25,25 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MQi-bh-iNQ">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YwD-Hs-d3v">
-                                                <rect key="frame" x="8" y="75" width="584" height="30"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="30" id="Csk-Cb-bP3"/>
-                                                </constraints>
-                                                <state key="normal" title="Register device to user"/>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q3U-LD-pN5">
                                                 <rect key="frame" x="8" y="37" width="584" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="xfD-Oe-ufN"/>
                                                 </constraints>
                                                 <state key="normal" title="Register Anonymous Device"/>
+                                                <connections>
+                                                    <action selector="registerAnonymous:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7ap-Dg-foE"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YwD-Hs-d3v">
+                                                <rect key="frame" x="8" y="75" width="584" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="Csk-Cb-bP3"/>
+                                                </constraints>
+                                                <state key="normal" title="Register device to user"/>
+                                                <connections>
+                                                    <action selector="registerToUser:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Va0-pU-gtv"/>
+                                                </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Register:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1bE-or-NVK">
                                                 <rect key="frame" x="8" y="8" width="68" height="21"/>
@@ -63,6 +69,9 @@
                                                     <constraint firstAttribute="height" constant="30" id="8Fa-ia-9TC"/>
                                                 </constraints>
                                                 <state key="normal" title="Associate to User"/>
+                                                <connections>
+                                                    <action selector="associateToUser:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GEL-2c-Gzz"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CHl-M4-67i">
                                                 <rect key="frame" x="8" y="180" width="584" height="30"/>
@@ -70,6 +79,9 @@
                                                     <constraint firstAttribute="height" constant="30" id="a6G-vb-AyK"/>
                                                 </constraints>
                                                 <state key="normal" title="Anonymise Device"/>
+                                                <connections>
+                                                    <action selector="anonymiseDevice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BZB-hu-2d2"/>
+                                                </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unregister:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3iy-3F-294">
                                                 <rect key="frame" x="8" y="218" width="85" height="21"/>
@@ -82,7 +94,13 @@
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vx7-M5-e2A">
                                                 <rect key="frame" x="8" y="247" width="584" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="aG5-JH-ObA"/>
+                                                </constraints>
                                                 <state key="normal" title="Unregister device"/>
+                                                <connections>
+                                                    <action selector="unregisterDevice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zVQ-46-xgz"/>
+                                                </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Update:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uh7-1f-oNC">
                                                 <rect key="frame" x="8" y="285" width="61" height="21"/>
@@ -99,6 +117,9 @@
                                                     <constraint firstAttribute="height" constant="30" id="2D7-By-Zow"/>
                                                 </constraints>
                                                 <state key="normal" title="Update device name"/>
+                                                <connections>
+                                                    <action selector="updateDeviceName:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9e2-tE-VwS"/>
+                                                </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f4F-9z-1Mc">
                                                 <rect key="frame" x="239" y="352" width="123" height="31"/>
@@ -108,6 +129,9 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="31" id="3wz-oe-tAU"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <action selector="updateOnSite:" destination="BYZ-38-t0r" eventType="valueChanged" id="vyA-9l-A52"/>
+                                                        </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Onsite" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WRW-2V-zNf">
                                                         <rect key="frame" x="8" y="5" width="50" height="21"/>
@@ -145,7 +169,7 @@
                                                 </constraints>
                                                 <state key="normal" title="List devices"/>
                                                 <connections>
-                                                    <segue destination="eII-hy-RtN" kind="show" id="pU4-fG-8Q8"/>
+                                                    <segue destination="eII-hy-RtN" kind="show" identifier="FWTDeviceListSegue" id="pU4-fG-8Q8"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -206,6 +230,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="FWTNotifiable" id="oRE-Po-oGW"/>
+                    <connections>
+                        <outlet property="onSiteSwitch" destination="vIy-h8-tFJ" id="UQF-tY-0pt"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="581" y="699"/>
@@ -213,18 +240,34 @@
         <!--Device List-->
         <scene sceneID="E5w-Dk-cSP">
             <objects>
-                <tableViewController title="Device List" id="eII-hy-RtN" sceneMemberID="viewController">
+                <tableViewController title="Device List" id="eII-hy-RtN" customClass="DeviceListTableViewController" customModule="Sample" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Y2L-cV-1rq">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Ai0-5Q-JXF">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FWTDeviceListCell" textLabel="ehS-fS-A2H" detailTextLabel="fQf-x2-Y9S" style="IBUITableViewCellStyleValue1" id="Ai0-5Q-JXF">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ai0-5Q-JXF" id="TbF-L5-4hS">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ehS-fS-A2H">
+                                            <rect key="frame" x="15" y="12" width="32" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fQf-x2-Y9S">
+                                            <rect key="frame" x="543" y="12" width="42" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>

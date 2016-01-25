@@ -9,7 +9,6 @@
         <!--FWTNotifiable-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <viewController title="FWTNotifiable" id="BYZ-38-t0r" customClass="ViewController" customModule="Sample" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
@@ -181,13 +180,13 @@
                                             <constraint firstItem="f4F-9z-1Mc" firstAttribute="centerX" secondItem="MQi-bh-iNQ" secondAttribute="centerX" id="5E1-ti-Abu"/>
                                             <constraint firstItem="1bE-or-NVK" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="8OT-ZL-LIC"/>
                                             <constraint firstItem="vx7-M5-e2A" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="BJ1-Yj-LEl"/>
-                                            <constraint firstItem="lHW-kM-3t4" firstAttribute="top" secondItem="3F0-Vo-vvp" secondAttribute="bottom" constant="47" id="DuS-A7-FH3"/>
                                             <constraint firstAttribute="trailing" secondItem="Q3U-LD-pN5" secondAttribute="trailing" constant="8" id="GpX-Q6-itG"/>
                                             <constraint firstItem="3F0-Vo-vvp" firstAttribute="top" secondItem="uh7-1f-oNC" secondAttribute="bottom" constant="8" id="Izm-HH-2fX"/>
                                             <constraint firstItem="8IK-WC-29v" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="JXt-Dz-zc9"/>
                                             <constraint firstItem="Q3U-LD-pN5" firstAttribute="top" secondItem="1bE-or-NVK" secondAttribute="bottom" constant="8" id="KN9-ZJ-YZf"/>
                                             <constraint firstItem="oFb-qJ-iVC" firstAttribute="top" secondItem="JWO-ZR-Ngq" secondAttribute="bottom" constant="8" id="Ket-vz-yiH"/>
                                             <constraint firstItem="uh7-1f-oNC" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="NOh-De-6Qt"/>
+                                            <constraint firstItem="lHW-kM-3t4" firstAttribute="top" secondItem="3F0-Vo-vvp" secondAttribute="bottom" constant="47" id="REV-mH-jyV"/>
                                             <constraint firstItem="lHW-kM-3t4" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="RIq-4n-7FZ"/>
                                             <constraint firstAttribute="trailing" secondItem="3F0-Vo-vvp" secondAttribute="trailing" constant="8" id="Uxm-m1-Tgs"/>
                                             <constraint firstAttribute="trailing" secondItem="vx7-M5-e2A" secondAttribute="trailing" constant="8" id="VEO-rP-ZIR"/>
@@ -234,6 +233,7 @@
                         <outlet property="onSiteSwitch" destination="vIy-h8-tFJ" id="UQF-tY-0pt"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="581" y="699"/>
         </scene>

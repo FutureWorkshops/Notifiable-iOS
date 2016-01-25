@@ -263,14 +263,15 @@ NSString * const FWTNotifiableProvider          = @"apns";
     [self.requester updateDeviceWithTokenId:deviceTokenId params:params success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         if (response == nil || ![response isKindOfClass:[NSDictionary class]]) {
-            [sself _registerDeviceWithUserAlias:alias
-                                          token:token
-                                           name:name
-                                         locale:locale
-                              deviceInformation:deviceInformation
-                                       attempts:(attempts - 1)
-                                  previousError:nil
-                              completionHandler:handler];
+            [sself _updateDevice:deviceTokenId
+                   withUserAlias:alias
+                           token:token
+                            name:name
+                          locale:locale
+               deviceInformation:deviceInformation
+                        attempts:(attempts - 1)
+                   previousError:error
+               completionHandler:handler];
             return;
         }
         
@@ -289,14 +290,15 @@ NSString * const FWTNotifiableProvider          = @"apns";
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [weakSelf _registerDeviceWithUserAlias:alias
-                                             token:token
-                                              name:name
-                                            locale:locale
-                                 deviceInformation:deviceInformation
-                                          attempts:(attempts - 1)
-                                     previousError:nil
-                                 completionHandler:handler];
+            [weakSelf _updateDevice:deviceTokenId
+                      withUserAlias:alias
+                              token:token
+                               name:name
+                             locale:locale
+                  deviceInformation:deviceInformation
+                           attempts:(attempts - 1)
+                      previousError:error
+                  completionHandler:handler];
         });
     }];
 }

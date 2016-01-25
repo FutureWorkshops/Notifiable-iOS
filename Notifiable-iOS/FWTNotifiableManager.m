@@ -240,7 +240,8 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:nil
-                 deviceName:self.currentDevice.name
+                 deviceName:nil
+                  userAlias:self.currentDevice.user
                    location:locale
           deviceInformation:nil
           completionHandler:handler];
@@ -249,7 +250,8 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void)updateDeviceToken:(NSData *)token completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
-                 deviceName:self.currentDevice.name
+                 deviceName:nil
+                  userAlias:self.currentDevice.user
                    location:nil
           deviceInformation:nil
           completionHandler:handler];
@@ -258,7 +260,8 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void)updateDeviceToken:(NSData *)token andLocation:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
-                 deviceName:self.currentDevice.name
+                 deviceName:nil
+                  userAlias:self.currentDevice.user
                    location:locale
           deviceInformation:nil
           completionHandler:handler];
@@ -269,6 +272,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     [self updateDeviceToken:nil
                  deviceName:name
+                  userAlias:self.currentDevice.user
                    location:nil
           deviceInformation:nil
           completionHandler:handler];
@@ -279,6 +283,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     [self updateDeviceToken:nil
                  deviceName:nil
+                  userAlias:self.currentDevice.user
                    location:nil
           deviceInformation:deviceInformation
           completionHandler:handler];
@@ -292,7 +297,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     [self updateDeviceToken:token
                  deviceName:name
-                  userAlias:nil
+                  userAlias:self.currentDevice.user
                    location:locale
           deviceInformation:deviceInformation
           completionHandler:handler];

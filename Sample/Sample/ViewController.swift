@@ -47,7 +47,7 @@ class ViewController: UIViewController {
     }
 
     func registerForRemoteNotification(notification:NSNotification) {
-        let token = notification.object as? NSData
+        let token = notification.userInfo?[FWTNotifiableNotificationDeviceToken] as? NSData
         self.registerCompleted?(token: token)
     }
 }

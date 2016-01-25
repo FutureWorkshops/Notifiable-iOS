@@ -18,6 +18,7 @@ extern NSString * const FWTNotifiableApplicationDidRegisterForRemoteNotification
 
 extern NSString * const FWTNotifiableNotificationDevice;
 extern NSString * const FWTNotifiableNotificationError;
+extern NSString * const FWTNotifiableNotificationDeviceToken;
 
 @protocol FWTNotifiableLogger;
 @class FWTNotifiableDevice;

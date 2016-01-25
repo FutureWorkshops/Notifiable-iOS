@@ -49,7 +49,7 @@ class DeviceListTableViewController: UITableViewController {
         let device = self.devices[indexPath.row]
         
         cell.textLabel?.text = device.name ?? "<No name>"
-        cell.detailTextLabel?.text = device.user ?? "Anonymous"
+        cell.detailTextLabel?.text = "User: \(device.user ?? "Anonymous")"
         
         return cell
     }

@@ -20,7 +20,7 @@ extern NSString * const FWTNotifiableNotificationError;
 @protocol FWTNotifiableLogger;
 @class FWTNotifiableDevice;
 
-typedef void (^FWTNotifiableOperationCompletionHandler)(BOOL success, NSError * _Nullable error);
+typedef void (^FWTNotifiableOperationCompletionHandler)(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error);
 typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiableDevice*> * _Nullable devices, NSError * _Nullable error);
 
 /**

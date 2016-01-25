@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return nil
         }
         
-        if let mainViewController = navigationController.viewControllers[0] as? ViewController {
+        if let mainViewController = navigationController.topViewController as? ViewController {
             return mainViewController
         } else {
             return nil

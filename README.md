@@ -9,31 +9,62 @@ Registering existing token for different user will result in token being reassig
 
 ## Setup
 
-You should the following to your application delegate:
+You should add the following to your application delegate:
 
 At the earliest opportunity set the base URL of the `FWTNotifiableManager` to your notifiable rails service.
 
 ```
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+var notifiableManager:FWTNotifiableManager!
+func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
 {
-    FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
-    [manager setBaseURL:[NSURL URLWithString:@"http://myserver.herokuapp.com/user_api/v1/"]];
+	notifiableManager = FWTNotifiableManager(url: <<SERVER_URL>>, accessId: <<USER_API_ACCESS_ID>>, andSecretKey: <<USER_API_SECRET_KEY>>)
 
-    return YES;
+	return YES;
 }
 ```
 
 Forward device token to `FWTNotifiableManager`:
 
 ```
-- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
-	
-    FWTNotifiableManager *manager = [FWTNotifiableManager sharedManager];
-    [manager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-
+func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) 
+{
+	notifiableManager.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
 }
 ```
 
+A notification is triggered (`FWTNotifiableApplicationDidRegisterForRemoteNotifications`) upon the `FWTNotifiableManager ` recording the device token registered for remote notifications. You can use this notification to be warned when the device is ready to be registered on the server.
+
+```
+override func viewDidLoad() {
+	super.viewDidLoad()
+	NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
+}
+ 
+ func registerForRemoteNotification(notification:NSNotification) {
+	notifiableManager.registerAnonymousDeviceWithCompletionHandler { (device, error) in
+		...
+	}
+}
+```
+
+The registered device token is passed in the `userInfo` dictionary of the `NSNotification` with the key `FWTNotifiableNotificationDeviceToken `. So, it can be used to perform the calls on the `FWTNotifiableManager ` object.
+
+```
+override func viewDidLoad() {
+	super.viewDidLoad()
+	NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
+}
+ 
+ func registerForRemoteNotification(notification:NSNotification) {
+	guard let token = notification.userInfo?[FWTNotifiableNotificationDeviceToken] as? NSData else {
+		return
+	}
+	
+	notifiableManager.registerAnonymousToken(token) { (device, error) in
+        	...
+	}
+}
+```
 
 ## Registering a user
 

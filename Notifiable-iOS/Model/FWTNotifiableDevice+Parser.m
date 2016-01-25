@@ -12,13 +12,27 @@
 
 - (instancetype)initWithUserName:(NSString *)userName dictionary:(NSDictionary*)dict
 {
-    NSMutableDictionary *mutableElement = [dict mutableCopy];
+    NSMutableDictionary *mutableElement = [[NSMutableDictionary alloc] init];
     
-    NSNumber *tokenId = mutableElement[@"id"];
-    NSString *name = mutableElement[@"name"];
+    NSNumber *tokenId = dict[@"id"];
+    if ([tokenId isKindOfClass:[NSNull class]]) {
+        return nil;
+    }
     
-    [mutableElement removeObjectForKey:@"id"];
-    [mutableElement removeObjectForKey:@"name"];
+    NSString *name = dict[@"name"];
+    if ([name isKindOfClass:[NSNull class]]) {
+        name = nil;
+    }
+    
+    for (NSString *element in dict) {
+        if ([element isEqualToString:@"id"] || [element isEqualToString:@"name"]) {
+            continue;
+        }
+        id value = dict[element];
+        if (![value isKindOfClass:[NSNull class]]) {
+            [mutableElement setValue:value forKey:element];
+        }
+    }
     
     return [self initWithToken:[[NSData alloc] init]
                        tokenId:tokenId

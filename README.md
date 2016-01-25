@@ -122,7 +122,11 @@ override func viewDidLoad() {
 
 The `deviceInformation` dictionary would some extended parameters that represents the metadata about the device, here you could send the latitude and longitude of the device, for example.
 
-A notification is triggered (`FWTNotifiableDidRegisterWithAPNSNotification`) upon the `FWTNotifiableManager` registering the device token.
+A notification is triggered (`FWTNotifiableDidRegisterWithAPNSNotification`) upon the `FWTNotifiableManager` registering the device token. And, you can access the registered device informations in the `currentDevice` property of the manager:
+
+```swift
+let device = notifiableManager.currentDevice
+```
 
 ## Updating the device informations
 

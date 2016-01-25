@@ -16,6 +16,7 @@
 
 NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification = @"FWTNotifiableDidRegisterDeviceWithAPNSNotification";
 NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification = @"FWTNotifiableFailedToRegisterDeviceWithAPNSNotification";
+NSString * const FWTNotifiableApplicationDidRegisterForRemoteNotifications = @"FWTNotifiableApplicationDidRegisterForRemoteNotifications";
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
@@ -24,6 +25,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 
 @property (nonatomic, strong) FWTRequesterManager *requestManager;
 @property (nonatomic, copy, readwrite, nullable) FWTNotifiableDevice *currentDevice;
+@property (nonatomic, strong) NSData *deviceTokenData;
 
 @end
 
@@ -61,6 +63,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     @synchronized(self) {
         self->_currentDevice = currentDevice;
+        self->_deviceTokenData = self->_currentDevice.token;
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
         if (self->_currentDevice) {
             NSData *deviceData = [NSKeyedArchiver archivedDataWithRootObject:self->_currentDevice];
@@ -116,6 +119,13 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     UIUserNotificationType typesAllowed = settings.types;
     
     return typesAllowed == types;
+}
+
+- (void)registerAnonymousDeviceWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+{
+    NSAssert(self.deviceTokenData != nil || self.currentDevice != nil, @"The application doesn't have a token to register");
+    [self registerAnonymousToken:(self.deviceTokenData ? self.deviceTokenData : self.currentDevice.token)
+               completionHandler:handler];
 }
 
 - (void)registerAnonymousToken:(NSData *)token
@@ -174,6 +184,15 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                            handler(sself.currentDevice, error);
                                        }
                                    }];
+}
+
+- (void)registerDeviceWithUserAlias:(NSString *)userAlias
+                  completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+{
+    NSAssert(self.deviceTokenData != nil || self.currentDevice != nil, @"The application doesn't have a token to register");
+    [self registerToken:(self.deviceTokenData ? self.deviceTokenData : self.currentDevice.token)
+          withUserAlias:userAlias
+      completionHandler:handler];
 }
 
 - (void)registerToken:(NSData *)token withUserAlias:(NSString *)userAlias completionHandler:(FWTNotifiableOperationCompletionHandler)handler
@@ -423,6 +442,13 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     
     [self.requestManager markNotificationAsOpenedWithParams:requestParameters
                                           completionHandler:nil];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
+{
+    self.deviceTokenData = deviceToken;
+    [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableApplicationDidRegisterForRemoteNotifications
+                                                        object:deviceToken];
 }
 
 - (void)listDevicesRelatedToUserWithCompletionHandler:(FWTNotifiableListOperationCompletionHandler)handler

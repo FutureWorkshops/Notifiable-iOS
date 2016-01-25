@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification;
 extern NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification;
 
+extern NSString * const FWTNotifiableApplicationDidRegisterForRemoteNotifications;
+
 extern NSString * const FWTNotifiableNotificationDevice;
 extern NSString * const FWTNotifiableNotificationError;
 
@@ -63,6 +65,17 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
                andSecretKey:(NSString *)secretKey NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Register Anonymous device
+/**
+ Register a device without a user associated to it. If the token already exists in the server,
+ the device configuration in the server will not change, otherwise, a new device will be created.
+ 
+ @warning If the application:didRegisterForRemoteNotificationsWithDeviceToken: wasn't called,
+ this operation will not have a token to register.
+ 
+ @param handler Block called once that the operation is finished.
+ */
+- (void)registerAnonymousDeviceWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
 /**
  Register a device without a user associated to it. If the token already exists in the server,
  the device configuration in the server will not change, otherwise, a new device will be created.
@@ -131,6 +144,20 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
+/**
+ Register a device with a user associated to it. If the token already exists in the server,
+ the device configuration in the server will not change, otherwise, a new device will be created.
+ If the user alias doesn't exist, a new user will be created.
+ 
+ @warning If the application:didRegisterForRemoteNotificationsWithDeviceToken: wasn't called,
+ this operation will not have a token to register.
+ 
+ @param userAlias   The alias of the user in the server.
+ @param handler     Block called once that the operation is finished.
+ */
+- (void)registerDeviceWithUserAlias:(NSString *)userAlias
+                  completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
 /**
  Register a device with a user associated to it. If the token already exists in the server,
  the device configuration in the server will not change, otherwise, a new device will be created.
@@ -338,6 +365,14 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
  @param notificationInfo    The information of the notification given by the system
 */
 - (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
+
+/**
+ Inform the Notifiable Manager that the application did register for remote notifications
+ 
+ @param application Application that was registered
+ @param deviceToken Device APNS token
+*/
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken;
 
 @end
 

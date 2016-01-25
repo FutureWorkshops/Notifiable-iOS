@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     var manager:FWTNotifiableManager!
     var token:NSData?
     
-    typealias FWTRegisterCompleted = (token:NSData)->Void;
+    typealias FWTRegisterCompleted = (token:NSData!)->Void;
     var registerCompleted:FWTRegisterCompleted?
     
     @IBOutlet weak var onSiteSwitch: UISwitch!
@@ -25,6 +25,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerDeviceSuccess:", name: FWTNotifiableDidRegisterDeviceWithAPNSNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "failedToRegisterDevice:", name: FWTNotifiableFailedToRegisterDeviceWithAPNSNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
         self.updateScreen()
     }
     
@@ -43,6 +44,11 @@ class ViewController: UIViewController {
     
     func failedToRegisterDevice(notification:NSNotification) {
         print("Device failed to register")
+    }
+
+    func registerForRemoteNotification(notification:NSNotification) {
+        let token = notification.object as? NSData
+        self.registerCompleted?(token: token)
     }
 }
 
@@ -216,16 +222,6 @@ extension ViewController {
         if let destination = segue.destinationViewController as? DeviceListTableViewController where segue.identifier == FWTDeviceListSegue {
             destination.manager = self.manager
         }
-    }
-}
-
-extension AppDelegate {
-    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-        application.registerForRemoteNotifications()
-    }
-    
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        self.getMainViewController()?.registeredForNotificationsWithToken(deviceToken)
     }
 }
 

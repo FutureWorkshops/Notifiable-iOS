@@ -46,4 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         self.notifiableManager.applicationDidReceiveRemoteNotification(userInfo);
     }
+    
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        application.registerForRemoteNotifications()
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        self.notifiableManager.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
 }

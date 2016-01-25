@@ -20,6 +20,7 @@ NSString * const FWTNotifiableApplicationDidRegisterForRemoteNotifications = @"F
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
+NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
 
 @interface FWTNotifiableManager ()
 
@@ -448,7 +449,8 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 {
     self.deviceTokenData = deviceToken;
     [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableApplicationDidRegisterForRemoteNotifications
-                                                        object:deviceToken];
+                                                        object:self
+                                                      userInfo:@{FWTNotifiableNotificationDeviceToken:deviceToken}];
 }
 
 - (void)listDevicesRelatedToUserWithCompletionHandler:(FWTNotifiableListOperationCompletionHandler)handler

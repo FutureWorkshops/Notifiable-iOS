@@ -62,8 +62,23 @@ extension ViewController {
     }
     
     @IBAction func registerToUser(sender: AnyObject) {
+        let alertController = UIAlertController(title: "User", message: "Please, insert the user name", preferredStyle: .Alert)
+        alertController.addTextFieldWithConfigurationHandler {
+            $0.placeholder = "User Name"
+        }
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Ok", style: .Default) { [weak self] (alertAction) -> Void in
+            guard let userName = alertController.textFields?.first?.text else {
+                return
+            }
+            self?._registerWithUser(userName)
+        })
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    private func _registerWithUser(user:String) {
         self._registerForNotifications { [weak self] (token) -> Void in
-            self?._registerToken(token, user: "iOS Sample")
+            self?._registerToken(token, user: user)
         }
     }
     
@@ -78,7 +93,8 @@ extension ViewController {
     }
     
     private func _registerToken(token:NSData, user:String) {
-        self.manager.registerToken(token, withUserAlias: user) { (device, error) in
+        let deviceName = UIDevice.currentDevice().name
+        self.manager.registerToken(token, withUserAlias: user, deviceName: deviceName) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
             } else {

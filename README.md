@@ -13,7 +13,7 @@ You should add the following to your application delegate:
 
 At the earliest opportunity set the base URL of the `FWTNotifiableManager` to your notifiable rails service.
 
-```
+```swift
 var notifiableManager:FWTNotifiableManager!
 func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
 {
@@ -25,7 +25,7 @@ func application(application: UIApplication, didFinishLaunchingWithOptions launc
 
 Forward device token to `FWTNotifiableManager`:
 
-```
+```swift
 func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) 
 {
 	notifiableManager.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
@@ -34,7 +34,7 @@ func application(application: UIApplication, didRegisterForRemoteNotificationsWi
 
 A notification is triggered (`FWTNotifiableApplicationDidRegisterForRemoteNotifications`) upon the `FWTNotifiableManager ` recording the device token registered for remote notifications. You can use this notification to be warned when the device is ready to be registered on the server.
 
-```
+```swift
 override func viewDidLoad() {
 	super.viewDidLoad()
 	NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
@@ -49,7 +49,7 @@ override func viewDidLoad() {
 
 The registered device token is passed in the `userInfo` dictionary of the `NSNotification` with the key `FWTNotifiableNotificationDeviceToken `. So, it can be used to perform the calls on the `FWTNotifiableManager ` object.
 
-```
+```swift
 override func viewDidLoad() {
 	super.viewDidLoad()
 	NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)

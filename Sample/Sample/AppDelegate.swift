@@ -23,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.getMainViewController()?.manager = self.notifiableManager
         
+        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject:AnyObject] {
+            self.application(application, didReceiveRemoteNotification: remoteNotification)
+        }
+        
         return true
     }
 
@@ -37,5 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             return nil
         }
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        self.notifiableManager.applicationDidReceiveRemoteNotification(userInfo);
     }
 }

@@ -68,4 +68,4 @@ The `userInfo` here should provide the necessary data to identify your user on t
 
 ## LICENSE
 
-Apache License Version 2.0
+[Apache License Version 2.0](LICENSE)

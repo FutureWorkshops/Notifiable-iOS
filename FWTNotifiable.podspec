@@ -12,6 +12,7 @@ Pod::Spec.new do |s|
 
   s.description  = <<-DESC
                    Utility classes to integrate with Notifiable-Rails gem (https://github.com/FutureWorkshops/notifiable-rails).
+                   You can see a sample of how to use the FWTNotifiable SDK on github: (https://github.com/FutureWorkshops/Notifiable-iOS/tree/master/Sample)
                    DESC
 
   s.homepage     = "https://github.com/FutureWorkshops/Notifiable-iOS"

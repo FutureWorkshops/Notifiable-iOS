@@ -101,9 +101,9 @@
                              deviceName:deviceName
                              withLocale:locale
                       deviceInformation:@{@"test":@YES}
-                      completionHandler:^(BOOL success, NSError * _Nullable error) {
+                      completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                           
-                          XCTAssertTrue(success);
+                          XCTAssertNotNil(device);
                           
                           FWTNotifiableDevice *currentDevice = manager.currentDevice;
                           XCTAssertTrue([currentDevice.tokenId integerValue] == 42);
@@ -169,10 +169,7 @@
                  withUserAlias:userAlias
                         locale:locale
              deviceInformation:@{@"test":@YES}
-             completionHandler:^(BOOL success, NSError * _Nullable error) {
-                 XCTAssertTrue(success);
-                 
-                 FWTNotifiableDevice *device = manager.currentDevice;
+             completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                  XCTAssertTrue([device.tokenId integerValue] == 42);
                  XCTAssertTrue([[device.token fwt_notificationTokenString] isEqualToString:[token fwt_notificationTokenString]]);
                  XCTAssertTrue([device.user isEqualToString:userAlias]);
@@ -198,9 +195,9 @@
                              deviceName:@"name"
                              withLocale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
                       deviceInformation:@{@"test":@YES}
-                      completionHandler:^(BOOL success, NSError * _Nullable error) {
+                      completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                           
-                          XCTAssertFalse(success);
+                          XCTAssertNil(device);
                           XCTAssertNotNil(error);
                           
                           [expectation fulfill];
@@ -223,9 +220,9 @@
                  withUserAlias:@"user"
                         locale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
              deviceInformation:@{@"test":@YES}
-             completionHandler:^(BOOL success, NSError * _Nullable error) {
+             completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                           
-                          XCTAssertFalse(success);
+                          XCTAssertNil(device);
                           XCTAssertNotNil(error);
                           
                           [expectation fulfill];

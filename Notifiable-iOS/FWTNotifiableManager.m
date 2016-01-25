@@ -170,7 +170,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
                                        sself.currentDevice = [sself.currentDevice deviceWithInformation:deviceInformation];
                                        if (handler) {
-                                           handler(error == nil, error);
+                                           handler(sself.currentDevice, error);
                                        }
                                    }];
 }
@@ -232,7 +232,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
                                        sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name andInformation:deviceInformation];
                                        if (handler) {
-                                           handler(error == nil, error);
+                                           handler(sself.currentDevice, error);
                                        }
                                    }];
 }
@@ -329,7 +329,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                         }
                         
                         if (handler) {
-                            handler(error == nil, error);
+                            handler(sself.currentDevice, error);
                         }
                     }];
 }
@@ -363,7 +363,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     }
     
     __weak typeof(self) weakSelf = self;
-    [self updateDeviceToken:nil deviceName:nil userAlias:userAlias location:nil deviceInformation:nil completionHandler:^(BOOL success, NSError * _Nullable error) {
+    [self updateDeviceToken:nil deviceName:nil userAlias:userAlias location:nil deviceInformation:nil completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself _handleDeviceRegisterWithToken:sself.currentDevice.token
                                       tokenId:sself.currentDevice.tokenId
@@ -373,7 +373,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
         if (error == nil && userAlias != nil) {
             sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias];
         }
-        handler(error == nil, error);
+        handler(sself.currentDevice, error);
         
     }];
 }
@@ -393,10 +393,11 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     [self.requestManager unregisterTokenId:self.currentDevice.tokenId
                                  userAlias:self.currentDevice.user
                          completionHandler:^(BOOL success, NSError * _Nullable error) {
+                             __strong typeof(weakSelf) sself = weakSelf;
                              if (success) {
-                                 weakSelf.currentDevice = nil;
+                                 sself.currentDevice = nil;
                              }
-                             handler(success, error);
+                             handler(sself.currentDevice, error);
                          }];
 }
 
@@ -451,7 +452,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
         sself.currentDevice = [sself.currentDevice deviceWithUser:nil];
         [sself _notifyNewDevice:sself.currentDevice withError:error];
         if (handler) {
-            handler(error == nil, error);
+            handler(sself.currentDevice, error);
         }
     };
 }

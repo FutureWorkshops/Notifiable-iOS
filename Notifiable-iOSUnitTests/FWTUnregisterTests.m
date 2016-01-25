@@ -101,8 +101,8 @@
     [self _stubSuccessUnregister];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Unregister"];
-    [self.manager unregisterTokenWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-        XCTAssertTrue(success);
+    [self.manager unregisterTokenWithCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        XCTAssertNil(device);
         XCTAssertNil(error);
         [expectation fulfill];
     }];
@@ -124,8 +124,8 @@
     [self _stubFailUnregister];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Unregister"];
-    [self.manager unregisterTokenWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-        XCTAssertFalse(success);
+    [self.manager unregisterTokenWithCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        XCTAssertNotNil(device);
         XCTAssertNotNil(error);
         [expectation fulfill];
     }];

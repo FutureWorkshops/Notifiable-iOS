@@ -20,6 +20,12 @@ extern NSString * const FWTUserAliasFormat;
 
 NSString * const FWTTestURL = @"http://localhost:3000";
 
+@interface FWTHTTPRequester (Private)
+
+@property (nonatomic, strong) AFHTTPSessionManager *httpSessionManager;
+
+@end
+
 @interface FWTHTTPRequesterTests : FWTTestCase
 
 @property (nonatomic, strong) id httpSessionManager;
@@ -43,6 +49,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
     if (self->_requester == nil) {
         self->_requester = [[FWTHTTPRequester alloc] initWithBaseUrl:FWTTestURL
                                                     andAuthenticator:self.authenticator];
+        self->_requester.httpSessionManager = self.httpSessionManager;
     }
     return self->_requester;
 }
@@ -50,11 +57,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 - (id)httpSessionManager
 {
     if (self->_httpSessionManager == nil) {
-        id mock = OCMClassMock([AFHTTPSessionManager class]);
-        OCMStub([mock alloc]).andReturn(mock);
-        OCMStub([mock init]).andReturn(mock);
-        OCMStub([mock initWithBaseURL:OCMOCK_ANY]).andReturn(mock);
-        self->_httpSessionManager = mock;
+        self->_httpSessionManager = OCMClassMock([AFHTTPSessionManager class]);
     }
     return self->_httpSessionManager;
 }
@@ -70,12 +73,10 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 }
 
 - (void)testRequester {
-    OCMExpect([self.httpSessionManager initWithBaseURL:OCMOCK_ANY]);
     XCTAssertThrows([[FWTHTTPRequester alloc] initWithBaseUrl:OCMOCK_ANY
                                              andAuthenticator:self.authenticator], @"Use of invalid URL");
     XCTAssertNotNil([[FWTHTTPRequester alloc] initWithBaseUrl:FWTTestURL
                                              andAuthenticator:self.authenticator]);
-    OCMVerifyAll(self.httpSessionManager);
 }
 
 - (void)testRegisterDevice

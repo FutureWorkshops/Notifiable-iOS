@@ -82,8 +82,8 @@
     [self registerAnonymousDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId andError:nil onManager:self.manager andRquesterMock:self.requesterManagerMock];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
-    [self.manager associateDeviceToUser:@"user" completionHandler:^(BOOL success, NSError * _Nullable error) {
-        XCTAssertTrue(success);
+    [self.manager associateDeviceToUser:@"user" completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        XCTAssertNotNil(device);
         XCTAssertNil(error);
         [expectation fulfill];
     }];
@@ -98,8 +98,8 @@
     XCTAssertEqualObjects(self.manager.currentDevice.user, @"user");
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
-    [self.manager associateDeviceToUser:@"test" completionHandler:^(BOOL success, NSError * _Nullable error) {
-        XCTAssertTrue(success);
+    [self.manager associateDeviceToUser:@"test" completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        XCTAssertNotNil(device);
         XCTAssertNil(error);
         [expectation fulfill];
     }];
@@ -113,8 +113,8 @@
     [self registerDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
-    [self.manager anonymiseTokenWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-        XCTAssertTrue(success);
+    [self.manager anonymiseTokenWithCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        XCTAssertNotNil(device);
         XCTAssertNil(error);
         [expectation fulfill];
     }];

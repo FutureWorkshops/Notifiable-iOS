@@ -9,9 +9,10 @@
 #import "FWTTestCase.h"
 #import "FWTRequesterManager.h"
 #import "FWTNotifiableManager.h"
+#import "FWTNotifiableDevice.h"
 #import <OCMock/OCMock.h>
 
-typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
+typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error);
 
 @implementation FWTTestCase
 
@@ -111,8 +112,8 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
 - (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
 {
     [self _registerDeviceWithTokenId:tokenId andError:error onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
-        [manager registerAnonymousToken:token completionHandler:^(BOOL success, NSError * _Nullable error) {
-            registerBlock(success, error);
+        [manager registerAnonymousToken:token completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+            registerBlock(device, error);
         }];
     }];
 }
@@ -120,8 +121,8 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
 - (void) registerDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId error:(NSError *)error andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
 {
     [self _registerDeviceWithTokenId:tokenId andError:error onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
-        [manager registerToken:token withUserAlias:userAlias completionHandler:^(BOOL success, NSError * _Nullable error) {
-            registerBlock(success, error);
+        [manager registerToken:token withUserAlias:userAlias completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+            registerBlock(device, error);
         }];
     }];
 }
@@ -130,7 +131,7 @@ typedef void(^FWTTestRegisterBlock)(BOOL success, NSError* error);
 {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Register device"];
     [self stubDeviceRegisterResponse:tokenId andError:error onMock:requesterManagerMock withBlock:^{
-        block(^(BOOL success, NSError * _Nullable error) {
+        block(^(FWTNotifiableDevice *device, NSError * _Nullable error) {
             [expectation fulfill];
         });
     }];

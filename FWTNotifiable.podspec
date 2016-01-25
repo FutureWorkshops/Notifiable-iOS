@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "FWTNotifiable"
-  s.version      = "0.0.13"
+  s.version      = "0.0.14"
   s.platform     = :ios, '8.0'
   s.summary      = "Utility classes to integrate with Notifiable-Rails gem"
 

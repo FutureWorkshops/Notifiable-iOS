@@ -15,7 +15,7 @@
 #import "NSError+FWTNotifiable.h"
 
 NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification = @"FWTNotifiableDidRegisterDeviceWithAPNSNotification";
-NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification = @"FWTNotifiableDidRegisterDeviceWithAPNSNotification";
+NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification = @"FWTNotifiableFailedToRegisterDeviceWithAPNSNotification";
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
@@ -169,6 +169,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                        sself.currentDevice = nil;
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
                                        sself.currentDevice = [sself.currentDevice deviceWithInformation:deviceInformation];
+                                       [sself _notifyNewDevice:sself.currentDevice withError:error];
                                        if (handler) {
                                            handler(sself.currentDevice, error);
                                        }
@@ -231,6 +232,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
                                        sself.currentDevice = nil;
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
                                        sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name andInformation:deviceInformation];
+                                       [sself _notifyNewDevice:sself.currentDevice withError:error];
                                        if (handler) {
                                            handler(sself.currentDevice, error);
                                        }
@@ -485,9 +487,9 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 - (void) _notifyNewDevice:(FWTNotifiableDevice *)device withError:(NSError *)error
 {
     if (error) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterDeviceWithAPNSNotification object:self userInfo:@{FWTNotifiableNotificationError: error}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableFailedToRegisterDeviceWithAPNSNotification object:self userInfo:@{FWTNotifiableNotificationError: error}];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableFailedToRegisterDeviceWithAPNSNotification object:self userInfo:@{FWTNotifiableNotificationDevice:device}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterDeviceWithAPNSNotification object:self userInfo:@{FWTNotifiableNotificationDevice:device}];
     }
 }
 

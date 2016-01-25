@@ -1,0 +1,12 @@
+platform :ios, '8.0'
+use_frameworks!
+
+plugin 'cocoapods-keys', {
+    :project => "Sample",
+    :keys => [
+    "FWTAccessID",
+    "FWTSecretKey"
+]}
+
+pod 'FWTNotifiable', :path => '..'
+pod 'SVProgressHUD', '~> 1.1'

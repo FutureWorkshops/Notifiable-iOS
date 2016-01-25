@@ -340,7 +340,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     
     if (self.currentDevice.token == nil) {
         if (handler) {
-            handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
+            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
         }
         return;
     }
@@ -357,7 +357,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     
     if (userAlias.length == 0 || self.currentDevice.token == nil) {
         if (handler) {
-            handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
+            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
         }
         return;
     }
@@ -384,7 +384,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
     
     if (self.currentDevice.token == nil) {
         if (handler) {
-            handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
+            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
         }
         return;
     }

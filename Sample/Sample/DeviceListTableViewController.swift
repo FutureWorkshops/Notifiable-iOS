@@ -25,7 +25,7 @@ class DeviceListTableViewController: UITableViewController {
         SVProgressHUD.showWithStatus(nil)
         self.manager.listDevicesRelatedToUserWithCompletionHandler { [weak self] (devices, error) -> Void in
             guard let devices = devices where error == nil else {
-                SVProgressHUD.showErrorWithStatus(error?.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error?.fwt_localizedMessage())
                 return
             }
             SVProgressHUD.showSuccessWithStatus(nil)

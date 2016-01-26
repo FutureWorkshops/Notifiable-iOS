@@ -7,7 +7,7 @@
 //
 
 #import "FWTTestCase.h"
-#import "AFHTTPSessionManager.h"
+#import <AFNetworking/AFHTTPSessionManager.h>
 #import "FWTNotifiableAuthenticator.h"
 #import "FWTHTTPRequester.h"
 #import <OCMock/OCMock.h>

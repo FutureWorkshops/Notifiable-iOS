@@ -95,7 +95,7 @@ extension ViewController {
         let deviceName = UIDevice.currentDevice().name
         self.manager.registerAnonymousToken(token, deviceName: deviceName) { (device, error) in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("Anonymous device registered")
             }
@@ -106,7 +106,7 @@ extension ViewController {
         let deviceName = UIDevice.currentDevice().name
         self.manager.registerToken(token, withUserAlias: user, deviceName: deviceName) { (device, error) in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("Device registered to user \(user)")
             }
@@ -143,7 +143,7 @@ extension ViewController {
         SVProgressHUD.showWithStatus(nil)
         self.manager.associateDeviceToUser(user, completionHandler: { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("Device associated with the user \(user)")
             }
@@ -154,7 +154,7 @@ extension ViewController {
         SVProgressHUD.showWithStatus(nil)
         self.manager.anonymiseTokenWithCompletionHandler { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("Device is now anonymous")
             }
@@ -186,7 +186,7 @@ extension ViewController {
         SVProgressHUD.showWithStatus(nil)
         self.manager.updateDeviceInformation(deviceInformation) { [weak self] (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("On site updated")
             }
@@ -198,7 +198,7 @@ extension ViewController {
         SVProgressHUD.showWithStatus(nil)
         self.manager.updateDeviceName(name) { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("Device name updated to \(name)")
             }
@@ -212,7 +212,7 @@ extension ViewController {
         SVProgressHUD.showWithStatus(nil)
         self.manager.unregisterTokenWithCompletionHandler { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
+                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
                 SVProgressHUD.showSuccessWithStatus("Device unregistered")
             }

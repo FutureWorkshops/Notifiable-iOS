@@ -457,21 +457,15 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
         return;
     }
     
-    NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
-    
-    if(notificationID)
-        requestParameters[@"localized_notification_id"] = notificationID;
-    if (self.currentDevice.user) {
-        [requestParameters addEntriesFromDictionary:@{@"user":@{@"alias":self.currentDevice.user}}];
-    }
-    requestParameters[@"device_token_id"] = self.currentDevice.tokenId;
-    
     __weak typeof(self) weakSelf = self;
-    [self.requestManager markNotificationAsOpenedWithParams:requestParameters completionHandler:^(BOOL success, NSError * _Nullable error) {
-        if (handler) {
-            handler(weakSelf.currentDevice, error);
-        }
-    }];
+    [self.requestManager markNotificationAsOpened:notificationID
+                                          forUser:self.currentDevice.user
+                                 andDeviceTokenId:self.currentDevice.tokenId
+                            withCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+                                if (handler) {
+                                    handler(weakSelf.currentDevice, error);
+                                }
+                            }];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken

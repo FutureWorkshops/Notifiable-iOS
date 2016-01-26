@@ -22,7 +22,8 @@ typedef NS_ENUM(NSInteger, FWTError) {
     FWTErrorInvalidOperation = -1004,
     FWTErrorUserAliasMissing,
     FWTErrorForbidden,
-    FWTErrorInvalidDeviceInformation
+    FWTErrorInvalidDeviceInformation,
+    FWTErrorInvalidNotification
 };
 
 @interface NSError (FWTNotifiable)
@@ -70,6 +71,14 @@ typedef NS_ENUM(NSInteger, FWTError) {
  @param underlyingError Original error.
  */
 + (instancetype) fwt_invalidDeviceInformationError:(NSError * _Nullable)underlyingError;
+/**
+ Create an error with the code FWTErrorInvalidNotification.
+ 
+ @see FWTError
+ 
+ @param underlyingError Original error.
+ */
++ (instancetype) fwt_invalidNotificationError:(NSError * _Nullable)underlyingError;
 
 - (NSString *) fwt_debugMessage;
 

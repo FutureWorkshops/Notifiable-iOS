@@ -368,6 +368,15 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
 - (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
 
 /**
+ Notify the server that a notification was read and listen for the server response
+ 
+ @param notificationInfo    The information of the notification given by the system
+ @param handler             Block called once that the operation is finished.
+*/
+- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
+                          withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
  Inform the Notifiable Manager that the application did register for remote notifications
  
  @param application Application that was registered

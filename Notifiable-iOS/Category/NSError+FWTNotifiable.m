@@ -55,6 +55,13 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
                 andUnderlyingError:underlyingError];
 }
 
++ (instancetype) fwt_invalidNotificationError:(NSError * _Nullable)underlyingError
+{
+    return [self fwt_errorWithCode:FWTErrorInvalidNotification
+                       description:@"Notification without the localized_notification_id property."
+                andUnderlyingError:underlyingError];
+}
+
 #pragma mark - Private methods
 
 + (instancetype) fwt_errorWithCode:(NSInteger)code

@@ -367,15 +367,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     
     __weak typeof(self) weakSelf = self;
     [self.requester markNotificationAsOpenedWithParams:params success:^(NSDictionary * _Nullable response) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        if (response == nil) {
-            [sself _markNotificationAsOpenedWithParams:params
-                                              attempts:(attempts - 1)
-                                         previousError:error
-                                     completionHandler:handler];
-            return;
-        }
-        [sself.logger logMessage:@"Notification flagged as opened"];
+        [weakSelf.logger logMessage:@"Notification flagged as opened"];
         if (handler) {
             handler(YES,nil);
         }

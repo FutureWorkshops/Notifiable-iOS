@@ -74,11 +74,6 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
 
 - (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId onMock:(id)mock
 {
-    [self stubDeviceUpdateResponse:deviceTokenId andError:nil onMock:mock withBlock:nil];
-}
-
-- (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock withBlock:(void(^)(void))block
-{
     void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
         FWTDeviceTokenIdResponse passedBlock;
         [invocation getArgument:&passedBlock atIndex:8];
@@ -93,10 +88,6 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
                         locale:OCMOCK_ANY
              deviceInformation:OCMOCK_ANY
              completionHandler:OCMOCK_ANY]).andDo(postProxyBlock);
-    
-    if (block) {
-        block();
-    }
 }
 
 - (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock

@@ -263,9 +263,6 @@
 
 - (id) _userAliasMockWithManager:(FWTNotifiableManager *)manager
 {
-    if (manager == nil) {
-        return nil;
-    }
     id managerMock = OCMPartialMock(manager);
     OCMExpect([managerMock registerToken:OCMOCK_ANY deviceName:OCMOCK_ANY withUserAlias:OCMOCK_ANY locale:OCMOCK_ANY deviceInformation:OCMOCK_ANY completionHandler:OCMOCK_ANY]).andForwardToRealObject();
     return managerMock;
@@ -273,9 +270,6 @@
 
 - (id) _anonymousMockWithManager:(FWTNotifiableManager *)manager
 {
-    if(manager) {
-        return nil;
-    }
     id managerMock = OCMPartialMock(manager);
     OCMExpect([managerMock registerAnonymousToken:OCMOCK_ANY deviceName:OCMOCK_ANY withLocale:OCMOCK_ANY deviceInformation:OCMOCK_ANY completionHandler:OCMOCK_ANY]).andForwardToRealObject();
     

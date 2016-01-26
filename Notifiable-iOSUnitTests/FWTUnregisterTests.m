@@ -18,19 +18,10 @@
 @property (nonatomic, strong) id requesterManagerMock;
 @property (nonatomic, strong) id httpRequestMock;
 @property (nonatomic, strong) FWTNotifiableManager *manager;
-@property (nonatomic, strong) NSNumber *deviceTokenId;
 
 @end
 
 @implementation FWTUnregisterTests
-
-- (NSNumber *)deviceTokenId
-{
-    if (self->_deviceTokenId == nil) {
-        self->_deviceTokenId = @42;
-    }
-    return self->_deviceTokenId;
-}
 
 - (FWTNotifiableManager *)manager
 {

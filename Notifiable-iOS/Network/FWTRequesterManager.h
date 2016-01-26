@@ -45,8 +45,10 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
    deviceInformation:(NSDictionary * _Nullable)deviceInformation
    completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;
 
-- (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
-                         completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
+- (void)markNotificationAsOpened:(NSNumber *)notificationId
+                         forUser:(NSString * _Nullable)userAlias
+                andDeviceTokenId:(NSNumber *)deviceTokenId
+           withCompletionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
 - (void)unregisterTokenId:(NSNumber *)tokenId
                 userAlias:(NSString * _Nullable)userAlias

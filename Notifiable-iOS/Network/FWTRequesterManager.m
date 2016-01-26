@@ -95,12 +95,22 @@ NSString * const FWTNotifiableProvider          = @"apns";
          completionHandler:handler];
 }
 
-- (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
-                         completionHandler:(FWTSimpleRequestResponse)handler
+- (void)markNotificationAsOpened:(NSNumber *)notificationId
+                         forUser:(NSString * _Nullable)userAlias
+                andDeviceTokenId:(NSNumber *)deviceTokenId
+           withCompletionHandler:(_Nullable FWTSimpleRequestResponse)handler
 {
-    [self _markNotificationAsOpenedWithParams:params
+    NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
+    [requestParameters setObject:notificationId forKey:@"localized_notification_id"];
+    [requestParameters setObject:deviceTokenId forKey:@"device_token_id"];
+    if (userAlias) {
+        [requestParameters addEntriesFromDictionary:@{@"user":@{@"alias":userAlias}}];
+    }
+    
+    [self _markNotificationAsOpenedWithParams:requestParameters
                                      attempts:self.retryAttempts
-                                previousError:nil completionHandler:handler];
+                                previousError:nil
+                            completionHandler:handler];
 }
 
 - (void)listDevicesOfUser:(NSString *)userAlias
@@ -367,15 +377,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     
     __weak typeof(self) weakSelf = self;
     [self.requester markNotificationAsOpenedWithParams:params success:^(NSDictionary * _Nullable response) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        if (response == nil) {
-            [sself _markNotificationAsOpenedWithParams:params
-                                              attempts:(attempts - 1)
-                                         previousError:error
-                                     completionHandler:handler];
-            return;
-        }
-        [sself.logger logMessage:@"Notification flagged as opened"];
+        [weakSelf.logger logMessage:@"Notification flagged as opened"];
         if (handler) {
             handler(YES,nil);
         }

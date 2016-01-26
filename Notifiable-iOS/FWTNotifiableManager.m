@@ -435,15 +435,38 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
 
 - (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
-    NSString *notificationID = notificationInfo[@"notification_id"];
+    [self applicationDidReceiveRemoteNotification:notificationInfo
+                            withCompletionHandler:nil];
+}
+
+- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
+                          withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+{
+    NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
     
-    NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
+    if (notificationID == nil) {
+        if(handler) {
+            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return;
+    }
     
-    if(notificationID)
-        requestParameters[@"notification_id"] = notificationID;
+    if(self.currentDevice == nil) {
+        if(handler) {
+            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return;
+    }
     
-    [self.requestManager markNotificationAsOpenedWithParams:requestParameters
-                                          completionHandler:nil];
+    __weak typeof(self) weakSelf = self;
+    [self.requestManager markNotificationAsOpened:notificationID
+                                          forUser:self.currentDevice.user
+                                 andDeviceTokenId:self.currentDevice.tokenId
+                            withCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+                                if (handler) {
+                                    handler(weakSelf.currentDevice, error);
+                                }
+                            }];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
@@ -460,7 +483,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     
     if (self.currentDevice == nil) {
         if (handler) {
-            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
+            handler(@[], [NSError fwt_invalidNotificationError:nil]);
         }
         return;
     }

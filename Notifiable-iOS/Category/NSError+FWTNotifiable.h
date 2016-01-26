@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, FWTError) {
  */
 + (instancetype) fwt_invalidNotificationError:(NSError * _Nullable)underlyingError;
 
-- (NSString *) fwt_debugMessage;
+- (NSString *) fwt_localizedMessage;
 
 @end
 

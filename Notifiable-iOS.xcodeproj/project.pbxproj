@@ -14,6 +14,7 @@
 		783AED211C57BD6800066EE7 /* FWTRequestIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */; };
 		783AED221C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */; };
 		783AED231C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */; };
+		783AED251C57D2AA00066EE7 /* FWTNSErrorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */; };
 		787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* FWTRegisterTests.m */; };
 		7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
 		787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
@@ -135,6 +136,7 @@
 		783AED0F1C57AC9400066EE7 /* NSLocale+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSLocale+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSLocale+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
 		783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSLocale+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSLocale+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
 		783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTRequestIntegrationTests.m; sourceTree = "<group>"; };
+		783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTNSErrorTests.m; sourceTree = "<group>"; };
 		787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSUnitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		787632471C50EC220074DE3F /* FWTRegisterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTRegisterTests.m; sourceTree = "<group>"; };
 		787632491C50EC220074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -238,20 +240,20 @@
 		787632461C50EC220074DE3F /* Notifiable-iOSUnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				787633141C51653A0074DE3F /* FWTNSDataTests.m */,
 				7876330A1C5137990074DE3F /* Libraries */,
-				787633091C51378C0074DE3F /* Categories */,
 				787632471C50EC220074DE3F /* FWTRegisterTests.m */,
 				787632491C50EC220074DE3F /* Info.plist */,
 				787633071C51330A0074DE3F /* FWTRequesterManagerTests.m */,
 				7876330E1C51383B0074DE3F /* FWTTestCase.h */,
 				7876330F1C51383B0074DE3F /* FWTTestCase.m */,
 				787633121C51605C0074DE3F /* FWTAuthorizationTests.m */,
-				787633141C51653A0074DE3F /* FWTNSDataTests.m */,
 				787633161C5165E10074DE3F /* FWTDeviceTests.m */,
 				787633181C5169D10074DE3F /* FWTHTTPRequesterTests.m */,
 				7876331A1C51739E0074DE3F /* FWTUpdateTests.m */,
 				788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */,
 				78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */,
+				783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */,
 			);
 			path = "Notifiable-iOSUnitTests";
 			sourceTree = "<group>";
@@ -297,13 +299,6 @@
 				787632F41C50EE950074DE3F /* OCMock.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		787633091C51378C0074DE3F /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Categories;
 			sourceTree = "<group>";
 		};
 		7876330A1C5137990074DE3F /* Libraries */ = {
@@ -593,6 +588,7 @@
 				7876331B1C51739E0074DE3F /* FWTUpdateTests.m in Sources */,
 				787633081C51330A0074DE3F /* FWTRequesterManagerTests.m in Sources */,
 				787633171C5165E10074DE3F /* FWTDeviceTests.m in Sources */,
+				783AED251C57D2AA00066EE7 /* FWTNSErrorTests.m in Sources */,
 				787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */,
 				788ED7171C527A2600694DC7 /* FWTUnregisterTests.m in Sources */,
 				787633191C5169D10074DE3F /* FWTHTTPRequesterTests.m in Sources */,

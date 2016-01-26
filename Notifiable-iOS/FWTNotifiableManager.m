@@ -503,23 +503,6 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
 }
 
 #pragma mark - Private
-- (FWTDeviceTokenIdResponse) _defaultRegisterResponseWithToken:(NSData *)token
-                                                        locale:(NSLocale *)locale
-                                                          name:(NSString *)name
-                                             completionHandler:(FWTNotifiableOperationCompletionHandler)handler
-{
-    __weak typeof(self) weakSelf = self;
-    return ^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:locale name:name andError:error];
-        sself.currentDevice = [sself.currentDevice deviceWithUser:nil];
-        [sself _notifyNewDevice:sself.currentDevice withError:error];
-        if (handler) {
-            handler(sself.currentDevice, error);
-        }
-    };
-}
-
 - (void) _handleDeviceRegisterWithToken:(NSData *)token
                                 tokenId:(NSNumber *)deviceTokenId
                                  locale:(NSLocale *)locale

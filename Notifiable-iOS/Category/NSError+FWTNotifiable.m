@@ -30,18 +30,14 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
     switch (error.code) {
         case 401:
             return [NSError fwt_userAliasErrorWithUnderlyingError:error];
-            break;
         case 403:
             return [NSError fwt_forbiddenErrorWithUnderlyingError:error];
-            break;
         case 404:
             return [NSError fwt_invalidOperationErrorWithUnderlyingError:error];
-            break;
         default:
             return [NSError fwt_errorWithCode:error.code
                                   description:error.localizedDescription
                            andUnderlyingError:error];
-            break;
     }
 }
 
@@ -97,13 +93,9 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
                 andUserInformation:[NSDictionary dictionaryWithDictionary:userInfo]];
 }
 
-- (NSString *)fwt_debugMessage
+- (NSString *)fwt_localizedMessage
 {
-    NSString *message = self.debugDescription;
-    if (message == nil) {
-        message = self.localizedDescription;
-    }
-    
+    NSString *message = self.localizedDescription;
     if (self.localizedFailureReason) {
         message = [message stringByAppendingFormat:@"\n%@", self.localizedFailureReason];
     }

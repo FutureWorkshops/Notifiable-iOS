@@ -16,7 +16,7 @@
 - (void)logError:(NSError *)error
 {
     if (self.logLevel >= FWTNotifiableLogLevelError) {
-        NSLog(@"%@", [error fwt_debugMessage]);
+        NSLog(@"%@", [error fwt_localizedMessage]);
     }
 }
 

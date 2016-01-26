@@ -11,6 +11,7 @@
 #import "FWTHTTPRequester.h"
 #import "FWTNotifiableManager.h"
 #import "FWTNotifiableDevice.h"
+#import "NSLocale+FWTNotifiable.h"
 #import <OCMock/OCMock.h>
 
 @interface FWTUpdateTests : FWTTestCase
@@ -169,7 +170,7 @@
 - (void) testUpdateDeviceLocale
 {
     id mockLocale = OCMClassMock([NSLocale class]);
-    OCMStub([mockLocale autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
+    OCMStub([mockLocale fwt_autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
     [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -202,7 +203,7 @@
 - (void) testUpdateDeviceTokenAndLocale
 {
     id mockLocale = OCMClassMock([NSLocale class]);
-    OCMStub([mockLocale autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
+    OCMStub([mockLocale fwt_autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
     [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -282,7 +283,7 @@
 - (void) testUpdateDeviceTokenNameLocaleAndInformation
 {
     id mockLocale = OCMClassMock([NSLocale class]);
-    OCMStub([mockLocale autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
+    OCMStub([mockLocale fwt_autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
     [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
     FWTNotifiableDevice *device = self.manager.currentDevice;

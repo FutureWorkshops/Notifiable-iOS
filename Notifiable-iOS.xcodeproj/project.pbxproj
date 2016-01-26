@@ -11,9 +11,11 @@
 		7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
 		7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
 		783AED111C57AC9400066EE7 /* NSLocale+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */; };
+		783AED211C57BD6800066EE7 /* FWTRequestIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */; };
+		783AED221C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */; };
+		783AED231C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */; };
 		787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* FWTRegisterTests.m */; };
 		7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
-		787632571C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */; };
 		787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
 		7876326D1C50ED370074DE3F /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632611C50ED370074DE3F /* AFHTTPSessionManager.m */; };
 		7876326E1C50ED370074DE3F /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632641C50ED370074DE3F /* AFNetworkReachabilityManager.m */; };
@@ -132,11 +134,11 @@
 		7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSError+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
 		783AED0F1C57AC9400066EE7 /* NSLocale+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSLocale+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSLocale+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
 		783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSLocale+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSLocale+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
+		783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTRequestIntegrationTests.m; sourceTree = "<group>"; };
 		787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSUnitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		787632471C50EC220074DE3F /* FWTRegisterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTRegisterTests.m; sourceTree = "<group>"; };
 		787632491C50EC220074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		787632541C50EC360074DE3F /* Notifiable-iOSIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSIntegrationTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Notifiable_iOSIntegrationTests.m; sourceTree = "<group>"; };
 		787632581C50EC360074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		787632601C50ED370074DE3F /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		787632611C50ED370074DE3F /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
@@ -257,8 +259,8 @@
 		787632551C50EC360074DE3F /* Notifiable-iOSIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
-				787632561C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m */,
 				787632581C50EC360074DE3F /* Info.plist */,
+				783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */,
 			);
 			path = "Notifiable-iOSIntegrationTests";
 			sourceTree = "<group>";
@@ -584,6 +586,7 @@
 				787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
 				787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */,
 				787633101C51383B0074DE3F /* FWTTestCase.m in Sources */,
+				783AED221C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */,
 				787633031C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */,
 				787633151C51653A0074DE3F /* FWTNSDataTests.m in Sources */,
 				787632FE1C51158C0074DE3F /* FWTNotifiableDevice+Private.m in Sources */,
@@ -602,9 +605,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				787633011C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
+				783AED231C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */,
 				787632FF1C51158D0074DE3F /* FWTNotifiableDevice+Private.m in Sources */,
 				787633041C5115B20074DE3F /* NSError+FWTNotifiable.m in Sources */,
-				787632571C50EC360074DE3F /* Notifiable_iOSIntegrationTests.m in Sources */,
+				783AED211C57BD6800066EE7 /* FWTRequestIntegrationTests.m in Sources */,
 				787633051C5115B50074DE3F /* NSData+FWTNotifiable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

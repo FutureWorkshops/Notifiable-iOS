@@ -15,6 +15,20 @@
 
 typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 
+@interface FWTRequesterManager (Private)
+
+- (void)_updateDevice:(NSNumber *)deviceTokenId
+        withUserAlias:(NSString *)alias
+                token:(NSData *)token
+                 name:(NSString *)name
+               locale:(NSLocale *)locale
+    deviceInformation:(NSDictionary *)deviceInformation
+             attempts:(NSUInteger)attempts
+        previousError:(NSError *)error
+    completionHandler:(FWTDeviceTokenIdResponse)handler;
+
+@end
+
 @interface FWTRequesterManagerTests : FWTTestCase
 
 @property (nonatomic, strong) id httpRequesterMock;
@@ -365,8 +379,10 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
     OCMExpect([self.httpRequesterMock markNotificationAsOpenedWithParams:OCMOCK_ANY
                                                                  success:OCMOCK_ANY
                                                                  failure:OCMOCK_ANY]);
-    [self.manager markNotificationAsOpenedWithParams:OCMOCK_ANY
-                                   completionHandler:nil];
+    [self.manager markNotificationAsOpened:OCMOCK_ANY
+                                   forUser:OCMOCK_ANY
+                          andDeviceTokenId:OCMOCK_ANY
+                     withCompletionHandler:nil];
     OCMVerifyAll(self.httpRequesterMock);
 }
 

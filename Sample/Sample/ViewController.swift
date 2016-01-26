@@ -59,7 +59,7 @@ extension ViewController {
     func registeredForNotificationsWithToken(token:NSData) {
         self.token = token
         self.registerCompleted?(token: token)
-        self.manager.updateDeviceToken(token, deviceName: "device", userAlias: "user", location: NSLocale.currentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+        self.manager.updateDeviceToken(token, deviceName: "device", userAlias: "user", location: NSLocale.fwt_autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
             
         }
     }
@@ -93,7 +93,7 @@ extension ViewController {
     
     private func _registerAnonymousToken(token:NSData) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerAnonymousToken(token, deviceName: deviceName, withLocale: NSLocale(localeIdentifier: "en"), deviceInformation: [:]) { (device, error) in
+        self.manager.registerAnonymousToken(token, deviceName: deviceName) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
             } else {
@@ -104,7 +104,7 @@ extension ViewController {
     
     private func _registerToken(token:NSData, user:String) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerToken(token, deviceName: deviceName, withUserAlias: user, locale: NSLocale(localeIdentifier: "en"), deviceInformation: [:]) { (device, error) in
+        self.manager.registerToken(token, withUserAlias: user, deviceName: deviceName) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
             } else {

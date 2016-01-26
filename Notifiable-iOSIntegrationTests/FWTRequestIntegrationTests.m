@@ -12,7 +12,7 @@
 
 @interface FWTRequestIntegrationTests : XCTestCase
 
-@property (nonatomic, strong)
+@property (nonatomic, strong) FWTRequesterManager *requestManager;
 
 @end
 

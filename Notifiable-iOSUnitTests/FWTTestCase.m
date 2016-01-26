@@ -52,11 +52,6 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
     [self stubDeviceRegisterResponse:deviceTokenId andError:nil onMock:mock withBlock:nil];
 }
 
-- (void) stubDeviceRegisterResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock
-{
-    [self stubDeviceRegisterResponse:deviceTokenId andError:error onMock:mock withBlock:nil];
-}
-
 - (void) stubDeviceRegisterResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock withBlock:(void(^)(void))block
 {
     void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
@@ -80,11 +75,6 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
 - (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId onMock:(id)mock
 {
     [self stubDeviceUpdateResponse:deviceTokenId andError:nil onMock:mock withBlock:nil];
-}
-
-- (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock
-{
-    [self stubDeviceRegisterResponse:deviceTokenId andError:error onMock:mock withBlock:nil];
 }
 
 - (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId andError:(NSError *)error onMock:(id)mock withBlock:(void(^)(void))block

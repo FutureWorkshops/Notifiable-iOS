@@ -12,6 +12,7 @@
 #import "FWTHTTPRequester.h"
 #import "FWTNotifiableLogger.h"
 #import "NSData+FWTNotifiable.h"
+#import "NSError+FWTNotifiable.h"
 
 typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 
@@ -26,6 +27,15 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
              attempts:(NSUInteger)attempts
         previousError:(NSError *)error
     completionHandler:(FWTDeviceTokenIdResponse)handler;
+
+- (void)_registerDeviceWithUserAlias:(NSString *)userAlias
+                               token:(NSData *)token
+                                name:(NSString *)name
+                              locale:(NSLocale *)locale
+                   deviceInformation:(NSDictionary *)deviceInformation
+                            attempts:(NSUInteger)attempts
+                       previousError:(NSError *)previousError
+                   completionHandler:(FWTDeviceTokenIdResponse)handler;
 
 @end
 
@@ -216,6 +226,86 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
     OCMVerifyAll(self.httpRequesterMock);
 }
 
+- (void)testRegisterError404
+{
+    NSError *error = [NSError errorWithDomain:@"test" code:404 userInfo:nil];
+    [self _testRegisterFailureWithError:error
+                       andExpectedError:[NSError fwt_invalidOperationErrorWithUnderlyingError:error]];
+}
+
+- (void) testRegisterError403
+{
+    NSError *error = [NSError errorWithDomain:@"test" code:403 userInfo:nil];
+    [self _testRegisterFailureWithError:error
+                       andExpectedError:[NSError fwt_forbiddenErrorWithUnderlyingError:error]];
+}
+
+- (void) testRegisterError401
+{
+    NSError *error = [NSError errorWithDomain:@"test" code:401 userInfo:nil];
+    [self _testRegisterFailureWithError:error
+                       andExpectedError:[NSError fwt_userAliasErrorWithUnderlyingError:error]];
+}
+
+- (void) testGeneralError
+{
+    NSError *error = [NSError errorWithDomain:@"test" code:500 userInfo:nil];
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    [userInfo setObject:error.localizedDescription forKey:NSLocalizedDescriptionKey];
+    [userInfo setObject:error forKey:NSUnderlyingErrorKey];
+    
+    [self _testRegisterFailureWithError:error
+                       andExpectedError:[NSError fwt_errorWithCode:500 andUserInformation:userInfo]];
+}
+
+- (void) _testRegisterFailureWithError:(NSError *)responseError andExpectedError:(NSError *)expectedError
+{
+    [self _stubRegisterFailureWithError:responseError];
+    
+    id mock = OCMPartialMock(self.manager);
+    OCMExpect([mock _registerDeviceWithUserAlias:OCMOCK_ANY
+                                           token:OCMOCK_ANY
+                                            name:OCMOCK_ANY
+                                          locale:OCMOCK_ANY
+                               deviceInformation:OCMOCK_ANY
+                                        attempts:1
+                                   previousError:OCMOCK_ANY
+                               completionHandler:OCMOCK_ANY]).andForwardToRealObject();
+    
+    self.manager.retryAttempts = 2;
+    self.manager.retryDelay = 0.1;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"failure"];
+    [self.manager registerDeviceWithUserAlias:@"user"
+                                        token:self.token
+                                         name:@"name"
+                                       locale:[NSLocale localeWithLocaleIdentifier:@"en"]
+                            deviceInformation:@{@"test":@YES}
+                            completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                                XCTAssertNil(deviceTokenId);
+                                XCTAssertNotNil(error);
+                                XCTAssertEqualObjects(error, expectedError);
+                                [expectation fulfill];
+                            }];
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+    OCMVerifyAll(mock);
+    [mock stopMocking];
+}
+
+- (void) _stubRegisterFailureWithError:(NSError *)error
+{
+    void(^block)(NSInvocation *) = ^(NSInvocation *invocation) {
+        FWTRequestManagerFailureBlock failure;
+        [invocation getArgument:&failure atIndex:4];
+        if (failure) {
+            failure(error.code, error);
+        }
+    };
+    OCMStub([self.httpRequesterMock registerDeviceWithParams:OCMOCK_ANY
+                                                     success:OCMOCK_ANY
+                                                     failure:OCMOCK_ANY]).andDo(block);
+}
+
 #pragma mark - Update tests
 
 - (void)testInvalidUpdateAsserts
@@ -359,6 +449,96 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
              completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
+}
+
+- (void)testUpdateError404
+{
+    NSError *responseError = [NSError errorWithDomain:@"test" code:404 userInfo:nil];
+    [self _testUpdateFailureWithError:responseError
+                     andExpectedError:[NSError fwt_invalidOperationErrorWithUnderlyingError:responseError]];
+}
+
+- (void)testUpdateError403
+{
+    NSError *responseError = [NSError errorWithDomain:@"test" code:403 userInfo:nil];
+    [self _testUpdateFailureWithError:responseError
+                     andExpectedError:[NSError fwt_forbiddenErrorWithUnderlyingError:responseError]];
+}
+
+- (void)testUpdateError401
+{
+    NSError *responseError = [NSError errorWithDomain:@"test"
+                                                 code:401
+                                             userInfo:nil];
+    [self _testUpdateFailureWithError:responseError
+                     andExpectedError:[NSError fwt_userAliasErrorWithUnderlyingError:responseError]];
+}
+
+- (void)testUpdateGeneralError
+{
+    NSError *responseError = [NSError errorWithDomain:@"test"
+                                                 code:200
+                                             userInfo:nil];
+    
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    [userInfo setObject:responseError.localizedDescription forKey:NSLocalizedDescriptionKey];
+    [userInfo setObject:responseError forKey:NSUnderlyingErrorKey];
+    
+    [self _testUpdateFailureWithError:responseError
+                     andExpectedError:[NSError fwt_errorWithCode:200 andUserInformation:userInfo]];
+}
+
+- (void) _testUpdateFailureWithError:(NSError *)responseError andExpectedError:(NSError *)expectedError
+{
+    [self _stubUpdateFailureWithError:responseError];
+    
+    id managerMock = OCMPartialMock(self.manager);
+    OCMExpect([managerMock _updateDevice:@42
+                           withUserAlias:OCMOCK_ANY
+                                   token:OCMOCK_ANY
+                                    name:OCMOCK_ANY
+                                  locale:OCMOCK_ANY
+                       deviceInformation:OCMOCK_ANY
+                                attempts:1
+                           previousError:OCMOCK_ANY
+                       completionHandler:OCMOCK_ANY]).andForwardToRealObject();
+    
+    self.manager.retryAttempts = 2;
+    self.manager.retryDelay = 0.1;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Failure"];
+    
+    [self.manager updateDevice:@42
+                 withUserAlias:@"user"
+                         token:self.token
+                          name:@"name"
+                        locale:[NSLocale localeWithLocaleIdentifier:@"en"]
+             deviceInformation:@{@"onsite":@YES, @"test":@YES}
+             completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                 XCTAssertEqualObjects(deviceTokenId, @42);
+                 XCTAssertNotNil(error);
+                 XCTAssertEqualObjects(error, expectedError);
+                 [expectation fulfill];
+             }];
+    
+    [self waitForExpectationsWithTimeout:1 handler:nil];
+    OCMVerifyAll(managerMock);
+    [managerMock stopMocking];
+}
+
+- (void) _stubUpdateFailureWithError:(NSError *)error
+{
+    void(^block)(NSInvocation *) = ^(NSInvocation *invocation) {
+        FWTRequestManagerFailureBlock failure;
+        [invocation getArgument:&failure atIndex:5];
+        if (failure) {
+            failure(error.code, error);
+        }
+    };
+    OCMStub([self.httpRequesterMock updateDeviceWithTokenId:@42
+                                                     params:OCMOCK_ANY
+                                                    success:OCMOCK_ANY
+                                                    failure:OCMOCK_ANY]).andDo(block);
 }
 
 - (void)testUnregisterDevice

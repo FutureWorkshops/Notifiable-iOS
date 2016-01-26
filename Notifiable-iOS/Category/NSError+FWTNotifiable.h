@@ -40,6 +40,16 @@ typedef NS_ENUM(NSInteger, FWTError) {
                 andUserInformation:(NSDictionary * _Nullable)userInformation;
 
 /**
+ Check the error code to see if matches the kwnown types, otherwise,
+ create a new error with the specified code.
+ 
+ @see FWTError
+ 
+ @param underlyingError Original error.
+*/
++ (instancetype) fwt_errorWithUnderlyingError:(NSError * _Nullable)error;
+
+/**
  Create an error with the code FWTErrorUserAliasMissing.
  
  @see FWTError

@@ -60,7 +60,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                   name:name
                                 locale:locale
                      deviceInformation:deviceInformation
-                              attempts:self.retryAttempts
+                              attempts:self.retryAttempts + 1
                          previousError:nil
                      completionHandler:handler];
 }
@@ -79,7 +79,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                    name:name
                  locale:locale
       deviceInformation:deviceInformation
-               attempts:self.retryAttempts
+               attempts:self.retryAttempts + 1
           previousError:nil
       completionHandler:handler];
 }
@@ -90,7 +90,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
 {
     [self _unregisterToken:deviceTokenId
                  userAlias:userAlias
-              withAttempts:self.retryAttempts
+              withAttempts:self.retryAttempts + 1
              previousError:nil
          completionHandler:handler];
 }
@@ -108,7 +108,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     }
     
     [self _markNotificationAsOpenedWithParams:requestParameters
-                                     attempts:self.retryAttempts
+                                     attempts:self.retryAttempts + 1
                                 previousError:nil
                             completionHandler:handler];
 }
@@ -117,7 +117,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
         completionHandler:(FWTDeviceListResponse)handler
 {
     [self _listDevicesOfUser:userAlias
-                    attempts:self.retryAttempts
+                    attempts:self.retryAttempts + 1
                previousError:nil
            completionHandler:handler];
 }
@@ -160,21 +160,21 @@ NSString * const FWTNotifiableProvider          = @"apns";
                               locale:(NSLocale *)locale
                    deviceInformation:(NSDictionary *)deviceInformation
                             attempts:(NSUInteger)attempts
-                       previousError:(NSError *)error
+                       previousError:(NSError *)previousError
                    completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     NSAssert(token != nil, @"To register a device, a token need to be provided");
     
     if (token == nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            handler(nil, [NSError fwt_invalidDeviceInformationError:nil]);
+            handler(nil, [NSError fwt_invalidDeviceInformationError:previousError]);
         });
     }
     
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, error);
+                handler(nil, [NSError fwt_errorWithUnderlyingError:previousError]);
             });
         }
         return;
@@ -197,7 +197,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                          locale:locale
                               deviceInformation:deviceInformation
                                        attempts:(attempts - 1)
-                                  previousError:error
+                                  previousError:previousError
                               completionHandler:handler];
             return;
         }
@@ -233,7 +233,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                locale:(NSLocale *)locale
     deviceInformation:(NSDictionary *)deviceInformation
              attempts:(NSUInteger)attempts
-        previousError:(NSError *)error
+        previousError:(NSError *)previousError
     completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     NSAssert(deviceTokenId != nil, @"To update a device, a device token in need to be provided.");
@@ -247,7 +247,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(deviceTokenId, [NSError fwt_invalidOperationErrorWithUnderlyingError:nil]);
+                handler(deviceTokenId, [NSError fwt_errorWithUnderlyingError:previousError]);
             });
         }
         return;
@@ -280,7 +280,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                           locale:locale
                deviceInformation:deviceInformation
                         attempts:(attempts - 1)
-                   previousError:error
+                   previousError:previousError
                completionHandler:handler];
             return;
         }
@@ -317,13 +317,13 @@ NSString * const FWTNotifiableProvider          = @"apns";
 - (void)_unregisterToken:(NSNumber *)deviceTokenId
                userAlias:(NSString *)userAlias
             withAttempts:(NSUInteger)attempts
-           previousError:(NSError *)error
+           previousError:(NSError *)previousError
        completionHandler:(FWTSimpleRequestResponse)handler
 {
     if (attempts == 0){
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO, [NSError fwt_invalidOperationErrorWithUnderlyingError:nil]);
+                handler(NO, [NSError fwt_errorWithUnderlyingError:previousError]);
             });
         }
         return;
@@ -370,7 +370,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
 {
     if (attempts == 0) {
         if (handler) {
-            handler(NO, error);
+            handler(NO, [NSError fwt_errorWithUnderlyingError:error]);
         }
         return;
     }
@@ -402,14 +402,14 @@ NSString * const FWTNotifiableProvider          = @"apns";
 {
     if (attempts == 0) {
         if (handler) {
-            handler(@[], error);
+            handler(@[], [NSError fwt_errorWithUnderlyingError:error]);
         }
         return;
     }
     
     if (userAlias.length == 0) {
         if (handler) {
-            handler(@[], [NSError fwt_invalidDeviceInformationError:error]);
+            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
         }
         return;
     }

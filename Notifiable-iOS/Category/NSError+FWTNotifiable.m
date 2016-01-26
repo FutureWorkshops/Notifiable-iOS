@@ -13,18 +13,36 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
 @implementation NSError (FWTNotifiable)
 
 + (instancetype) fwt_errorWithCode:(NSInteger)code
-                       description:(NSString *)description
-                andUnderlyingError:(NSError *)underlyingError
+                andUserInformation:(NSDictionary *)userInformation
 {
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    if (description) {
-        [userInfo setObject:description forKey:NSLocalizedDescriptionKey];
+    NSError *error = [[NSError alloc] initWithDomain:FWTNotifiableErrorDomain
+                                                code:code
+                                            userInfo:userInformation];
+    return error;
+}
+
++ (instancetype) fwt_errorWithUnderlyingError:(NSError * _Nullable)error
+{
+    if (error == nil) {
+        return [NSError fwt_invalidOperationErrorWithUnderlyingError:nil];
     }
-    if (underlyingError) {
-        [userInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
+    
+    switch (error.code) {
+        case 401:
+            return [NSError fwt_userAliasErrorWithUnderlyingError:error];
+            break;
+        case 403:
+            return [NSError fwt_forbiddenErrorWithUnderlyingError:error];
+            break;
+        case 404:
+            return [NSError fwt_invalidOperationErrorWithUnderlyingError:error];
+            break;
+        default:
+            return [NSError fwt_errorWithCode:error.code
+                                  description:error.localizedDescription
+                           andUnderlyingError:error];
+            break;
     }
-    return [self fwt_errorWithCode:code
-                andUserInformation:[NSDictionary dictionaryWithDictionary:userInfo]];
 }
 
 + (instancetype) fwt_userAliasErrorWithUnderlyingError:(NSError *)underlyingError
@@ -65,12 +83,18 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
 #pragma mark - Private methods
 
 + (instancetype) fwt_errorWithCode:(NSInteger)code
-                andUserInformation:(NSDictionary *)userInformation
+                       description:(NSString *)description
+                andUnderlyingError:(NSError *)underlyingError
 {
-    NSError *error = [[NSError alloc] initWithDomain:FWTNotifiableErrorDomain
-                                                code:code
-                                            userInfo:userInformation];
-    return error;
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    if (description) {
+        [userInfo setObject:description forKey:NSLocalizedDescriptionKey];
+    }
+    if (underlyingError) {
+        [userInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
+    }
+    return [self fwt_errorWithCode:code
+                andUserInformation:[NSDictionary dictionaryWithDictionary:userInfo]];
 }
 
 - (NSString *)fwt_debugMessage

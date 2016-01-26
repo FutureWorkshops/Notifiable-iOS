@@ -13,6 +13,7 @@
 #import "FWTRequesterManager.h"
 #import "FWTNotifiableDevice+Private.h"
 #import "NSError+FWTNotifiable.h"
+#import "NSLocale+FWTNotifiable.h"
 
 NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification = @"FWTNotifiableDidRegisterDeviceWithAPNSNotification";
 NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification = @"FWTNotifiableFailedToRegisterDeviceWithAPNSNotification";
@@ -133,7 +134,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
              completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self registerAnonymousToken:token
-                      withLocale:[NSLocale autoupdatingCurrentLocale]
+                      withLocale:[NSLocale fwt_autoupdatingCurrentLocale]
                completionHandler:handler];
 }
 
@@ -143,7 +144,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
 {
     [self registerAnonymousToken:token
                       deviceName:deviceName
-                      withLocale:[NSLocale autoupdatingCurrentLocale]
+                      withLocale:[NSLocale fwt_autoupdatingCurrentLocale]
                deviceInformation:@{}
                completionHandler:handler];
 }
@@ -201,7 +202,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     [self registerToken:token
              deviceName:nil
           withUserAlias:userAlias
-                 locale:[NSLocale autoupdatingCurrentLocale]
+                 locale:[NSLocale fwt_autoupdatingCurrentLocale]
       deviceInformation:@{}
       completionHandler:handler];
 }
@@ -211,7 +212,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     [self registerToken:token
              deviceName:deviceName
           withUserAlias:userAlias
-                 locale:[NSLocale autoupdatingCurrentLocale]
+                 locale:[NSLocale fwt_autoupdatingCurrentLocale]
       deviceInformation:@{}
       completionHandler:handler];
 }

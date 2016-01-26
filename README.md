@@ -13,9 +13,11 @@ Registering existing token for different user will result in token being reassig
 
 The `FWTNotifiable` for iOS is avaliable on [Cocoapods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
 
-`pod 'FWTNotifiable'`
+```
+pod 'FWTNotifiable'
+```
 
-If you are not using Cocoapods, you clone this project and import the files into your project. This libraries uses [AFNetworking](https://github.com/AFNetworking/AFNetworking) as a dependency and is configured as a [submodule](https://git-scm.com/docs/git-submodule).
+If you are not using Cocoapods, you can clone this project and import the files into your own project. This libraries uses [AFNetworking](https://github.com/AFNetworking/AFNetworking) as a dependency and is configured as a [submodule](https://git-scm.com/docs/git-submodule).
 
 You can see an example of the implementation in the [Sample folder](Sample).
 
@@ -31,7 +33,7 @@ func application(application: UIApplication, didFinishLaunchingWithOptions launc
 {
 	notifiableManager = FWTNotifiableManager(url: <<SERVER_URL>>, accessId: <<USER_API_ACCESS_ID>>, andSecretKey: <<USER_API_SECRET_KEY>>)
 
-	return YES;
+	return true;
 }
 ```
 

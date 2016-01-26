@@ -7,7 +7,7 @@
 //
 
 #import "FWTHTTPRequester.h"
-#import "AFNetworking.h"
+#import <AFNetworking/AFHTTPSessionManager.h>
 #import "FWTNotifiableAuthenticator.h"
 #import "NSError+FWTNotifiable.h"
 
@@ -53,6 +53,8 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                          success:(FWTRequestManagerSuccessBlock)success
                          failure:(FWTRequestManagerFailureBlock)failure
 {
+    NSAssert(params != nil, @"You need provide, at least, the device token that will be registered");
+    
     [self _updateAuthenticationForPath:FWTDeviceTokensPath];
     
     [self.httpSessionManager POST:FWTDeviceTokensPath
@@ -67,6 +69,9 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                         success:(FWTRequestManagerSuccessBlock)success
                         failure:(FWTRequestManagerFailureBlock)failure
 {
+    NSAssert(params != nil, @"You need provide some information to update");
+    NSAssert(tokenId != nil, @"Device token id missing");
+    
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, [tokenId stringValue]];
     [self _updateAuthenticationForPath:path];
     [self.httpSessionManager PUT:path
@@ -80,6 +85,8 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                   success:(FWTRequestManagerSuccessBlock)success
                   failure:(FWTRequestManagerFailureBlock)failure
 {
+    NSAssert(tokenId != nil, @"Device token id missing");
+    
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, tokenId];
     if (userAlias) {
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
@@ -96,6 +103,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                                    success:(FWTRequestManagerSuccessBlock)success
                                    failure:(FWTRequestManagerFailureBlock)failure
 {
+    NSAssert(params != nil, @"You need provide, at least, the localized_notification_id");
     [self _updateAuthenticationForPath:FWTNotificationOpenPath];
     [self.httpSessionManager PUT:FWTNotificationOpenPath
                       parameters:params
@@ -107,6 +115,8 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                   success:(FWTRequestManagerArraySuccessBlock)success
                   failure:(FWTRequestManagerFailureBlock)failure
 {
+    NSAssert(userAlias != nil, @"User alias missing");
+    
     NSString *path = FWTListDevicesPath;
     if (userAlias) {
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];

@@ -92,7 +92,8 @@ extension ViewController {
     }
     
     private func _registerAnonymousToken(token:NSData) {
-        self.manager.registerAnonymousToken(token) { (device, error) in
+        let deviceName = UIDevice.currentDevice().name
+        self.manager.registerAnonymousToken(token, deviceName: deviceName, withLocale: NSLocale(localeIdentifier: "en"), deviceInformation: [:]) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
             } else {
@@ -103,7 +104,7 @@ extension ViewController {
     
     private func _registerToken(token:NSData, user:String) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerToken(token, withUserAlias: user, deviceName: deviceName) { (device, error) in
+        self.manager.registerToken(token, deviceName: deviceName, withUserAlias: user, locale: NSLocale(localeIdentifier: "en"), deviceInformation: [:]) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_debugMessage())
             } else {

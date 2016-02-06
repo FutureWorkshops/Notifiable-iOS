@@ -8,5 +8,5 @@ plugin 'cocoapods-keys', {
     "FWTSecretKey"
 ]}
 
-pod 'FWTNotifiable', :path => '..'
+pod 'Notifiable-iOS', :path => '..'
 pod 'SVProgressHUD', '~> 1.1'

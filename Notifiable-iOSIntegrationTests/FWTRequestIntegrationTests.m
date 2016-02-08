@@ -232,7 +232,7 @@ NSString * const FWTUser = @"test_user";
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         XCTAssertTrue(NO, @"This method should succed");
     }];
-    [self waitForExpectationsWithTimeout:5 handler:nil];
+    [self waitForExpectationsWithTimeout:1000 handler:nil];
     
     expectation = [self expectationWithDescription:@"register"];
     __block NSNumber *deviceTokenId;

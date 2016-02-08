@@ -483,7 +483,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     
     if (self.currentDevice == nil) {
         if (handler) {
-            handler(@[], [NSError fwt_invalidNotificationError:nil]);
+            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
         }
         return;
     }

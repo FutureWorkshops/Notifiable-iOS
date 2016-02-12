@@ -11,13 +11,13 @@ Registering existing token for different user will result in token being reassig
 
 ### Project integration
 
-The `FWTNotifiable` for iOS is avaliable on [Cocoapods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
+The `FWTNotifiable` for iOS is avaliable on [CocoaPods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
 
 ```
 pod 'FWTNotifiable'
 ```
 
-If you are not using Cocoapods, you can clone this project and import the files into your own project. This libraries uses [AFNetworking](https://github.com/AFNetworking/AFNetworking) as a dependency and is configured as a [submodule](https://git-scm.com/docs/git-submodule).
+If you are not using CocoaPods, you can clone this project and import the files into your own project. This libraries uses [AFNetworking](https://github.com/AFNetworking/AFNetworking) as a dependency and is configured as a [submodule](https://git-scm.com/docs/git-submodule).
 
 You can see an example of the implementation in the [Sample folder](Sample).
 

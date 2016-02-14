@@ -116,7 +116,7 @@ extension ViewController {
     private func _registerForNotifications(completion:FWTRegisterCompleted) {
         self.registerCompleted = completion
         SVProgressHUD.show()
-        let notificationSettings = UIUserNotificationSettings(forTypes: .Badge, categories: nil)
+        let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
     }
 }

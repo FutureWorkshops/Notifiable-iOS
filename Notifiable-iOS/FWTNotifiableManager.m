@@ -15,19 +15,19 @@
 #import "NSError+FWTNotifiable.h"
 #import "NSLocale+FWTNotifiable.h"
 
-NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification = @"FWTNotifiableDidRegisterDeviceWithAPNSNotification";
-NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification = @"FWTNotifiableFailedToRegisterDeviceWithAPNSNotification";
-NSString * const FWTNotifiableApplicationDidRegisterForRemoteNotifications = @"FWTNotifiableApplicationDidRegisterForRemoteNotifications";
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
 
-@interface FWTNotifiableManager ()
+static NSHashTable *listeners;
+
+@interface FWTNotifiableManager () <FWTNotifiableManagerListener>
 
 @property (nonatomic, strong) FWTRequesterManager *requestManager;
 @property (nonatomic, copy, readwrite, nullable) FWTNotifiableDevice *currentDevice;
 @property (nonatomic, strong) NSData *deviceTokenData;
+@property (nonatomic, strong) NSNotificationCenter *notificationCenter;
 
 @end
 
@@ -45,8 +45,35 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
                                                                                             andSecretKey:secretKey];
         FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseUrl:url andAuthenticator:authenticator];
         self->_requestManager = [[FWTRequesterManager alloc] initWithRequester:requester];
+        [FWTNotifiableManager registerManagerListener:self];
     }
     return self;
+}
+
++ (NSHashTable *)listenerTable
+{
+    if (listeners == nil) {
+        listeners = [NSHashTable weakObjectsHashTable];
+    }
+    return listeners;
+}
+
++ (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table))block
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSHashTable *table = [FWTNotifiableManager listenerTable];
+        @synchronized(table) {
+            block(table);
+        }
+    });
+}
+
+- (NSNotificationCenter *)notificationCenter
+{
+    if (self->_notificationCenter == nil) {
+        self->_notificationCenter = [NSNotificationCenter defaultCenter];
+    }
+    return self->_notificationCenter;
 }
 
 - (FWTNotifiableDevice *)currentDevice
@@ -107,7 +134,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     self.requestManager.logger = logger;
 }
 
-#pragma mark - Public
+#pragma mark - Public static methods
 
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types
 {
@@ -122,6 +149,38 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     
     return typesAllowed == types;
 }
+
+
++ (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+        if (![table containsObject:listener]) {
+            [table addObject:listener];
+        }
+    }];
+}
+
++ (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+        if ([table containsObject:listener]) {
+            [table removeObject:listener];
+        }
+    }];
+}
+
++ (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+        for (id object in table) {
+            if ([object conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [object respondsToSelector:@selector(applicationDidRegisterForRemoteNotificationsWithToken:)]) {
+                [object applicationDidRegisterForRemoteNotificationsWithToken:deviceToken];
+            }
+        }
+    }];
+}
+
+#pragma mark - Public methods
 
 - (void)registerAnonymousDeviceWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
@@ -433,14 +492,34 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
                          }];
 }
 
-- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
++ (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
-    [self applicationDidReceiveRemoteNotification:notificationInfo
-                            withCompletionHandler:nil];
+    NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
+    
+    if (notificationID == nil) {
+        return NO;
+    }
+    
+    NSDictionary *notificationCopy = [notificationInfo copy];
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+        for(id listener in table) {
+            if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveANotification:)]) {
+                [listener applicationDidReciveANotification:notificationCopy];
+            }
+        }
+    }];
+    
+    return YES;
 }
 
-- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
-                          withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+- (void)applicationDidReciveANotification:(NSDictionary *)notification
+{
+    [self markNotificationAsOpened:notification
+             withCompletionHandler:nil];
+}
+
+- (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
     NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
     
@@ -448,14 +527,14 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
         if(handler) {
             handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
         }
-        return;
+        return NO;
     }
     
     if(self.currentDevice == nil) {
         if(handler) {
             handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
         }
-        return;
+        return NO;
     }
     
     __weak typeof(self) weakSelf = self;
@@ -467,14 +546,7 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
                                     handler(weakSelf.currentDevice, error);
                                 }
                             }];
-}
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
-{
-    self.deviceTokenData = deviceToken;
-    [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableApplicationDidRegisterForRemoteNotifications
-                                                        object:self
-                                                      userInfo:@{FWTNotifiableNotificationDeviceToken:deviceToken}];
+    return YES;
 }
 
 - (void)listDevicesRelatedToUserWithCompletionHandler:(FWTNotifiableListOperationCompletionHandler)handler
@@ -502,6 +574,12 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
     }];
 }
 
+#pragma mark - FWTManagerListener
+- (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token
+{
+    self.deviceTokenData = token;
+}
+
 #pragma mark - Private
 - (void) _handleDeviceRegisterWithToken:(NSData *)token
                                 tokenId:(NSNumber *)deviceTokenId
@@ -521,11 +599,23 @@ NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificat
 
 - (void) _notifyNewDevice:(FWTNotifiableDevice *)device withError:(NSError *)error
 {
-    if (error) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableFailedToRegisterDeviceWithAPNSNotification object:self userInfo:@{FWTNotifiableNotificationError: error}];
-    } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FWTNotifiableDidRegisterDeviceWithAPNSNotification object:self userInfo:@{FWTNotifiableNotificationDevice:device}];
-    }
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+        for (id listener in table) {
+            if (![listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)]) {
+                continue;
+            }
+            
+            if (error) {
+                if ([listener respondsToSelector:@selector(notifiableManager:didFailToRegisterDeviceWithError:)]) {
+                    [listener notifiableManager:self didFailToRegisterDeviceWithError:error];
+                }
+            } else {
+                if ([listener respondsToSelector:@selector(notifiableManager:didRegisterDevice:)]) {
+                    [listener notifiableManager:self didRegisterDevice:device];
+                }
+            }
+        }
+    }];
 }
 
 @end

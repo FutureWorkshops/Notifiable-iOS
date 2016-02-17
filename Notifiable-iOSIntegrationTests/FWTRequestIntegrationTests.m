@@ -31,7 +31,8 @@ NSString * const FWTUser = @"test_user";
     if (self->_requester == nil) {
         FWTNotifiableAuthenticator *authenticator = [[FWTNotifiableAuthenticator alloc] initWithAccessId:FWTTestServerAccessId
                                                                                             andSecretKey:FWTTestServerSecretKey];
-        self->_requester = [[FWTHTTPRequester alloc] initWithBaseUrl:FWTTestServerURL andAuthenticator:authenticator];
+        NSURL *url = [NSURL URLWithString:FWTTestServerURL];
+        self->_requester = [[FWTHTTPRequester alloc] initWithBaseURL:url andAuthenticator:authenticator];
     }
     return self->_requester;
 }

@@ -7,13 +7,23 @@
 //
 
 import UIKit
+import Keys
 import FWTNotifiable
 import SVProgressHUD
 
 class ViewController: UIViewController, FWTNotifiableManagerListener {
     
     let FWTDeviceListSegue = "FWTDeviceListSegue"
-    var manager:FWTNotifiableManager!
+    lazy var manager:FWTNotifiableManager! = {
+        let keys = SampleKeys()
+        guard let serverURL = NSURL(string: "http://fw-notifiable-staging2.herokuapp.com/") else {
+            return nil
+        }
+        
+        return FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID(), secretKey: keys.fWTSecretKey(), didRegisterBlock: { [unowned self] (token) -> Void in
+            self.registerCompleted?(token: token)
+        }, andNotificationBlock: nil)
+    }()
     
     typealias FWTRegisterCompleted = (token:NSData!)->Void;
     var registerCompleted:FWTRegisterCompleted?
@@ -22,12 +32,7 @@ class ViewController: UIViewController, FWTNotifiableManagerListener {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        FWTNotifiableManager.registerManagerListener(self)
         self.updateScreen()
-    }
-    
-    deinit {
-        FWTNotifiableManager.unregisterManagerListener(self)
     }
     
     func updateScreen() {
@@ -37,24 +42,6 @@ class ViewController: UIViewController, FWTNotifiableManagerListener {
         }
         
         onSiteSwitch.on = information.boolValue
-    }
-}
-
-extension ViewController {
-    func notifiableManager(manager: FWTNotifiableManager, didRegisterDevice device: FWTNotifiableDevice) {
-        if (manager == self.manager) {
-            print("Device registered")
-        }
-    }
-    
-    func notifiableManager(manager: FWTNotifiableManager, didFailToRegisterDeviceWithError error: NSError) {
-        if (manager == self.manager) {
-            print("Error on register device: \(error)");
-        }
-    }
-    
-    func applicationDidRegisterForRemoteNotificationsWithToken(token: NSData) {
-        self.registerCompleted?(token: token)
     }
 }
 

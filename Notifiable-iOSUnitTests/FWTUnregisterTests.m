@@ -26,9 +26,11 @@
 - (FWTNotifiableManager *)manager
 {
     if (self->_manager == nil) {
-        self->_manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+        self->_manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                           accessId:OCMOCK_ANY
-                                                      andSecretKey:OCMOCK_ANY];
+                                                         secretKey:OCMOCK_ANY
+                                                  didRegisterBlock:nil
+                                              andNotificationBlock:nil];
     }
     return self->_manager;
 }
@@ -48,7 +50,7 @@
     if (self->_httpRequestMock == nil) {
         id httpMock = OCMClassMock([FWTHTTPRequester class]);
         OCMStub([httpMock alloc]).andReturn(httpMock);
-        OCMStub([httpMock initWithBaseUrl:[OCMArg any] andAuthenticator:[OCMArg any]]).andReturn(httpMock);
+        OCMStub([httpMock initWithBaseURL:[OCMArg any] andAuthenticator:[OCMArg any]]).andReturn(httpMock);
     }
 }
 

@@ -33,12 +33,12 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 
 @implementation FWTHTTPRequester
 
-- (instancetype)initWithBaseUrl:(NSString*)baseUrl
+- (instancetype)initWithBaseURL:(NSURL*)baseUrl
                andAuthenticator:(FWTNotifiableAuthenticator*)authenticator
 {
     self = [super init];
     if (self) {
-        self->_baseUrl = [NSURL URLWithString:baseUrl];
+        self->_baseUrl = baseUrl;
         self->_authenticator = authenticator;
     }
     return self;

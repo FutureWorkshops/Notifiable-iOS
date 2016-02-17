@@ -38,7 +38,7 @@
     if (self->_httpRequestMock == nil) {
         id httpMock = OCMClassMock([FWTHTTPRequester class]);
         OCMStub([httpMock alloc]).andReturn(httpMock);
-        OCMStub([httpMock initWithBaseUrl:[OCMArg any] andAuthenticator:[OCMArg any]]).andReturn(httpMock);
+        OCMStub([httpMock initWithBaseURL:[OCMArg any] andAuthenticator:[OCMArg any]]).andReturn(httpMock);
     }
 }
 
@@ -59,9 +59,11 @@
 }
 
 - (void)testRegisterAnonymousToken {
-    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                                      accessId:OCMOCK_ANY
-                                                                 andSecretKey:OCMOCK_ANY];
+                                                                    secretKey:OCMOCK_ANY
+                                                             didRegisterBlock:nil
+                                                         andNotificationBlock:nil];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
     XCTAssertThrows([manager registerAnonymousToken:nil completionHandler:nil], @"The register should fail if no token is provided");
@@ -118,9 +120,11 @@
 }
 
 - (void)testRegisterTokenToUser {
-    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                                      accessId:OCMOCK_ANY
-                                                                 andSecretKey:OCMOCK_ANY];
+                                                                    secretKey:OCMOCK_ANY
+                                                             didRegisterBlock:nil
+                                                         andNotificationBlock:nil];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
     XCTAssertThrows([manager registerToken:OCMOCK_ANY withUserAlias:nil completionHandler:nil], @"The register should fail if no user is provided");
@@ -186,9 +190,11 @@
 
 - (void) testFailOnRegisterAnonymousDevice
 {
-    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                                      accessId:OCMOCK_ANY
-                                                                 andSecretKey:OCMOCK_ANY];
+                                                                    secretKey:OCMOCK_ANY
+                                                             didRegisterBlock:nil
+                                                         andNotificationBlock:nil];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Fail unregister"];
     [self stubDeviceRegisterResponse:nil andError:[NSError errorWithDomain:@"domain" code:404 userInfo:nil] onMock:self.requesterManagerMock withBlock:^{
         [manager registerAnonymousToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
@@ -210,9 +216,11 @@
 
 - (void) testFailOnRegisterDevice
 {
-    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithUrl:OCMOCK_ANY
+    FWTNotifiableManager *manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                                      accessId:OCMOCK_ANY
-                                                                 andSecretKey:OCMOCK_ANY];
+                                                                    secretKey:OCMOCK_ANY
+                                                             didRegisterBlock:nil
+                                                         andNotificationBlock:nil];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Fail unregister"];
     [self stubDeviceRegisterResponse:nil andError:[NSError errorWithDomain:@"domain" code:404 userInfo:nil] onMock:self.requesterManagerMock withBlock:^{
         [manager registerToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]

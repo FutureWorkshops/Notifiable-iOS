@@ -53,7 +53,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 - (FWTHTTPRequester *)requester
 {
     if (self->_requester == nil) {
-        self->_requester = [[FWTHTTPRequester alloc] initWithBaseUrl:FWTTestURL
+        self->_requester = [[FWTHTTPRequester alloc] initWithBaseURL:[NSURL URLWithString:FWTTestURL]
                                                     andAuthenticator:self.authenticator];
         self->_requester.httpClient = self.clientMock;
     }
@@ -88,9 +88,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 }
 
 - (void)testRequester {
-    XCTAssertThrows([[FWTHTTPRequester alloc] initWithBaseUrl:OCMOCK_ANY
-                                             andAuthenticator:self.authenticator], @"Use of invalid URL");
-    XCTAssertNotNil([[FWTHTTPRequester alloc] initWithBaseUrl:FWTTestURL
+    XCTAssertNotNil([[FWTHTTPRequester alloc] initWithBaseURL:[NSURL URLWithString:FWTTestURL]
                                              andAuthenticator:self.authenticator]);
 }
 

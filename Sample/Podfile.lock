@@ -15,7 +15,7 @@ PODS:
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
   - Keys (1.0.0)
-  - Notifiable-iOS (0.1.1):
+  - Notifiable-iOS (0.1.2):
     - AFNetworking (~> 3.0.4)
   - SVProgressHUD (1.1.3)
 
@@ -33,7 +33,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
   Keys: 7d2ff6ff42f6903358267ce56e9392f83c31acfe
-  Notifiable-iOS: 5626e60216d4a5ac01351551617106d7364fe269
+  Notifiable-iOS: a559ca6c58fd67d4c6e3e27382cf0acd39bf2621
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
 COCOAPODS: 0.39.0

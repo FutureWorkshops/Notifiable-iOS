@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Keys
 import FWTNotifiable
 
 @UIApplicationMain
@@ -16,29 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        let keys = SampleKeys()
-        
-        self.getMainViewController()?.manager = FWTNotifiableManager(url: "http://fw-notifiable-staging2.herokuapp.com/", accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
-        
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject:AnyObject] {
             self.application(application, didReceiveRemoteNotification: remoteNotification)
         }
         
         return true
-    }
-
-    func getMainViewController() -> ViewController?
-    {
-        guard let navigationController = window?.rootViewController as? UINavigationController else {
-            return nil
-        }
-        
-        if let mainViewController = navigationController.topViewController as? ViewController {
-            return mainViewController
-        } else {
-            return nil
-        }
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {

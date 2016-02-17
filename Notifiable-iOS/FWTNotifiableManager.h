@@ -11,20 +11,28 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const FWTNotifiableDidRegisterDeviceWithAPNSNotification;
-extern NSString * const FWTNotifiableFailedToRegisterDeviceWithAPNSNotification;
-
-extern NSString * const FWTNotifiableApplicationDidRegisterForRemoteNotifications;
-
 extern NSString * const FWTNotifiableNotificationDevice;
 extern NSString * const FWTNotifiableNotificationError;
 extern NSString * const FWTNotifiableNotificationDeviceToken;
 
 @protocol FWTNotifiableLogger;
+
 @class FWTNotifiableDevice;
 
 typedef void (^FWTNotifiableOperationCompletionHandler)(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error);
 typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiableDevice*> * _Nullable devices, NSError * _Nullable error);
+
+@class FWTNotifiableManager;
+
+@protocol FWTNotifiableManagerListener <NSObject>
+
+@optional
+- (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token;
+- (void)applicationDidReciveANotification:(NSDictionary *)notification;
+- (void)notifiableManager:(FWTNotifiableManager *)manager didRegisterDevice:(FWTNotifiableDevice *)device;
+- (void)notifiableManager:(FWTNotifiableManager *)manager didFailToRegisterDeviceWithError:(NSError *)error;
+
+@end
 
 /**
  The FWTNotifiableManager is the interface between the iOS application and a Notifiable-Rails gem server
@@ -47,6 +55,50 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
  @param types   Notification setting that is expected to be registered
 */
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
+
+#pragma mark - Permission notification
+/**
+ Inform the Notifiable Manager that the application did register for remote notifications
+ 
+ @param application Application that was registered
+ @param deviceToken Device APNS token
+ */
++ (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken;
+
+#pragma mark - Listener operations
+/**
+ Register an object to be informed when a asynchronous operation related to the managers is performed
+ @param listener    Object to listen for the notifications
+ */
++ (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener;
+
+/**
+ Unregister an object previously registered as listener
+ @param listener    Object previously registered
+ */
++ (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener;
+
+#pragma mark - Read receipts can be delivered back to server via this method
+/**
+ Notify the server that a notification was read.
+ 
+ @param notificationInfo    The information of the notification given by the system
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
++ (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
+
+/**
+ Notify the server that a notification was read and listen for the server response
+ 
+ @param notificationInfo    The information of the notification given by the system
+ @param handler             Block called once that the operation is finished.
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
+- (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -358,31 +410,6 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
  @param handler Block called once that the operation is finished.
 */
 - (void)listDevicesRelatedToUserWithCompletionHandler:(_Nullable FWTNotifiableListOperationCompletionHandler)handler;
-
-#pragma mark - Read receipts can be delivered back to server via this method
-/**
- Notify the server that a notification was read.
- 
- @param notificationInfo    The information of the notification given by the system
-*/
-- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
-
-/**
- Notify the server that a notification was read and listen for the server response
- 
- @param notificationInfo    The information of the notification given by the system
- @param handler             Block called once that the operation is finished.
-*/
-- (void)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
-                          withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Inform the Notifiable Manager that the application did register for remote notifications
- 
- @param application Application that was registered
- @param deviceToken Device APNS token
-*/
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken;
 
 @end
 

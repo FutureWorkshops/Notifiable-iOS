@@ -14,14 +14,12 @@ import FWTNotifiable
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var notifiableManager:FWTNotifiableManager!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         let keys = SampleKeys()
-        self.notifiableManager = FWTNotifiableManager(url: "http://fw-notifiable-staging2.herokuapp.com/", accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
         
-        self.getMainViewController()?.manager = self.notifiableManager
+        self.getMainViewController()?.manager = FWTNotifiableManager(url: "http://fw-notifiable-staging2.herokuapp.com/", accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
         
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject:AnyObject] {
             self.application(application, didReceiveRemoteNotification: remoteNotification)
@@ -44,7 +42,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        self.notifiableManager.applicationDidReceiveRemoteNotification(userInfo);
+        if (FWTNotifiableManager.applicationDidReceiveRemoteNotification(userInfo)) {
+            print("Notifiable server notification")
+        }
     }
     
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
@@ -52,6 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        self.notifiableManager.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+        FWTNotifiableManager.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
     }
 }

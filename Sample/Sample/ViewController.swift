@@ -10,11 +10,10 @@ import UIKit
 import FWTNotifiable
 import SVProgressHUD
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, FWTNotifiableManagerListener {
     
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     var manager:FWTNotifiableManager!
-    var token:NSData?
     
     typealias FWTRegisterCompleted = (token:NSData!)->Void;
     var registerCompleted:FWTRegisterCompleted?
@@ -23,10 +22,12 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerDeviceSuccess:", name: FWTNotifiableDidRegisterDeviceWithAPNSNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "failedToRegisterDevice:", name: FWTNotifiableFailedToRegisterDeviceWithAPNSNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "registerForRemoteNotification:", name: FWTNotifiableApplicationDidRegisterForRemoteNotifications, object: nil)
+        FWTNotifiableManager.registerManagerListener(self)
         self.updateScreen()
+    }
+    
+    deinit {
+        FWTNotifiableManager.unregisterManagerListener(self)
     }
     
     func updateScreen() {
@@ -37,17 +38,22 @@ class ViewController: UIViewController {
         
         onSiteSwitch.on = information.boolValue
     }
-    
-    func registerDeviceSuccess(notification:NSNotification) {
-        print("Device registered")
-    }
-    
-    func failedToRegisterDevice(notification:NSNotification) {
-        print("Device failed to register")
-    }
+}
 
-    func registerForRemoteNotification(notification:NSNotification) {
-        let token = notification.userInfo?[FWTNotifiableNotificationDeviceToken] as? NSData
+extension ViewController {
+    func notifiableManager(manager: FWTNotifiableManager, didRegisterDevice device: FWTNotifiableDevice) {
+        if (manager == self.manager) {
+            print("Device registered")
+        }
+    }
+    
+    func notifiableManager(manager: FWTNotifiableManager, didFailToRegisterDeviceWithError error: NSError) {
+        if (manager == self.manager) {
+            print("Error on register device: \(error)");
+        }
+    }
+    
+    func applicationDidRegisterForRemoteNotificationsWithToken(token: NSData) {
         self.registerCompleted?(token: token)
     }
 }
@@ -55,14 +61,6 @@ class ViewController: UIViewController {
 //MARK - Register
 
 extension ViewController {
-    
-    func registeredForNotificationsWithToken(token:NSData) {
-        self.token = token
-        self.registerCompleted?(token: token)
-        self.manager.updateDeviceToken(token, deviceName: "device", userAlias: "user", location: NSLocale.fwt_autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
-            
-        }
-    }
     
     @IBAction func registerAnonymous(sender: AnyObject) {
         self._registerForNotifications { [weak self] (token) in
@@ -116,7 +114,7 @@ extension ViewController {
     private func _registerForNotifications(completion:FWTRegisterCompleted) {
         self.registerCompleted = completion
         SVProgressHUD.show()
-        let notificationSettings = UIUserNotificationSettings(forTypes: .Badge, categories: nil)
+        let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
     }
 }

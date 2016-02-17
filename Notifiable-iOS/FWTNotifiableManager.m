@@ -28,6 +28,8 @@ static NSHashTable *listeners;
 @property (nonatomic, copy, readwrite, nullable) FWTNotifiableDevice *currentDevice;
 @property (nonatomic, strong) NSData *deviceTokenData;
 @property (nonatomic, strong) NSNotificationCenter *notificationCenter;
+@property (nonatomic, copy) FWTNotifiableDidRegisterBlock registerBlock;
+@property (nonatomic, copy) FWTNotifiableDidReceiveNotificationBlock notificationBlock;
 
 @end
 
@@ -35,15 +37,21 @@ static NSHashTable *listeners;
 
 @synthesize currentDevice = _currentDevice;
 
-- (instancetype)initWithUrl:(NSString *)url
+- (instancetype)initWithURL:(NSURL *)url
                    accessId:(NSString *)accessId
-               andSecretKey:(NSString *)secretKey
+                  secretKey:(NSString *)secretKey
+           didRegisterBlock:(FWTNotifiableDidRegisterBlock)registerBlock
+       andNotificationBlock:(FWTNotifiableDidReceiveNotificationBlock)notificationBlock
 {
     self = [super init];
     if (self) {
+        self->_registerBlock = registerBlock;
+        self->_notificationBlock = notificationBlock;
+        
         FWTNotifiableAuthenticator *authenticator = [[FWTNotifiableAuthenticator alloc] initWithAccessId:accessId
                                                                                             andSecretKey:secretKey];
-        FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseUrl:url andAuthenticator:authenticator];
+        FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseURL:url
+                                                               andAuthenticator:authenticator];
         self->_requestManager = [[FWTRequesterManager alloc] initWithRequester:requester];
         [FWTNotifiableManager registerManagerListener:self];
     }
@@ -503,19 +511,13 @@ static NSHashTable *listeners;
     NSDictionary *notificationCopy = [notificationInfo copy];
     [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
         for(id listener in table) {
-            if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveANotification:)]) {
-                [listener applicationDidReciveANotification:notificationCopy];
+            if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
+                [listener applicationDidReciveNotification:notificationCopy];
             }
         }
     }];
     
     return YES;
-}
-
-- (void)applicationDidReciveANotification:(NSDictionary *)notification
-{
-    [self markNotificationAsOpened:notification
-             withCompletionHandler:nil];
 }
 
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
@@ -578,6 +580,20 @@ static NSHashTable *listeners;
 - (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token
 {
     self.deviceTokenData = token;
+    if (self.registerBlock) {
+        self.registerBlock(token);
+    }
+}
+
+- (void)applicationDidReciveNotification:(NSDictionary *)notification
+{
+    @synchronized(self) {
+        [self markNotificationAsOpened:notification
+                 withCompletionHandler:nil];
+        if (self.notificationBlock) {
+            self.notificationBlock(self.currentDevice, notification);
+        }
+    }
 }
 
 #pragma mark - Private

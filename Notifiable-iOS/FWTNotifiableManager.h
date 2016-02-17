@@ -22,13 +22,16 @@ extern NSString * const FWTNotifiableNotificationDeviceToken;
 typedef void (^FWTNotifiableOperationCompletionHandler)(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error);
 typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiableDevice*> * _Nullable devices, NSError * _Nullable error);
 
+typedef void (^FWTNotifiableDidRegisterBlock)(NSData * token);
+typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableDevice * device, NSDictionary *notification);
+
 @class FWTNotifiableManager;
 
 @protocol FWTNotifiableManagerListener <NSObject>
 
 @optional
 - (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token;
-- (void)applicationDidReciveANotification:(NSDictionary *)notification;
+- (void)applicationDidReciveNotification:(NSDictionary *)notification;
 - (void)notifiableManager:(FWTNotifiableManager *)manager didRegisterDevice:(FWTNotifiableDevice *)device;
 - (void)notifiableManager:(FWTNotifiableManager *)manager didFailToRegisterDeviceWithError:(NSError *)error;
 
@@ -107,15 +110,19 @@ typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiabl
  
  @see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
  
- @param url         Notifiable-Rails server url
- @param accessId    Access Id of the app
- @param secretKey   Secret key of the app
+ @param url                 Notifiable-Rails server url
+ @param accessId            Access Id of the app
+ @param secretKey           Secret key of the app
+ @param registerBlock       Block that is called once that the device is registered for receiving notifications
+ @param notificationBlock   Block that is called once that the device receives a notification;
  
  @return Manager configured to access a specific Notifiable-Rails server
 */
-- (instancetype)initWithUrl:(NSString *)url
+- (instancetype)initWithURL:(NSURL *)url
                    accessId:(NSString *)accessId
-               andSecretKey:(NSString *)secretKey NS_DESIGNATED_INITIALIZER;
+                  secretKey:(NSString *)secretKey
+           didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock  NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Register Anonymous device
 /**

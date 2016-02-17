@@ -21,7 +21,7 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
 @property (nonatomic, readonly, strong) NSURL* baseUrl;
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithBaseUrl:(NSString*)baseUrl
+- (instancetype)initWithBaseURL:(NSURL *)baseUrl
                andAuthenticator:(FWTNotifiableAuthenticator*)authenticator NS_DESIGNATED_INITIALIZER;
 - (void)registerDeviceWithParams:(NSDictionary *)params
                          success:(_Nullable FWTRequestManagerSuccessBlock)success

@@ -11,7 +11,7 @@ import Keys
 import FWTNotifiable
 import SVProgressHUD
 
-class ViewController: UIViewController, FWTNotifiableManagerListener {
+class ViewController: UIViewController {
     
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:FWTNotifiableManager! = {

@@ -18,6 +18,7 @@
 @property (nonatomic, strong) id requesterManagerMock;
 @property (nonatomic, strong) id httpRequestMock;
 @property (nonatomic, strong) FWTNotifiableManager *manager;
+@property (nonatomic, strong) NSData *deviceToken;
 
 @end
 
@@ -26,6 +27,7 @@
 - (FWTNotifiableManager *)manager
 {
     if (self->_manager == nil) {
+        [FWTNotifiableManager application:OCMOCK_ANY didRegisterForRemoteNotificationsWithDeviceToken:self.deviceToken];
         self->_manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                           accessId:OCMOCK_ANY
                                                          secretKey:OCMOCK_ANY
@@ -33,6 +35,14 @@
                                               andNotificationBlock:nil];
     }
     return self->_manager;
+}
+
+- (NSData *)deviceToken
+{
+    if (self->_deviceToken == nil) {
+        self->_deviceToken = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    return self->_deviceToken;
 }
 
 - (void)mockRequester
@@ -83,8 +93,7 @@
 
 - (void) testUnregisterDevice
 {
-    [self registerAnonymousDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
-                                   tokenId:@42
+    [self registerAnonymousDeviceWithTokenId:@42
                                   andError:nil
                                  onManager:self.manager
                            andRquesterMock:self.requesterManagerMock];
@@ -106,8 +115,7 @@
 
 - (void) testErrorOnUnregister
 {
-    [self registerAnonymousDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
-                                   tokenId:@42
+    [self registerAnonymousDeviceWithTokenId:@42
                                   andError:nil
                                  onManager:self.manager
                            andRquesterMock:self.requesterManagerMock];

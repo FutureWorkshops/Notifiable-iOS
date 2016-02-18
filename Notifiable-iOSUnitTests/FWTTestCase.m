@@ -90,19 +90,19 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
              completionHandler:OCMOCK_ANY]).andDo(postProxyBlock);
 }
 
-- (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
+- (void) registerAnonymousDeviceWithTokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
 {
     [self _registerDeviceWithTokenId:tokenId andError:error onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
-        [manager registerAnonymousToken:token completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        [manager registerAnonymousDeviceWithName:nil locale:nil deviceInformation:nil andCompletionHandler:^(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error) {
             registerBlock(device, error);
         }];
     }];
 }
 
-- (void) registerDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId error:(NSError *)error andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
+- (void) registerDeviceWithTokenId:(NSNumber *)tokenId error:(NSError *)error andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock
 {
     [self _registerDeviceWithTokenId:tokenId andError:error onMock:mock andBlock:^(FWTTestRegisterBlock registerBlock) {
-        [manager registerToken:token withUserAlias:userAlias completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+        [manager registerDeviceWithName:nil userAlias:userAlias locale:nil deviceInformation:nil andCompletionHandler:^(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error) {
             registerBlock(device, error);
         }];
     }];

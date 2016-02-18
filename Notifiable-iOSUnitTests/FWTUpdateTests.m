@@ -20,6 +20,7 @@
 @property (nonatomic, strong) id httpRequestMock;
 @property (nonatomic, strong) FWTNotifiableManager *manager;
 @property (nonatomic, strong) NSNumber *deviceTokenId;
+@property (nonatomic, strong) NSData *tokenData;
 
 @end
 
@@ -36,6 +37,7 @@
 - (FWTNotifiableManager *)manager
 {
     if (self->_manager == nil) {
+        [FWTNotifiableManager application:OCMOCK_ANY didRegisterForRemoteNotificationsWithDeviceToken:self.tokenData];
         self->_manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                           accessId:OCMOCK_ANY
                                                          secretKey:OCMOCK_ANY
@@ -43,6 +45,14 @@
                                               andNotificationBlock:nil];
     }
     return self->_manager;
+}
+
+- (NSData *)tokenData
+{
+    if (self->_tokenData == nil) {
+        self->_tokenData = [@"original" dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    return self->_tokenData;
 }
 
 - (void)mockRequester
@@ -94,7 +104,7 @@
 
 - (void)testUpdateAnonymousDevice
 {
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     XCTAssertNotNil(self.manager.currentDevice);
     XCTAssertEqualObjects(self.manager.currentDevice.tokenId, self.deviceTokenId);
     XCTAssertEqualObjects(self.manager.currentDevice.token, [@"original" dataUsingEncoding:NSUTF8StringEncoding]);
@@ -122,7 +132,7 @@
 
 - (void)testUpdateDeviceWithUser
 {
-    [self _registerDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding] andUserAlias:@"original"];
+    [self _registerDeviceWithUserAlias:@"original"];
     XCTAssertNotNil(self.manager.currentDevice);
     XCTAssertEqualObjects(self.manager.currentDevice.tokenId, self.deviceTokenId);
     XCTAssertEqualObjects(self.manager.currentDevice.token, [@"original" dataUsingEncoding:NSUTF8StringEncoding]);
@@ -150,7 +160,7 @@
 
 - (void) testUpdateToken
 {
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     
     XCTAssertEqualObjects(self.manager.currentDevice.token, [@"original" dataUsingEncoding:NSUTF8StringEncoding]);
     
@@ -174,7 +184,7 @@
     id mockLocale = OCMClassMock([NSLocale class]);
     OCMStub([mockLocale fwt_autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     
     XCTAssertEqualObjects(self.manager.currentDevice.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
@@ -207,7 +217,7 @@
     id mockLocale = OCMClassMock([NSLocale class]);
     OCMStub([mockLocale fwt_autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     
     XCTAssertEqualObjects(self.manager.currentDevice.token, [@"original" dataUsingEncoding:NSUTF8StringEncoding]);
     XCTAssertEqualObjects(self.manager.currentDevice.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
@@ -228,7 +238,7 @@
 
 - (void) testUpdateDeviceName
 {
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     
     XCTAssertNotNil(self.manager.currentDevice);
     XCTAssertNil(self.manager.currentDevice.name);
@@ -257,7 +267,7 @@
 
 - (void) testUpdateDeviceInformation
 {
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     XCTAssertNotNil(self.manager.currentDevice);
     XCTAssertEqual(self.manager.currentDevice.information.count, 0);
     
@@ -287,7 +297,7 @@
     id mockLocale = OCMClassMock([NSLocale class]);
     OCMStub([mockLocale fwt_autoupdatingCurrentLocale]).andReturn([NSLocale localeWithLocaleIdentifier:@"en_US"]);
     
-    [self _registerAnonymousDeviceWithToken:[@"original" dataUsingEncoding:NSUTF8StringEncoding]];
+    [self _registerAnonymousDevice];
     FWTNotifiableDevice *device = self.manager.currentDevice;
     XCTAssertEqualObjects(device.token, [@"original" dataUsingEncoding:NSUTF8StringEncoding]);
     XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
@@ -331,23 +341,21 @@
     [managerMock stopMocking];
 }
 
-- (void) _registerAnonymousDeviceWithToken:(NSData *)token
+- (void) _registerAnonymousDevice
 {
-    [self registerAnonymousDeviceWithToken:token
-                                   tokenId:self.deviceTokenId
-                                  andError:nil
-                                 onManager:self.manager
-                           andRquesterMock:self.requesterManagerMock];
+    [self registerAnonymousDeviceWithTokenId:self.deviceTokenId
+                                    andError:nil
+                                   onManager:self.manager
+                             andRquesterMock:self.requesterManagerMock];
 }
 
-- (void) _registerDeviceWithToken:(NSData *)token andUserAlias:(NSString *)userAlias
+- (void) _registerDeviceWithUserAlias:(NSString *)userAlias
 {
-    [self registerDeviceWithToken:token
-                          tokenId:self.deviceTokenId
-                            error:nil
-                     andUserAlias:userAlias
-                        onManager:self.manager
-                  andRquesterMock:self.requesterManagerMock];
+    [self registerDeviceWithTokenId:self.deviceTokenId
+                              error:nil
+                       andUserAlias:userAlias
+                          onManager:self.manager
+                    andRquesterMock:self.requesterManagerMock];
 }
 
 @end

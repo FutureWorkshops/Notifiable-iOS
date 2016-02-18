@@ -20,7 +20,7 @@ class ViewController: UIViewController {
             return nil
         }
         
-        return FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID(), secretKey: keys.fWTSecretKey(), didRegisterBlock: { [unowned self] (token) -> Void in
+        return FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID(), secretKey: keys.fWTSecretKey(), didRegisterBlock: { [unowned self] (manager, token) -> Void in
             self.registerCompleted?(token: token)
         }, andNotificationBlock: nil)
     }()
@@ -78,7 +78,7 @@ extension ViewController {
     
     private func _registerAnonymousToken(token:NSData) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerAnonymousToken(token, deviceName: deviceName) { (device, error) in
+        self.manager.registerAnonymousDeviceWithName(deviceName, locale: nil, deviceInformation: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
@@ -89,7 +89,7 @@ extension ViewController {
     
     private func _registerToken(token:NSData, user:String) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerToken(token, withUserAlias: user, deviceName: deviceName) { (device, error) in
+        self.manager.registerDeviceWithName(deviceName, userAlias: user, locale: nil, deviceInformation: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {

@@ -19,7 +19,7 @@
 
 - (void) stubDeviceUpdateResponse:(NSNumber *)deviceTokenId onMock:(id)mock;
 
-- (void) registerAnonymousDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock;
-- (void) registerDeviceWithToken:(NSData *)token tokenId:(NSNumber *)tokenId error:(NSError *)error andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock;
+- (void) registerAnonymousDeviceWithTokenId:(NSNumber *)tokenId andError:(NSError *)error onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock;
+- (void) registerDeviceWithTokenId:(NSNumber *)tokenId error:(NSError *)error andUserAlias:(NSString *)userAlias onManager:(FWTNotifiableManager *)manager andRquesterMock:(id)mock;
 
 @end

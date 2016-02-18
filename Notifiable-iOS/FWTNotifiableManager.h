@@ -18,14 +18,13 @@ extern NSString * const FWTNotifiableNotificationDeviceToken;
 @protocol FWTNotifiableLogger;
 
 @class FWTNotifiableDevice;
+@class FWTNotifiableManager;
 
 typedef void (^FWTNotifiableOperationCompletionHandler)(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error);
 typedef void (^FWTNotifiableListOperationCompletionHandler)(NSArray<FWTNotifiableDevice*> * _Nullable devices, NSError * _Nullable error);
 
-typedef void (^FWTNotifiableDidRegisterBlock)(NSData * token);
-typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableDevice * device, NSDictionary *notification);
-
-@class FWTNotifiableManager;
+typedef void (^FWTNotifiableDidRegisterBlock)(FWTNotifiableManager *manager, NSData * token);
+typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *manager, FWTNotifiableDevice * device, NSDictionary *notification);
 
 @protocol FWTNotifiableManagerListener <NSObject>
 
@@ -125,158 +124,23 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableDevice * d
        andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock  NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Register Anonymous device
-/**
- Register a device without a user associated to it. If the token already exists in the server,
- the device configuration in the server will not change, otherwise, a new device will be created.
- 
- @warning If the application:didRegisterForRemoteNotificationsWithDeviceToken: wasn't called,
- this operation will not have a token to register.
- 
- @param handler Block called once that the operation is finished.
- */
-- (void)registerAnonymousDeviceWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device without a user associated to it. If the token already exists in the server,
- the device configuration in the server will not change, otherwise, a new device will be created.
- 
- @param token   The device token.
- @param handler Block called once that the operation is finished.
-*/
-- (void)registerAnonymousToken:(NSData *)token
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device without a user associated to it. If the token already exists in the server,
- the device configuration in the server will not change, otherwise, a new device will be created.
- 
- @param token       The device token.
- @param deviceName  A label for the device.
- @param handler     Block called once that the operation is finished.
- */
-- (void)registerAnonymousToken:(NSData *)token
-                    deviceName:(NSString *)deviceName
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device, without a user associated to it. If the token already exists in the server,
- the device locale will be updated. Otherwise, a new device will be created with the token 
- and locale provided.
- 
- @param token   The device token.
- @param locale  The locale of the device.
- @param handler Block called once that the operation is finished.
-*/
-- (void)registerAnonymousToken:(NSData *)token
-                    withLocale:(NSLocale *)locale
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device, without a user associated to it. If the token already exists in the server,
- the device locale will be updated. Otherwise, a new device will be created with the token
- and locale provided.
- 
- @param token               The device token.
- @param locale              The locale of the device.
- @param deviceInformation   Aditional information about the device.
- @param handler             Block called once that the operation is finished.
-*/
-- (void)registerAnonymousToken:(NSData *)token
-                    withLocale:(NSLocale *)locale
-             deviceInformation:(NSDictionary *)deviceInformation
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Register a device, without a user associated to it, but with a name to represent the device.
  If the token already exists in the server, the device locale will be updated. 
  Otherwise, a new device will be created with the token and locale provided.
  
- @param token               The device token.
- @param deviceName          A label for the device.
+ @param name                A label for the device.
  @param locale              The locale of the device.
  @param deviceInformation   Aditional information about the device.
  @param handler             Block called once that the operation is finished.
  */
--(void)registerAnonymousToken:(NSData *)token
-                   deviceName:(NSString * _Nullable)deviceName
-                   withLocale:(NSLocale *)locale
-            deviceInformation:(NSDictionary *)deviceInformation
-            completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+-(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
+                                locale:(NSLocale * _Nullable)locale
+                     deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                  andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
-/**
- Register a device with a user associated to it. If the token already exists in the server,
- the device configuration in the server will not change, otherwise, a new device will be created.
- If the user alias doesn't exist, a new user will be created.
- 
- @warning If the application:didRegisterForRemoteNotificationsWithDeviceToken: wasn't called,
- this operation will not have a token to register.
- 
- @param userAlias   The alias of the user in the server.
- @param handler     Block called once that the operation is finished.
- */
-- (void)registerDeviceWithUserAlias:(NSString *)userAlias
-                  completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device with a user associated to it. If the token already exists in the server,
- the device configuration in the server will not change, otherwise, a new device will be created.
- If the user alias doesn't exist, a new user will be created.
- 
- @param token       The device token.
- @param userAlias   The alias of the user in the server.
- @param handler     Block called once that the operation is finished.
-*/
-- (void)registerToken:(NSData *)token
-        withUserAlias:(NSString *)userAlias
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device with a user associated to it. If the token already exists in the server,
- the device configuration in the server will not change, otherwise, a new device will be created.
- If the user alias doesn't exist, a new user will be created.
- 
- @param token       The device token.
- @param userAlias   The alias of the user in the server.
- @param deviceName  A label for the device.
- @param handler     Block called once that the operation is finished.
- */
-- (void)registerToken:(NSData *)token
-        withUserAlias:(NSString *)userAlias
-           deviceName:(NSString *)deviceName
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device, with a user associated to it. If the token already exists in the server,
- the device locale will be updated. Otherwise, a new device will be created with the token
- and locale provided. If the user alias doesn't exist, a new user will be created.
- 
- @param token       The device token.
- @param locale      The locale of the device.
- @param userAlias   The alias of the user in the server.
- @param handler     Block called once that the operation is finished.
-*/
-- (void)registerToken:(NSData *)token
-        withUserAlias:(NSString *)userAlias
-            andLocale:(NSLocale *)locale
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-/**
- Register a device, with a user associated to it. If the token already exists in the server,
- the device locale will be updated. Otherwise, a new device will be created with the token
- and locale provided. If the user alias doesn't exist, a new user will be created.
- 
- @param token       The device token.
- @param locale      The locale of the device.
- @param userAlias   The alias of the user in the server.
- @param deviceInformation   Aditional information about the device
- @param handler     Block called once that the operation is finished.
-*/
-- (void)registerToken:(NSData *)token
-        withUserAlias:(NSString *)userAlias
-               locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Register a device, with a user associated to it, but with a name to represent the device. 
@@ -284,19 +148,17 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableDevice * d
  Otherwise, a new device will be created with the token and locale provided. 
  If the user alias doesn't exist, a new user will be created.
  
- @param token       The device token.
  @param deviceName  A label for the device.
  @param locale      The locale of the device.
  @param userAlias   The alias of the user in the server.
  @param deviceInformation   Aditional information about the device
  @param handler     Block called once that the operation is finished.
  */
-- (void)registerToken:(NSData *)token
-           deviceName:(NSString * _Nullable)deviceName
-        withUserAlias:(NSString *)userAlias
-               locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
-    completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+- (void)registerDeviceWithName:(NSString * _Nullable)deviceName
+                     userAlias:(NSString *)userAlias
+                        locale:(NSLocale * _Nullable)locale
+             deviceInformation:(NSDictionary * _Nullable)deviceInformation
+          andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Update device information
 /**

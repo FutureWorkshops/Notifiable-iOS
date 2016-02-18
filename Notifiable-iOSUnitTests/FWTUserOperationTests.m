@@ -19,6 +19,7 @@
 @property (nonatomic, strong) id httpRequestMock;
 @property (nonatomic, strong) FWTNotifiableManager *manager;
 @property (nonatomic, strong) NSNumber *deviceTokenId;
+@property (nonatomic, strong) NSData *deviceToken;
 
 @end
 
@@ -35,6 +36,7 @@
 - (FWTNotifiableManager *)manager
 {
     if (self->_manager == nil) {
+        [FWTNotifiableManager application:OCMOCK_ANY didRegisterForRemoteNotificationsWithDeviceToken:self.deviceToken];
         self->_manager = [[FWTNotifiableManager alloc] initWithURL:OCMOCK_ANY
                                                           accessId:OCMOCK_ANY
                                                          secretKey:OCMOCK_ANY
@@ -42,6 +44,14 @@
                                               andNotificationBlock:nil];
     }
     return self->_manager;
+}
+
+- (NSData *)deviceToken
+{
+    if (self->_deviceToken == nil) {
+        self->_deviceToken = [@"test" dataUsingEncoding:NSUTF8StringEncoding];
+    }
+    return self->_deviceToken;
 }
 
 - (void)mockRequester
@@ -81,7 +91,7 @@
 
 - (void)testAssociateUserWithAnonymous {
     [self stubDeviceUpdateResponse:self.deviceTokenId onMock:self.requesterManagerMock];
-    [self registerAnonymousDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId andError:nil onManager:self.manager andRquesterMock:self.requesterManagerMock];
+    [self registerAnonymousDeviceWithTokenId:self.deviceTokenId andError:nil onManager:self.manager andRquesterMock:self.requesterManagerMock];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
     [self.manager associateDeviceToUser:@"user" completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
@@ -95,7 +105,7 @@
 
 - (void)testAssociateUserWithPreviousUser {
     [self stubDeviceUpdateResponse:self.deviceTokenId onMock:self.requesterManagerMock];
-    [self registerDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
+    [self registerDeviceWithTokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
     
     XCTAssertEqualObjects(self.manager.currentDevice.user, @"user");
     
@@ -112,7 +122,7 @@
 
 - (void) testAnonymiseUser {
     [self stubDeviceRegisterResponse:self.deviceTokenId onMock:self.requesterManagerMock];
-    [self registerDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
+    [self registerDeviceWithTokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
     [self.manager anonymiseTokenWithCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
@@ -126,7 +136,7 @@
 }
 
 - (void) testListDevices {
-    [self registerAnonymousDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId andError:nil onManager:self.manager andRquesterMock:self.requesterManagerMock];
+    [self registerAnonymousDeviceWithTokenId:self.deviceTokenId andError:nil onManager:self.manager andRquesterMock:self.requesterManagerMock];
     [self _stubDeviceList];
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
     [self.manager listDevicesRelatedToUserWithCompletionHandler:^(NSArray<FWTNotifiableDevice *> * _Nullable devices, NSError * _Nullable error) {
@@ -139,7 +149,7 @@
 }
 
 - (void) testListDevicesUser {
-    [self registerDeviceWithToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding] tokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
+    [self registerDeviceWithTokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
     [self _stubDeviceList];
     XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
     [self.manager listDevicesRelatedToUserWithCompletionHandler:^(NSArray<FWTNotifiableDevice *> * _Nullable devices, NSError * _Nullable error) {

@@ -26,9 +26,9 @@ You can see an example of the implementation in the [Sample folder](Sample).
 To use the `FWTNotifiableManager`, create a new object passing your server URL, application access id, application secret key. You can, also, provide blocks that will be used to notify your code when the device is registered for remote notifications and when it receives a new notification.
 
 ```swift
-self.manager = FWTNotifiableManager(url: <<SERVER_URL>>, accessId: <<USER_API_ACCESS_ID>>, secretKey: <<USER_API_SECRET_KEY>>, didRegisterBlock: { [unowned self] (token) -> Void in 
+self.manager = FWTNotifiableManager(url: <<SERVER_URL>>, accessId: <<USER_API_ACCESS_ID>>, secretKey: <<USER_API_SECRET_KEY>>, didRegisterBlock: { [unowned self] (manager, token) -> Void in 
 	...
-}, andNotificationBlock:{ [unowned self] (device, notification) -> Void in
+}, andNotificationBlock:{ [unowned self] (manager, device, notification) -> Void in
 	...
 })
 ```
@@ -93,9 +93,9 @@ override func viewDidLoad() {
     super.viewDidLoad()
     
     //1 - Config manager
-    self.manager = FWTNotifiableManager(URL: serverURL, accessId: accessID, secretKey: secretKey(), didRegisterBlock: { [unowned self] (token) -> Void in
+    self.manager = FWTNotifiableManager(URL: serverURL, accessId: accessID, secretKey: secretKey(), didRegisterBlock: { [unowned self] (manager, token) -> Void in
         //3 - Register device
-        self.registerDevice(token)
+        self.registerDevice(manager, token: token)
     }, andNotificationBlock: nil)
 
     //2 - Request for permission
@@ -103,8 +103,8 @@ override func viewDidLoad() {
     UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
 }
     
-func registerDevice(token:NSData) {
-    self.manager.registerAnonymousToken(token, deviceName: "iPhone", withLocale: NSLocale.autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+func registerDevice(manager:FWTNotifiableManager, token:NSData) {
+    manager. registerAnonymousDeviceWithName("iPhone", locale: NSLocale.autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
     	...
     }
 }
@@ -113,8 +113,8 @@ func registerDevice(token:NSData) {
 Or register a device associated to a user:
 
 ```swift
-func registerDevice(token:NSData) {
-    self.manager.registerToken(token, deviceName: "device", withUserAlias: "user", locale: NSLocale.autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
+func registerDevice(manager:FWTNotifiableManager, token:NSData) {
+    manager.registerDeviceWithName("device", userAlias: "user", locale: NSLocale.autoupdatingCurrentLocale(), deviceInformation: ["onsite":true]) { (device, error) -> Void in
     	...       
     }
 }

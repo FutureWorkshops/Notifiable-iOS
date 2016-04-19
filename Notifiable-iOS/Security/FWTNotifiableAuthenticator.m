@@ -7,6 +7,7 @@
 //
 
 #import "FWTNotifiableAuthenticator.h"
+#import "NSDate+FWTNotifiable.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 NSString * const FWTAuthFormat = @"APIAuth %@:%@";
@@ -44,7 +45,7 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
 {
     if (!self->_httpDateFormatter) {
         self->_httpDateFormatter = [[NSDateFormatter alloc] init];
-        [self->_httpDateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss zzz"];
+        [self->_httpDateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss 'GMT'"];
     }
     return self->_httpDateFormatter;
 }
@@ -57,7 +58,7 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
         contentType = FWTDefaultContentType;
     }
     
-    NSDate *timestamp = [NSDate date];
+    NSDate *timestamp = [NSDate fwt_gmtDate];
     NSString* canonicalString = [self _canonicalStringForPath:path
                                                   contentType:contentType
                                                       andDate:timestamp];

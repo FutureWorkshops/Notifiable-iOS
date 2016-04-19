@@ -52,6 +52,7 @@
 		78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
 		8E4119F617E9BC53000CD6F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119F517E9BC53000CD6F3 /* UIKit.framework */; };
+		ADDC47BC1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = ADDC47BB1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +227,8 @@
 		8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8E4119DA17E9B9D1000CD6F3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		8E4119F517E9BC53000CD6F3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		ADDC47BA1CC6E74200C9BE58 /* NSDate+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSDate+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; };
+		ADDC47BB1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSDate+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +277,8 @@
 				7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */,
 				783AED0F1C57AC9400066EE7 /* NSLocale+FWTNotifiable.h */,
 				783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */,
+				ADDC47BA1CC6E74200C9BE58 /* NSDate+FWTNotifiable.h */,
+				ADDC47BB1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -701,6 +706,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78843C731C4E9B090044CE25 /* FWTNotifiableDevice.m in Sources */,
+				ADDC47BC1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m in Sources */,
 				7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */,
 				78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */,
 				78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */,

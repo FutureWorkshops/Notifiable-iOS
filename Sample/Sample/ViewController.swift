@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:FWTNotifiableManager! = {
         let keys = SampleKeys()
-        guard let serverURL = NSURL(string: "http://fw-notifiable-staging2.herokuapp.com/") else {
+        guard let serverURL = NSURL(string: "http://fw-notifiable-staging.herokuapp.com/") else {
             return nil
         }
         

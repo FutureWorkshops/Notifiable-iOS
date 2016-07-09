@@ -228,7 +228,7 @@ NSString * const FWTNotifiableTokenIdKey                            = @"FWTNotif
                          attempts:(NSUInteger)attempts
                 completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    if (self.deviceTokenId) {
+    if (self.deviceTokenId && [[self.deviceTokenId stringValue] length] > 0) {
         [self _updateDeviceWithParams:params attempts:attempts completionHandler:handler];
         return;
     }

@@ -1,8 +1,6 @@
 //
 //  FWTNotifiableManager.m
 //  FWTNotifiable
-//
-//  Created by Kamil Kocemba on 18/09/2013.
 //  Copyright (c) 2013 Future Workshops. All rights reserved.
 //
 

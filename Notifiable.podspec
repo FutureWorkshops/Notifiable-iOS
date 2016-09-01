@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/FutureWorkshops/Notifiable-iOS"
   s.license      = { :type => 'Apache License Version 2.0', :file => 'LICENSE' }
-  s.author       = { "Future Workshops" => "fabio@futureworkshops.com" }
+  s.author       = { "Daniel Phillips" => "daniel@futureworkshops.com" }
 
   s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => s.version }
 

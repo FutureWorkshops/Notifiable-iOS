@@ -1,8 +1,6 @@
 //
 //  FWTNotifiableLogger.h
 //  Notifiable-iOS
-//
-//  Created by Igor Fereira on 19/01/2016.
 //  Copyright © 2016 Future Workshops. All rights reserved.
 //
 typedef NS_ENUM(NSUInteger, FWTNotifiableLogLevel) {

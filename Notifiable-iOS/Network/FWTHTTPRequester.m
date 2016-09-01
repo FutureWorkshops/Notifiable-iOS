@@ -1,8 +1,6 @@
 //
 //  FWTRequestManager.m
 //  Notifiable-iOS
-//
-//  Created by Igor Fereira on 15/01/2016.
 //  Copyright © 2016 Future Workshops. All rights reserved.
 //
 

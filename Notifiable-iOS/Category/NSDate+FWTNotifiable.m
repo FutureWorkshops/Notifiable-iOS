@@ -1,8 +1,6 @@
 //
 //  NSDate+FWTNotifiable.m
 //  Notifiable-iOS
-//
-//  Created by Igor Ferreira on 4/19/16.
 //  Copyright © 2016 Future Workshops. All rights reserved.
 //
 

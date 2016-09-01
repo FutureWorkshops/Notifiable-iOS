@@ -1,6 +1,6 @@
-# Notifiable-iOS
+# Notifiable
 
-**Notifiable-iOS** is a set of utility classes to easily integrate with
+**Notifiable** is a set of utility classes to easily integrate with
 [Notifiable-Rails](https://github.com/FutureWorkshops/Notifiable-Rails).
 
 It handles device token registration and takes care of retrying failed requests and avoiding duplicate registrations.
@@ -11,10 +11,10 @@ Registering existing token for different user will result in token being reassig
 
 ### Project integration
 
-The `Notifiable-iOS` for iOS is avaliable on [CocoaPods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
+The `Notifiable` for iOS is avaliable on [CocoaPods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
 
 ```
-pod 'Notifiable-iOS'
+pod 'Notifiable'
 ```
 
 If you are not using CocoaPods, you can clone this project and import the files into your own project. This libraries uses [AFNetworking](https://github.com/AFNetworking/AFNetworking) as a dependency and is configured as a [submodule](https://git-scm.com/docs/git-submodule).

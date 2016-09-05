@@ -20,9 +20,11 @@ class ViewController: UIViewController {
             return nil
         }
         
-        return FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID(), secretKey: keys.fWTSecretKey(), didRegisterBlock: { [unowned self] (manager, token) -> Void in
+        let manager = FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID(), secretKey: keys.fWTSecretKey(), didRegisterBlock: { [unowned self] (manager, token) -> Void in
             self.registerCompleted?(token: token)
         }, andNotificationBlock: nil)
+        manager.retryAttempts = 0
+        return manager
     }()
     
     typealias FWTRegisterCompleted = (token:NSData!)->Void;

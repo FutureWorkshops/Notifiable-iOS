@@ -43,6 +43,7 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
 {
     if (!self->_httpDateFormatter) {
         self->_httpDateFormatter = [[NSDateFormatter alloc] init];
+        self->_httpDateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         [self->_httpDateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss 'GMT'"];
     }
     return self->_httpDateFormatter;
@@ -56,10 +57,11 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
         contentType = FWTDefaultContentType;
     }
     
-    NSDate *timestamp = [NSDate fwt_gmtDate];
+    NSDate *timestamp = [NSDate date];
+    NSString* timestampString = [self.httpDateFormatter stringFromDate:timestamp];
     NSString* canonicalString = [self _canonicalStringForPath:path
                                                   contentType:contentType
-                                                      andDate:timestamp];
+                                                andDateString:timestampString];
     
     NSString* encryptedString = [self _hmacHashForString:canonicalString
                                                  withKey:self.secretKey];
@@ -67,7 +69,7 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
     NSString* authField = [NSString stringWithFormat:FWTAuthFormat, self.accessId, encryptedString];
     
     return @{FWTAuthHeader:authField,
-             FWTTimestampHeader:[self.httpDateFormatter stringFromDate:timestamp],
+             FWTTimestampHeader:timestampString,
              FWTContentTypeHeader: contentType};
 }
 
@@ -75,12 +77,11 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
 
 - (NSString *) _canonicalStringForPath:(NSString *)path
                            contentType:(NSString *)contentType
-                                  andDate:(NSDate *)date
+                         andDateString:(NSString *)date
 {
     NSString* uri = [NSString stringWithFormat:@"/%@", path];
-    NSString* timestamp = [self.httpDateFormatter stringFromDate:date];
     
-    return [NSString stringWithFormat:@"%@,,%@,%@",contentType, uri, timestamp];
+    return [NSString stringWithFormat:@"%@,,%@,%@",contentType, uri, date];
 }
 
 - (NSString *) _hmacHashForString:(NSString *)string

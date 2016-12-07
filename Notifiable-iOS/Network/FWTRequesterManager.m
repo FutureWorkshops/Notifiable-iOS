@@ -11,14 +11,15 @@
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
 
-NSString * const FWTNotifiableUserInfoKey       = @"user";
-NSString * const FWTNotifiableDeviceTokenKey    = @"token";
-NSString * const FWTNotifiableProviderKey       = @"provider";
-NSString * const FWTNotifiableUserAliasKey      = @"alias";
-NSString * const FWTNotifiableLocaleKey         = @"locale";
-NSString * const FWTNotifiableNameKey           = @"name";
+NSString * const FWTNotifiableUserInfoKey          = @"user";
+NSString * const FWTNotifiableDeviceTokenKey       = @"token";
+NSString * const FWTNotifiableProviderKey          = @"provider";
+NSString * const FWTNotifiableUserAliasKey         = @"alias";
+NSString * const FWTNotifiableLocaleKey            = @"locale";
+NSString * const FWTNotifiableNameKey              = @"name";
+NSString * const FWTNotifiableCustomPropertiesKey  = @"customProperties";
 
-NSString * const FWTNotifiableProvider          = @"apns";
+NSString * const FWTNotifiableProvider             = @"apns";
 
 @interface FWTRequesterManager ()
 
@@ -50,14 +51,14 @@ NSString * const FWTNotifiableProvider          = @"apns";
                               token:(NSData *)token
                                name:(NSString *)name
                              locale:(NSLocale *)locale
-                  deviceInformation:(NSDictionary *)deviceInformation
+                   customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                   completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     [self _registerDeviceWithUserAlias:userAlias
                                  token:token
                                   name:name
                                 locale:locale
-                     deviceInformation:deviceInformation
+                      customProperties:customProperties
                               attempts:self.retryAttempts + 1
                          previousError:nil
                      completionHandler:handler];
@@ -68,7 +69,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                token:(NSData *)token
                 name:(NSString *)name
                locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
+     customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
     completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     [self _updateDevice:deviceTokenId
@@ -76,7 +77,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                   token:token
                    name:name
                  locale:locale
-      deviceInformation:deviceInformation
+       customProperties:customProperties
                attempts:self.retryAttempts + 1
           previousError:nil
       completionHandler:handler];
@@ -125,7 +126,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                          token:(NSData *)token
                                           name:(NSString *)name
                                         locale:(NSLocale *)locale
-                             deviceInformation:(NSDictionary *)deviceInformation
+                              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                              includingProvider:(BOOL)includeProvider
 {
     NSMutableDictionary *params;
@@ -146,8 +147,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
     if (locale) {
         [params setObject:[locale localeIdentifier] forKey:FWTNotifiableLocaleKey];
     }
-    if (deviceInformation) {
-        [params addEntriesFromDictionary:deviceInformation];
+    if (customProperties) {
+        [params setObject:[NSDictionary dictionaryWithDictionary:customProperties] forKey:FWTNotifiableCustomPropertiesKey];
     }
     return [NSDictionary dictionaryWithDictionary:params];
 }
@@ -156,7 +157,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                token:(NSData *)token
                                 name:(NSString *)name
                               locale:(NSLocale *)locale
-                   deviceInformation:(NSDictionary *)deviceInformation
+                    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                             attempts:(NSUInteger)attempts
                        previousError:(NSError *)previousError
                    completionHandler:(FWTDeviceTokenIdResponse)handler
@@ -182,7 +183,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                                         token:token
                                                          name:name
                                                        locale:locale
-                                            deviceInformation:deviceInformation
+                                             customProperties:customProperties
                                             includingProvider:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -193,7 +194,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                           token:token
                                            name:name
                                          locale:locale
-                              deviceInformation:deviceInformation
+                               customProperties:customProperties
                                        attempts:(attempts - 1)
                                   previousError:previousError
                               completionHandler:handler];
@@ -216,7 +217,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                              token:token
                                               name:name
                                             locale:locale
-                                 deviceInformation:deviceInformation
+                                  customProperties:customProperties
                                           attempts:(attempts - 1)
                                      previousError:error
                                  completionHandler:handler];
@@ -229,7 +230,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                 token:(NSData *)token
                  name:(NSString *)name
                locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
+     customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
              attempts:(NSUInteger)attempts
         previousError:(NSError *)previousError
     completionHandler:(FWTDeviceTokenIdResponse)handler
@@ -240,7 +241,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
              token != nil ||
              name != nil ||
              locale != nil ||
-             deviceInformation != nil, @"You need provid at least one updated parameter.");
+             customProperties != nil, @"You need provid at least one updated parameter.");
     
     if (attempts == 0){
         if(handler){
@@ -264,7 +265,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                                         token:token
                                                          name:name
                                                        locale:locale
-                                            deviceInformation:deviceInformation
+                                             customProperties:customProperties
                                             includingProvider:NO];
     
     __weak typeof(self) weakSelf = self;
@@ -276,7 +277,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                            token:token
                             name:name
                           locale:locale
-               deviceInformation:deviceInformation
+                customProperties:customProperties
                         attempts:(attempts - 1)
                    previousError:previousError
                completionHandler:handler];
@@ -303,7 +304,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
                               token:token
                                name:name
                              locale:locale
-                  deviceInformation:deviceInformation
+                   customProperties:customProperties
                            attempts:(attempts - 1)
                       previousError:error
                   completionHandler:handler];

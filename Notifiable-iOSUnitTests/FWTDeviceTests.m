@@ -25,19 +25,19 @@
     XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
     XCTAssertNil(device.user);
     XCTAssertNil(device.name);
-    XCTAssertNil(device.information);
+    XCTAssertNil(device.customProperties);
     
     device = [[FWTNotifiableDevice alloc] initWithToken:[NSStringFromClass([self class]) dataUsingEncoding:NSUTF8StringEncoding]
                                                 tokenId:@42 locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
                                                    user:@"user"
                                                    name:@"name"
-                                            information:@{@"onsite":@YES}];
+                                       customProperties:@{@"onsite":@YES}];
     XCTAssertEqualObjects(device.token, [NSStringFromClass([self class]) dataUsingEncoding:NSUTF8StringEncoding]);
     XCTAssertEqualObjects(device.tokenId, @42);
     XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
     XCTAssertEqualObjects(device.user, @"user");
     XCTAssertEqualObjects(device.name, @"name");
-    XCTAssertEqualObjects(device.information, @{@"onsite":@YES});
+    XCTAssertEqualObjects(device.customProperties, @{@"onsite":@YES});
 }
 
 - (void)testParser {
@@ -46,13 +46,13 @@
     
     FWTNotifiableDevice *device = [[FWTNotifiableDevice alloc] initWithUserName:@"user" dictionary:@{@"id":@42,
                                                                                                      @"name":@"name",
-                                                                                                     @"onsite":@"onsite"}];
+                                                                                                     @"customProperties": @{@"onsite":@"onsite"}}];
     
     XCTAssertNotNil(device.token);
     XCTAssertEqualObjects(device.tokenId, @42);
     XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"pt_BR"]);
     XCTAssertEqualObjects(device.name, @"name");
-    XCTAssertEqualObjects(device.information, @{@"onsite":@"onsite"});
+    XCTAssertEqualObjects(device.customProperties, @{@"onsite":@"onsite"});
     
     [mock stopMocking];
 }

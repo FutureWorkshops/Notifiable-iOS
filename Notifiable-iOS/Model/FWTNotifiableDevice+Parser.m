@@ -10,8 +10,6 @@
 
 - (instancetype)initWithUserName:(NSString *)userName dictionary:(NSDictionary*)dict
 {
-    NSMutableDictionary *mutableElement = [[NSMutableDictionary alloc] init];
-    
     NSNumber *tokenId = dict[@"id"];
     if ([tokenId isKindOfClass:[NSNull class]]) {
         return nil;
@@ -22,14 +20,9 @@
         name = nil;
     }
     
-    for (NSString *element in dict) {
-        if ([element isEqualToString:@"id"] || [element isEqualToString:@"name"]) {
-            continue;
-        }
-        id value = dict[element];
-        if (![value isKindOfClass:[NSNull class]]) {
-            [mutableElement setValue:value forKey:element];
-        }
+    NSDictionary *customProperties = dict[@"customProperties"];
+    if ([customProperties isKindOfClass:[NSNull class]]) {
+        customProperties = nil;
     }
     
     return [self initWithToken:[[NSData alloc] init]
@@ -37,7 +30,7 @@
                         locale:[NSLocale autoupdatingCurrentLocale]
                           user:userName
                           name:name
-                   information:[NSDictionary dictionaryWithDictionary:mutableElement]];
+              customProperties:[NSDictionary dictionaryWithDictionary:customProperties]];
 }
 
 @end

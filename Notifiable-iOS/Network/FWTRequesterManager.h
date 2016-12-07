@@ -52,9 +52,6 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
                 userAlias:(NSString * _Nullable)userAlias
         completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
-- (void)listDevicesOfUser:(NSString *)userAlias
-        completionHandler:(_Nullable FWTDeviceListResponse)handler;
-
 @end
 
 NS_ASSUME_NONNULL_END

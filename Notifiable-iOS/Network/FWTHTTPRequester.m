@@ -109,29 +109,6 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                          failure:[self _defaultFailureHandler:failure success:success]];
 }
 
-- (void)listDevicesOfUser:(NSString *)userAlias
-                  success:(FWTRequestManagerArraySuccessBlock)success
-                  failure:(FWTRequestManagerFailureBlock)failure
-{
-    NSAssert(userAlias != nil, @"User alias missing");
-    
-    NSString *path = FWTListDevicesPath;
-    if (userAlias) {
-        NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    }
-    [self _updateAuthenticationForPath:path];
-    [self.httpSessionManager GET:path parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if ([responseObject isKindOfClass:[NSArray class]]) {
-            success(responseObject != nil ? responseObject : @[]);
-        } else {
-            success(@[]);
-        }
-    } failure:[self _defaultFailureHandler:failure success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
-        success(@[]);
-    }]];
-}
-
 #pragma mark - Private Methods
 - (FWTAFNetworkingSuccessBlock) _defaultSuccessHandler:(FWTRequestManagerSuccessBlock)success
 {

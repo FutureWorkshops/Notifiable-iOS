@@ -112,15 +112,6 @@ NSString * const FWTNotifiableProvider             = @"apns";
                             completionHandler:handler];
 }
 
-- (void)listDevicesOfUser:(NSString *)userAlias
-        completionHandler:(FWTDeviceListResponse)handler
-{
-    [self _listDevicesOfUser:userAlias
-                    attempts:self.retryAttempts + 1
-               previousError:nil
-           completionHandler:handler];
-}
-
 #pragma mark - Private
 - (NSDictionary *)_buildParametersForUserAlias:(NSString *)userAlias
                                          token:(NSData *)token
@@ -392,60 +383,6 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                         completionHandler:handler];
         });
     }];
-}
-
-- (void)_listDevicesOfUser:(NSString *)userAlias
-                  attempts:(NSUInteger)attempts
-             previousError:(NSError *)error
-        completionHandler:(FWTDeviceListResponse)handler
-{
-    if (attempts == 0) {
-        if (handler) {
-            handler(@[], [NSError fwt_errorWithUnderlyingError:error]);
-        }
-        return;
-    }
-    
-    if (userAlias.length == 0) {
-        if (handler) {
-            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return;
-    }
-    
-    __weak typeof(self) weakSelf = self;
-    [self.requester listDevicesOfUser:userAlias success:^(NSArray * _Nonnull response) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        
-        NSMutableArray *parsedResponse = [[NSMutableArray alloc] initWithCapacity:response.count];
-        
-        for (NSDictionary *element in response) {
-            FWTNotifiableDevice *device = [[FWTNotifiableDevice alloc] initWithUserName:userAlias dictionary:element];
-            if (device) {
-                [parsedResponse addObject:device];
-            } else {
-                [sself.logger logMessage:@"Received an invalid device: %@", element];
-            }
-        }
-        
-        [sself.logger logMessage:@"Got the list of devices"];
-        if (handler) {
-            handler([NSArray arrayWithArray:parsedResponse], nil);
-        }
-        
-    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        [sself.logger logMessage:@"Failed to list devices"];
-        
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^{
-            [weakSelf _listDevicesOfUser:userAlias
-                                attempts:(attempts - 1)
-                           previousError:error
-                       completionHandler:handler];
-        });
-    }];
-    
 }
 
 @end

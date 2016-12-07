@@ -486,31 +486,6 @@ static NSData * tokenDataBuffer;
     return YES;
 }
 
-- (void)listDevicesRelatedToUserWithCompletionHandler:(FWTNotifiableListOperationCompletionHandler)handler
-{
-    NSAssert(self.currentDevice != nil, @"The device need to be registered to perform this method.");
-    
-    if (self.currentDevice == nil) {
-        if (handler) {
-            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return;
-    }
-    
-    if (self.currentDevice.user.length == 0) {
-        if (handler) {
-            handler(@[self.currentDevice], nil);
-        }
-        return;
-    }
-    
-    [self.requestManager listDevicesOfUser:self.currentDevice.user completionHandler:^(NSArray<FWTNotifiableDevice *> * _Nonnull devices, NSError * _Nullable error) {
-        if(handler) {
-            handler(devices, error);
-        }
-    }];
-}
-
 #pragma mark - FWTManagerListener
 - (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token
 {

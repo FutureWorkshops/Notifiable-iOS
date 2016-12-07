@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAccessId:(NSString *)accessId
                     andSecretKey:(NSString *)secretKey NS_DESIGNATED_INITIALIZER;
 
-- (NSDictionary *) authHeadersForPath:(NSString *)path
-                           andHeaders:(NSDictionary <NSString *, NSString *>*)headers;
+- (NSDictionary *)authHeadersForPath:(NSString *)path
+                          andHeaders:(NSDictionary <NSString *, NSString *>*)headers;
 @end
 
 NS_ASSUME_NONNULL_END

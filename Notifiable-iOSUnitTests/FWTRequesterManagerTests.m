@@ -23,7 +23,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                 token:(NSData *)token
                  name:(NSString *)name
                locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
+    customProperties:(NSDictionary *)customProperties
              attempts:(NSUInteger)attempts
         previousError:(NSError *)error
     completionHandler:(FWTDeviceTokenIdResponse)handler;
@@ -32,7 +32,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                token:(NSData *)token
                                 name:(NSString *)name
                               locale:(NSLocale *)locale
-                   deviceInformation:(NSDictionary *)deviceInformation
+                   customProperties:(NSDictionary *)customProperties
                             attempts:(NSUInteger)attempts
                        previousError:(NSError *)previousError
                    completionHandler:(FWTDeviceTokenIdResponse)handler;
@@ -117,7 +117,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                                         token:nil
                                                          name:OCMOCK_ANY
                                                        locale:OCMOCK_ANY
-                                            deviceInformation:OCMOCK_ANY
+                                             customProperties:OCMOCK_ANY
                                             completionHandler:OCMOCK_ANY]);
 #pragma clang diagnostic pop
     
@@ -125,7 +125,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:nil
                                        locale:nil
-                            deviceInformation:nil
+                            customProperties:nil
                             completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -142,7 +142,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:nil
                                        locale:nil
-                            deviceInformation:nil
+                            customProperties:nil
                             completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -159,7 +159,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:deviceName
                                        locale:nil
-                            deviceInformation:nil
+                            customProperties:nil
                             completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -175,7 +175,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:nil
                                        locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
-                            deviceInformation:nil
+                            customProperties:nil
                             completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -184,7 +184,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (void)testRegisterWithDeviceInformation
 {
     NSDictionary *info = @{@"onsite":@YES, @"test":@YES};
-    OCMExpect([self.httpRequesterMock registerDeviceWithParams:[self _registerParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:info count:4]]
+    OCMExpect([self.httpRequesterMock registerDeviceWithParams:[self _registerParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:@{@"customProperties": info} count:3]]
                                                        success:OCMOCK_ANY
                                                        failure:OCMOCK_ANY]);
     
@@ -192,7 +192,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:nil
                                        locale:nil
-                            deviceInformation:info
+                            customProperties:info
                             completionHandler:nil];
     OCMVerifyAll(self.httpRequesterMock);
 }
@@ -205,12 +205,11 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
     NSString *locale = @"en_US";
     
     NSDictionary *completeParams = @{ @"user": @{@"alias":userAlias},
-                                      @"token":tokenInfo,
+                                      @"token": tokenInfo,
                                       @"name": name,
-                                      @"locale":locale,
-                                      @"onsite": @YES,
-                                      @"provider":@"apns",
-                                      @"test": @YES};
+                                      @"locale": locale,
+                                      @"provider": @"apns",
+                                      @"customProperties": @{@"onsite":@YES, @"test":@YES}};
     
     OCMExpect([self.httpRequesterMock registerDeviceWithParams:[self _registerParamsValidationWithBlock:[self _validateCompleteInformationWithTarget:completeParams]]
                                                        success:OCMOCK_ANY
@@ -220,7 +219,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:name
                                        locale:[NSLocale localeWithLocaleIdentifier:locale]
-                            deviceInformation:@{@"onsite":@YES, @"test":@YES}
+                            customProperties:@{@"onsite":@YES, @"test":@YES}
                             completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -267,7 +266,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                            token:OCMOCK_ANY
                                             name:OCMOCK_ANY
                                           locale:OCMOCK_ANY
-                               deviceInformation:OCMOCK_ANY
+                               customProperties:OCMOCK_ANY
                                         attempts:1
                                    previousError:OCMOCK_ANY
                                completionHandler:OCMOCK_ANY]).andForwardToRealObject();
@@ -280,7 +279,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:@"name"
                                        locale:[NSLocale localeWithLocaleIdentifier:@"en"]
-                            deviceInformation:@{@"test":@YES}
+                            customProperties:@{@"test":@YES}
                             completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                                 XCTAssertNil(deviceTokenId);
                                 XCTAssertNotNil(error);
@@ -319,7 +318,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                          token:nil
                                           name:nil
                                         locale:nil
-                             deviceInformation:nil
+                             customProperties:nil
                              completionHandler:nil]);
     OCMVerifyAll(self.httpRequesterMock);
 #pragma clang diagnostic push
@@ -329,7 +328,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                          token:OCMOCK_ANY
                                           name:OCMOCK_ANY
                                         locale:OCMOCK_ANY
-                             deviceInformation:OCMOCK_ANY
+                             customProperties:OCMOCK_ANY
                              completionHandler:OCMOCK_ANY]);
 #pragma clang diagnostic pop
     
@@ -346,7 +345,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:self.token
                           name:nil
                         locale:nil
-             deviceInformation:nil
+             customProperties:nil
              completionHandler:nil];
     OCMVerifyAll(self.httpRequesterMock);
 }
@@ -363,7 +362,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:nil
                           name:nil
                         locale:nil
-             deviceInformation:nil
+             customProperties:nil
              completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -381,7 +380,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:nil
                           name:name
                         locale:nil
-             deviceInformation:nil
+             customProperties:nil
              completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -398,7 +397,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:nil
                           name:nil
                         locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
-             deviceInformation:nil
+             customProperties:nil
              completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -406,9 +405,9 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 
 - (void)testUpdateInformation
 {
-    NSDictionary *info = @{@"onsite":@YES, @"test":@YES};
+    NSDictionary *info = @{@"onsite": @YES, @"test": @YES};
     OCMExpect([self.httpRequesterMock updateDeviceWithTokenId:@42
-                                                       params:[self _updateParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:info count:2]]
+                                                       params:[self _updateParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:@{@"customProperties": info} count:1]]
                                                       success:OCMOCK_ANY
                                                       failure:OCMOCK_ANY]);
     [self.manager updateDevice:@42
@@ -416,7 +415,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:nil
                           name:nil
                         locale:nil
-             deviceInformation:info
+             customProperties:info
              completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -433,8 +432,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                       @"token":tokenInfo,
                                       @"name": name,
                                       @"locale":locale,
-                                      @"onsite": @YES,
-                                      @"test": @YES};
+                                      @"customProperties": @{@"onsite":@YES, @"test":@YES}};
     
     OCMExpect([self.httpRequesterMock updateDeviceWithTokenId:@42
                                                        params:[self _updateParamsValidationWithBlock:[self _validateCompleteInformationWithTarget:completeParams]]
@@ -445,7 +443,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:self.token
                           name:name
                         locale:[NSLocale localeWithLocaleIdentifier:locale]
-             deviceInformation:@{@"onsite":@YES, @"test":@YES}
+             customProperties:@{@"onsite":@YES, @"test":@YES}
              completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -498,7 +496,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                    token:OCMOCK_ANY
                                     name:OCMOCK_ANY
                                   locale:OCMOCK_ANY
-                       deviceInformation:OCMOCK_ANY
+                       customProperties:OCMOCK_ANY
                                 attempts:1
                            previousError:OCMOCK_ANY
                        completionHandler:OCMOCK_ANY]).andForwardToRealObject();
@@ -513,7 +511,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                          token:self.token
                           name:@"name"
                         locale:[NSLocale localeWithLocaleIdentifier:@"en"]
-             deviceInformation:@{@"onsite":@YES, @"test":@YES}
+             customProperties:@{@"onsite":@YES, @"test":@YES}
              completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                  XCTAssertEqualObjects(deviceTokenId, @42);
                  XCTAssertNotNil(error);
@@ -563,15 +561,6 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                    forUser:OCMOCK_ANY
                           andDeviceTokenId:OCMOCK_ANY
                      withCompletionHandler:nil];
-    OCMVerifyAll(self.httpRequesterMock);
-}
-
-- (void)testListDevices
-{
-    OCMExpect([self.httpRequesterMock listDevicesOfUser:@"user"
-                                                success:OCMOCK_ANY
-                                                failure:OCMOCK_ANY]);
-    [self.manager listDevicesOfUser:@"user" completionHandler:nil];
     OCMVerifyAll(self.httpRequesterMock);
 }
 

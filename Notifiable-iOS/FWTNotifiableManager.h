@@ -130,12 +130,12 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  
  @param name                A label for the device.
  @param locale              The locale of the device.
- @param deviceInformation   Aditional information about the device.
+ @param customProperties   Aditional information about the device.
  @param handler             Block called once that the operation is finished.
  */
 -(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
                                 locale:(NSLocale * _Nullable)locale
-                     deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                      customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                   andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
@@ -149,13 +149,13 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param deviceName  A label for the device.
  @param locale      The locale of the device.
  @param userAlias   The alias of the user in the server.
- @param deviceInformation   Aditional information about the device
+ @param customProperties   Aditional information about the device
  @param handler     Block called once that the operation is finished.
  */
 - (void)registerDeviceWithName:(NSString * _Nullable)deviceName
                      userAlias:(NSString *)userAlias
                         locale:(NSLocale * _Nullable)locale
-             deviceInformation:(NSDictionary * _Nullable)deviceInformation
+              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
           andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Update device information
@@ -198,10 +198,10 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 /**
  Update the device aditional informations
  
- @param deviceInformation   Aditional information about the device
+ @param customProperties   Aditional information about the device
  @param handler             Block called once that the operation is finished.
 */
-- (void)updateDeviceInformation:(NSDictionary *)deviceInformation
+- (void)updateCustomProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
               completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
@@ -210,13 +210,13 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param token               New device token.
  @param deviceName          The name of the device
  @param locale              New device locale.
- @param deviceInformation   Aditional information about the device
+ @param customProperties   Aditional information about the device
  @param handler             Block called once that the operation is finished.
 */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
-                 location:(NSLocale * _Nullable)locale
-        deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                 locale:(NSLocale * _Nullable)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
@@ -225,15 +225,15 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param token               New device token.
  @param deviceName          The name of the device
  @param locale              New device locale.
- @param deviceInformation   Aditional information about the device.
+ @param customProperties   Aditional information about the device.
  @param userAlias   The alias of the user in the server.
  @param handler             Block called once that the operation is finished.
  */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)name
                 userAlias:(NSString * _Nullable)userAlias
-                 location:(NSLocale * _Nullable)locale
-        deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                 locale:(NSLocale * _Nullable)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Device/user relationship

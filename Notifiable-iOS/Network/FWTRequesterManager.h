@@ -32,7 +32,7 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
                               token:(NSData *)token
                                name:(NSString * _Nullable)name
                              locale:(NSLocale * _Nullable)locale
-                  deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                   customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                   completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;
 
 - (void)updateDevice:(NSNumber *)deviceTokenId
@@ -40,7 +40,7 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
                token:(NSData * _Nullable)token
                 name:(NSString * _Nullable)name
               locale:(NSLocale * _Nullable)locale
-   deviceInformation:(NSDictionary * _Nullable)deviceInformation
+    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
    completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;
 
 - (void)markNotificationAsOpened:(NSNumber *)notificationId

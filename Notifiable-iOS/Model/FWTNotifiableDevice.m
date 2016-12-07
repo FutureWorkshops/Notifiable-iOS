@@ -31,7 +31,7 @@ NSString * const FWTNotifiableDeviceInformation = @"FWTNotifiableDeviceInformati
     [aCoder encodeObject:self.locale forKey:FWTNotifiableDeviceLocale];
     [aCoder encodeObject:self.user forKey:FWTNotifiableDeviceUser];
     [aCoder encodeObject:self.name forKey:FWTNotifiableDeviceName];
-    [aCoder encodeObject:self.information forKey:FWTNotifiableDeviceInformation];
+    [aCoder encodeObject:self.customProperties forKey:FWTNotifiableDeviceInformation];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -41,11 +41,11 @@ NSString * const FWTNotifiableDeviceInformation = @"FWTNotifiableDeviceInformati
     NSLocale *locale = [aDecoder decodeObjectForKey:FWTNotifiableDeviceLocale];
     NSString *user = [aDecoder decodeObjectForKey:FWTNotifiableDeviceUser];
     NSString *name = [aDecoder decodeObjectForKey:FWTNotifiableDeviceName];
-    NSDictionary *information = [aDecoder decodeObjectForKey:FWTNotifiableDeviceInformation];
+    NSDictionary<NSString *, id> *customProperties = [aDecoder decodeObjectForKey:FWTNotifiableDeviceInformation];
     
     NSAssert(token != nil && tokenId != nil, @"The encoded object doesn't have all the required informations.");
     
-    return [self initWithToken:token tokenId:tokenId locale:locale user:user name:name information:information];
+    return [self initWithToken:token tokenId:tokenId locale:locale user:user name:name customProperties:customProperties];
 }
 
 - (instancetype)initWithToken:(NSData *)token
@@ -57,7 +57,7 @@ NSString * const FWTNotifiableDeviceInformation = @"FWTNotifiableDeviceInformati
                         locale:locale
                           user:nil
                           name:nil
-                   information:nil];
+              customProperties:nil];
 }
 
 - (instancetype)initWithToken:(NSData *)token
@@ -65,7 +65,7 @@ NSString * const FWTNotifiableDeviceInformation = @"FWTNotifiableDeviceInformati
                        locale:(NSLocale *)locale
                          user:(NSString *)user
                          name:(NSString *)name
-                  information:(NSDictionary *)information
+             customProperties:(NSDictionary<NSString *, id> *)customProperties
 {
     self = [super init];
     if (self) {
@@ -73,7 +73,7 @@ NSString * const FWTNotifiableDeviceInformation = @"FWTNotifiableDeviceInformati
         self->_tokenId = tokenId;
         self->_user = user;
         self->_name = name;
-        self->_information = information;
+        self->_customProperties = customProperties;
         self->_locale = locale;
     }
     return self;

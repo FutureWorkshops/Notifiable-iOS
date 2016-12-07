@@ -35,9 +35,7 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
 - (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
                                    success:(_Nullable FWTRequestManagerSuccessBlock)success
                                    failure:(_Nullable FWTRequestManagerFailureBlock)failure;
-- (void)listDevicesOfUser:(NSString *)userAlias
-                  success:(_Nullable FWTRequestManagerArraySuccessBlock)success
-                  failure:(_Nullable FWTRequestManagerFailureBlock)failure;
+
 @end
 
 NS_ASSUME_NONNULL_END

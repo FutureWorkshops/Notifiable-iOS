@@ -179,26 +179,4 @@ NSString * const FWTTestURL = @"http://localhost:3000";
     OCMVerifyAll(self.authenticator);
 }
 
-- (void)testListDevices
-{
-    NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,@"user"];
-    NSString *path = [FWTListDevicesPath stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    
-    OCMExpect([self.httpSessionManager GET:path
-                                parameters:OCMOCK_ANY
-                                  progress:OCMOCK_ANY
-                                   success:OCMOCK_ANY
-                                   failure:OCMOCK_ANY]);
-    
-    OCMExpect([self.authenticator authHeadersForPath:path
-                                          andHeaders:OCMOCK_ANY]);
-    
-    [self.requester listDevicesOfUser:@"user"
-                              success:nil
-                              failure:nil];
-    
-    OCMVerifyAll(self.httpSessionManager);
-    OCMVerifyAll(self.authenticator);
-}
-
 @end

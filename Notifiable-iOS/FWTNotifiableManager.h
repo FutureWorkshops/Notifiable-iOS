@@ -267,17 +267,6 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 */
 - (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
-#pragma mark - Device list
-/**
- List the devices related to the current device user.
- 
- @warning If the device is not registered, the server will not be called and the list will return empty.
- @warning If the device is anonymous, the server will not be called and only the current device will be included in the list.
- 
- @param handler Block called once that the operation is finished.
-*/
-- (void)listDevicesRelatedToUserWithCompletionHandler:(_Nullable FWTNotifiableListOperationCompletionHandler)handler;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -29,12 +29,12 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                         success:(_Nullable FWTRequestManagerSuccessBlock)success
                         failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 - (void)unregisterTokenId:(NSNumber *)tokenId
-                userAlias:(NSString * _Nullable)userAlias
-                  success:(_Nullable FWTRequestManagerSuccessBlock)success
-                  failure:(_Nullable FWTRequestManagerFailureBlock)failure;
-- (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
-                                   success:(_Nullable FWTRequestManagerSuccessBlock)success
-                                   failure:(_Nullable FWTRequestManagerFailureBlock)failure;
+                  success:(FWTRequestManagerSuccessBlock)success
+                  failure:(FWTRequestManagerFailureBlock)failure;
+- (void)markNotificationAsOpenedWithId:(NSString *)notificationId
+                         deviceTokenId:(NSString *)deviceTokenId
+                               success:(FWTRequestManagerSuccessBlock)success
+                               failure:(FWTRequestManagerFailureBlock)failure;
 
 @end
 

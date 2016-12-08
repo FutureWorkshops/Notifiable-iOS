@@ -141,7 +141,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
     if (customProperties) {
         [params setObject:[NSDictionary dictionaryWithDictionary:customProperties] forKey:FWTNotifiableCustomPropertiesKey];
     }
-    return [NSDictionary dictionaryWithDictionary:params];
+    return @{@"device_token": [NSDictionary dictionaryWithDictionary:params]};
 }
 
 - (void)_registerDeviceWithUserAlias:(NSString *)userAlias

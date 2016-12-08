@@ -84,30 +84,21 @@ NSString * const FWTNotifiableProvider             = @"apns";
 }
 
 - (void)unregisterTokenId:(NSNumber *)deviceTokenId
-                userAlias:(NSString *)userAlias
         completionHandler:(FWTSimpleRequestResponse)handler
 {
     [self _unregisterToken:deviceTokenId
-                 userAlias:userAlias
               withAttempts:self.retryAttempts + 1
              previousError:nil
          completionHandler:handler];
 }
 
-- (void)markNotificationAsOpened:(NSNumber *)notificationId
-                         forUser:(NSString * _Nullable)userAlias
-                andDeviceTokenId:(NSNumber *)deviceTokenId
-           withCompletionHandler:(_Nullable FWTSimpleRequestResponse)handler
+- (void)markNotificationAsOpenedWithId:(NSNumber *)notificationId
+                         deviceTokenId:(NSNumber *)deviceTokenId
+                     completionHandler:(_Nullable FWTSimpleRequestResponse)handler
 {
-    NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
-    [requestParameters setObject:notificationId forKey:@"localized_notification_id"];
-    [requestParameters setObject:deviceTokenId forKey:@"device_token_id"];
-    if (userAlias) {
-        [requestParameters addEntriesFromDictionary:@{@"user":@{@"alias":userAlias}}];
-    }
-    
-    [self _markNotificationAsOpenedWithParams:requestParameters
-                                     attempts:self.retryAttempts + 1
+    [self _markNotificationAsOpenedWithId:[notificationId stringValue]
+                            deviceTokenId:[deviceTokenId stringValue]
+                                 attempts:self.retryAttempts + 1
                                 previousError:nil
                             completionHandler:handler];
 }
@@ -305,7 +296,6 @@ NSString * const FWTNotifiableProvider             = @"apns";
 
 
 - (void)_unregisterToken:(NSNumber *)deviceTokenId
-               userAlias:(NSString *)userAlias
             withAttempts:(NSUInteger)attempts
            previousError:(NSError *)previousError
        completionHandler:(FWTSimpleRequestResponse)handler
@@ -329,7 +319,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requester unregisterTokenId:deviceTokenId userAlias:userAlias success:^(NSDictionary * _Nullable response) {
+    [self.requester unregisterTokenId:deviceTokenId success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself.logger logMessage:@"Did unregister for push notifications"];
         if(handler){
@@ -344,7 +334,6 @@ NSString * const FWTNotifiableProvider             = @"apns";
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _unregisterToken:deviceTokenId
-                             userAlias:userAlias
                           withAttempts:(attempts - 1)
                          previousError:error
                      completionHandler:handler];
@@ -353,10 +342,11 @@ NSString * const FWTNotifiableProvider             = @"apns";
 }
 
 
-- (void)_markNotificationAsOpenedWithParams:(NSDictionary *)params
-                                   attempts:(NSUInteger)attempts
-                              previousError:(NSError *)error
-                          completionHandler:(FWTSimpleRequestResponse)handler
+- (void)_markNotificationAsOpenedWithId:(NSString *)notificationId
+                          deviceTokenId:(NSString *)deviceTokenId
+                               attempts:(NSUInteger)attempts
+                          previousError:(NSError *)error
+                      completionHandler:(FWTSimpleRequestResponse)handler
 {
     if (attempts == 0) {
         if (handler) {
@@ -366,7 +356,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requester markNotificationAsOpenedWithParams:params success:^(NSDictionary * _Nullable response) {
+    [self.requester markNotificationAsOpenedWithId:notificationId deviceTokenId:deviceTokenId success:^(NSDictionary * _Nullable response) {
         [weakSelf.logger logMessage:@"Notification flagged as opened"];
         if (handler) {
             handler(YES,nil);
@@ -377,10 +367,11 @@ NSString * const FWTNotifiableProvider             = @"apns";
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [weakSelf _markNotificationAsOpenedWithParams:params
-                                                 attempts:(attempts - 1)
-                                            previousError:error
-                                        completionHandler:handler];
+            [weakSelf _markNotificationAsOpenedWithId:notificationId
+                                        deviceTokenId:deviceTokenId
+                                             attempts:(attempts - 1)
+                                        previousError:error
+                                    completionHandler:handler];
         });
     }];
 }

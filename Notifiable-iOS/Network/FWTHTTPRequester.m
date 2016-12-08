@@ -13,10 +13,8 @@ typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task,
 typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
 
 NSString * const FWTDeviceTokensPath = @"api/v1/device_tokens";
-NSString * const FWTNotificationOpenPath = @"api/v1/notification/%@/opened";
+NSString * const FWTNotificationOpenPath = @"api/v1/notifications/%@/opened";
 NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
-
-NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 
 @interface FWTHTTPRequester ()
 
@@ -79,32 +77,26 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 }
 
 - (void)unregisterTokenId:(NSNumber *)tokenId
-                userAlias:(NSString *)userAlias
                   success:(FWTRequestManagerSuccessBlock)success
                   failure:(FWTRequestManagerFailureBlock)failure
 {
-    NSAssert(tokenId != nil, @"Device token id missing");
-    
-    NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, tokenId];
-    if (userAlias) {
-        NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    }
-    [self _updateAuthenticationForPath:path httpMethod:@"DELETE"];
-    [self.httpSessionManager DELETE:path
-                         parameters:nil
-                            success:[self _defaultSuccessHandler:success]
-                            failure:[self _defaultFailureHandler:failure success:success]];
+    [self updateDeviceWithTokenId:tokenId
+                           params:@{@"device_token": @{@"user_alias": [NSNull null]}}
+                          success:success
+                          failure:failure];
 }
 
-- (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
-                                   success:(FWTRequestManagerSuccessBlock)success
-                                   failure:(FWTRequestManagerFailureBlock)failure
+- (void)markNotificationAsOpenedWithId:(NSString *)notificationId
+                         deviceTokenId:(NSString *)deviceTokenId
+                               success:(FWTRequestManagerSuccessBlock)success
+                               failure:(FWTRequestManagerFailureBlock)failure
 {
-    NSAssert(params != nil, @"You need provide, at least, the localized_notification_id");
-    [self _updateAuthenticationForPath:FWTNotificationOpenPath httpMethod:@"POST"];
-    [self.httpSessionManager POST:FWTNotificationOpenPath
-                       parameters:params
+    NSAssert(deviceTokenId != nil, @"Device token id missing");
+    NSAssert(notificationId != nil, @"Notification id missing");
+    NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
+    [self _updateAuthenticationForPath:path httpMethod:@"POST"];
+    [self.httpSessionManager POST:path
+                       parameters:@{@"device_token_id": deviceTokenId}
                          progress:nil
                           success:[self _defaultSuccessHandler:success]
                           failure:[self _defaultFailureHandler:failure success:success]];

@@ -425,7 +425,6 @@ static NSData * tokenDataBuffer;
     
     __weak typeof(self) weakSelf = self;
     [self.requestManager unregisterTokenId:self.currentDevice.tokenId
-                                 userAlias:self.currentDevice.user
                          completionHandler:^(BOOL success, NSError * _Nullable error) {
                              __strong typeof(weakSelf) sself = weakSelf;
                              if (success) {
@@ -475,14 +474,13 @@ static NSData * tokenDataBuffer;
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requestManager markNotificationAsOpened:notificationID
-                                          forUser:self.currentDevice.user
-                                 andDeviceTokenId:self.currentDevice.tokenId
-                            withCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-                                if (handler) {
-                                    handler(weakSelf.currentDevice, error);
-                                }
-                            }];
+    [self.requestManager markNotificationAsOpenedWithId:notificationID
+                                          deviceTokenId:self.currentDevice.tokenId
+                                      completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                          if (handler) {
+                                              handler(weakSelf.currentDevice, error);
+                                          }
+                                      }];
     return YES;
 }
 

@@ -13,7 +13,7 @@ typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task,
 typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
 
 NSString * const FWTDeviceTokensPath = @"api/v1/device_tokens";
-NSString * const FWTNotificationOpenPath = @"api/v1/notification_statuses/opened";
+NSString * const FWTNotificationOpenPath = @"api/v1/notification/%@/opened";
 NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 NSString * const FWTUserAliasFormat = @"user[alias]=%@";
@@ -53,7 +53,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 {
     NSAssert(params != nil, @"You need provide, at least, the device token that will be registered");
     
-    [self _updateAuthenticationForPath:FWTDeviceTokensPath];
+    [self _updateAuthenticationForPath:FWTDeviceTokensPath httpMethod:@"POST"];
     
     [self.httpSessionManager POST:FWTDeviceTokensPath
                        parameters:params
@@ -71,11 +71,11 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     NSAssert(tokenId != nil, @"Device token id missing");
     
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, [tokenId stringValue]];
-    [self _updateAuthenticationForPath:path];
-    [self.httpSessionManager PUT:path
-                      parameters:params
-                         success:[self _defaultSuccessHandler:success]
-                         failure:[self _defaultFailureHandler:failure success:success]];
+    [self _updateAuthenticationForPath:path httpMethod:@"PATCH"];
+    [self.httpSessionManager PATCH:path
+                        parameters:params
+                           success:[self _defaultSuccessHandler:success]
+                           failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 - (void)unregisterTokenId:(NSNumber *)tokenId
@@ -90,7 +90,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
         NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
         path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
     }
-    [self _updateAuthenticationForPath:path];
+    [self _updateAuthenticationForPath:path httpMethod:@"DELETE"];
     [self.httpSessionManager DELETE:path
                          parameters:nil
                             success:[self _defaultSuccessHandler:success]
@@ -102,11 +102,12 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
                                    failure:(FWTRequestManagerFailureBlock)failure
 {
     NSAssert(params != nil, @"You need provide, at least, the localized_notification_id");
-    [self _updateAuthenticationForPath:FWTNotificationOpenPath];
-    [self.httpSessionManager PUT:FWTNotificationOpenPath
-                      parameters:params
-                         success:[self _defaultSuccessHandler:success]
-                         failure:[self _defaultFailureHandler:failure success:success]];
+    [self _updateAuthenticationForPath:FWTNotificationOpenPath httpMethod:@"POST"];
+    [self.httpSessionManager POST:FWTNotificationOpenPath
+                       parameters:params
+                         progress:nil
+                          success:[self _defaultSuccessHandler:success]
+                          failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 #pragma mark - Private Methods
@@ -136,8 +137,10 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 }
 
 - (void) _updateAuthenticationForPath:(NSString *)path
+                           httpMethod:(NSString *)httpMethod
 {
     NSDictionary *headers = [self.authenticator authHeadersForPath:path
+                                                        httpMethod:httpMethod
                                                         andHeaders:self.httpSessionManager.requestSerializer.HTTPRequestHeaders];
     for (NSString *header in headers.keyEnumerator) {
         [self.httpSessionManager.requestSerializer setValue:headers[header] forHTTPHeaderField:header];

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
                     andSecretKey:(NSString *)secretKey NS_DESIGNATED_INITIALIZER;
 
 - (NSDictionary *)authHeadersForPath:(NSString *)path
+                          httpMethod:(NSString *)httpMethod
                           andHeaders:(NSDictionary <NSString *, NSString *>*)headers;
 @end
 

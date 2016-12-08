@@ -12,9 +12,9 @@
 typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
 typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
 
-NSString * const FWTDeviceTokensPath = @"user_api/v1/device_tokens";
-NSString * const FWTNotificationOpenPath = @"user_api/v1/notification_statuses/opened";
-NSString * const FWTListDevicesPath = @"user_api/v1/device_tokens.json";
+NSString * const FWTDeviceTokensPath = @"api/v1/device_tokens";
+NSString * const FWTNotificationOpenPath = @"api/v1/notification_statuses/opened";
+NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 

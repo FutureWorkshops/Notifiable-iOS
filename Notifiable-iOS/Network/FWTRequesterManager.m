@@ -11,10 +11,9 @@
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
 
-NSString * const FWTNotifiableUserInfoKey          = @"user";
 NSString * const FWTNotifiableDeviceTokenKey       = @"token";
 NSString * const FWTNotifiableProviderKey          = @"provider";
-NSString * const FWTNotifiableUserAliasKey         = @"alias";
+NSString * const FWTNotifiableUserAliasKey         = @"user_alias";
 NSString * const FWTNotifiableLocaleKey            = @"locale";
 NSString * const FWTNotifiableNameKey              = @"name";
 NSString * const FWTNotifiableCustomPropertiesKey  = @"customProperties";
@@ -121,7 +120,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
         [params setObject:name forKey:FWTNotifiableNameKey];
     }
     if (userAlias) {
-        [params addEntriesFromDictionary:@{FWTNotifiableUserInfoKey: @{FWTNotifiableUserAliasKey: userAlias}}];
+        [params addEntriesFromDictionary:@{FWTNotifiableUserAliasKey: userAlias}];
     }
     if (token) {
         [params setObject:[token fwt_notificationTokenString] forKey:FWTNotifiableDeviceTokenKey];

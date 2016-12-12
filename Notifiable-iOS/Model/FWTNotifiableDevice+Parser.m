@@ -20,9 +20,20 @@
         name = nil;
     }
     
-    NSDictionary *customProperties = dict[@"custom_properties"];
-    if ([customProperties isKindOfClass:[NSNull class]]) {
-        customProperties = nil;
+    NSDictionary *customPropertiesDictionary = nil;
+    id customPropertiesObject = dict[@"custom_properties"];
+    if ([customPropertiesObject isKindOfClass:[NSNull class]]) {
+        customPropertiesDictionary = nil;
+    } else if ([customPropertiesObject isKindOfClass:[NSDictionary class]]) {
+        customPropertiesDictionary = customPropertiesObject;
+    } else if ([customPropertiesObject isKindOfClass:[NSString class]]) {
+        NSString *jsonString = customPropertiesObject;
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+        if (error == nil & jsonObject != nil && [jsonObject isKindOfClass:[NSDictionary class]]) {
+            customPropertiesDictionary = jsonObject;
+        }
     }
     
     return [self initWithToken:[[NSData alloc] init]
@@ -30,7 +41,7 @@
                         locale:[NSLocale autoupdatingCurrentLocale]
                           user:userName
                           name:name
-              customProperties:[NSDictionary dictionaryWithDictionary:customProperties]];
+              customProperties:[NSDictionary dictionaryWithDictionary:customPropertiesDictionary]];
 }
 
 @end

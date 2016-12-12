@@ -20,7 +20,7 @@
         name = nil;
     }
     
-    NSDictionary *customProperties = dict[@"customProperties"];
+    NSDictionary *customProperties = dict[@"custom_properties"];
     if ([customProperties isKindOfClass:[NSNull class]]) {
         customProperties = nil;
     }

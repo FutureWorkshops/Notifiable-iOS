@@ -18,6 +18,7 @@ NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDe
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
 
+static NSHashTable *managerListeners;
 static NSHashTable *listeners;
 static NSData * tokenDataBuffer;
 
@@ -53,7 +54,11 @@ static NSData * tokenDataBuffer;
                                                                andAuthenticator:authenticator];
         self->_requestManager = [[FWTRequesterManager alloc] initWithRequester:requester];
         self->_deviceTokenData = tokenDataBuffer;
-        [FWTNotifiableManager registerManagerListener:self];
+        
+        // register self as listener
+        [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+            [managerTable addObject:self];
+        }];
     }
     return self;
 }
@@ -66,12 +71,21 @@ static NSData * tokenDataBuffer;
     return listeners;
 }
 
-+ (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table))block
++ (NSHashTable *)managerListenerTable
+{
+    if (managerListeners == nil) {
+        managerListeners = [NSHashTable weakObjectsHashTable];
+    }
+    return managerListeners;
+}
+
++ (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table, NSHashTable *managerTable))block
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSHashTable *table = [FWTNotifiableManager listenerTable];
+        NSHashTable *managerTable = [FWTNotifiableManager managerListenerTable];
         @synchronized(table) {
-            block(table);
+            block(table, managerTable);
         }
     });
 }
@@ -161,7 +175,7 @@ static NSData * tokenDataBuffer;
 
 + (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener
 {
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         if (![table containsObject:listener]) {
             [table addObject:listener];
         }
@@ -170,7 +184,7 @@ static NSData * tokenDataBuffer;
 
 + (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener
 {
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         if ([table containsObject:listener]) {
             [table removeObject:listener];
         }
@@ -180,11 +194,17 @@ static NSData * tokenDataBuffer;
 + (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
 {
     tokenDataBuffer = deviceToken;
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
-        for (id object in table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithObject)(id) = ^(id object) {
             if ([object conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [object respondsToSelector:@selector(applicationDidRegisterForRemoteNotificationsWithToken:)]) {
                 [object applicationDidRegisterForRemoteNotificationsWithToken:deviceToken];
             }
+        };
+        for (id object in managerTable) {
+            performWithObject(object);
+        }
+        for (id object in table) {
+            performWithObject(object);
         }
     }];
 }
@@ -443,11 +463,17 @@ static NSData * tokenDataBuffer;
     }
     
     NSDictionary *notificationCopy = [notificationInfo copy];
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
-        for(id listener in table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithListener)(id) = ^(id listener) {
             if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
                 [listener applicationDidReciveNotification:notificationCopy];
             }
+        };
+        for (id listener in managerTable) {
+            performWithListener(listener);
+        }
+        for(id listener in table) {
+            performWithListener(listener);
         }
     }];
     
@@ -523,10 +549,10 @@ static NSData * tokenDataBuffer;
 
 - (void) _notifyNewDevice:(FWTNotifiableDevice *)device withError:(NSError *)error
 {
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
-        for (id listener in table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithListener)(id) = ^(id listener) {
             if (![listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)]) {
-                continue;
+                return;
             }
             
             if (error) {
@@ -538,6 +564,12 @@ static NSData * tokenDataBuffer;
                     [listener notifiableManager:self didRegisterDevice:device];
                 }
             }
+        };
+        for (id listener in managerTable) {
+            performWithListener(listener);
+        }
+        for (id listener in table) {
+            performWithListener(listener);
         }
     }];
 }

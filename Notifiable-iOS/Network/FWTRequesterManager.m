@@ -16,7 +16,7 @@ NSString * const FWTNotifiableProviderKey          = @"provider";
 NSString * const FWTNotifiableUserAliasKey         = @"user_alias";
 NSString * const FWTNotifiableLocaleKey            = @"locale";
 NSString * const FWTNotifiableNameKey              = @"name";
-NSString * const FWTNotifiableCustomPropertiesKey  = @"customProperties";
+NSString * const FWTNotifiableCustomPropertiesKey  = @"custom_properties";
 
 NSString * const FWTNotifiableProvider             = @"apns";
 

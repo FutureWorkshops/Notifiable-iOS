@@ -129,7 +129,12 @@ NSString * const FWTNotifiableProvider             = @"apns";
         [params setObject:[locale localeIdentifier] forKey:FWTNotifiableLocaleKey];
     }
     if (customProperties) {
-        [params setObject:[NSDictionary dictionaryWithDictionary:customProperties] forKey:FWTNotifiableCustomPropertiesKey];
+        NSError *error = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:customProperties options:0 error:&error];
+        if (error == nil && jsonData.length > 0) {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            [params setObject:jsonString forKey:FWTNotifiableCustomPropertiesKey];
+        }
     }
     return @{@"device_token": [NSDictionary dictionaryWithDictionary:params]};
 }

@@ -19,7 +19,7 @@ NSString * const FWTTestContent = @"content";
 
 NSTimeInterval const FWTTestDateTimestamp = 1453393539;
 
-NSString * const FWTTestAuthResult = @"CLYylIraZPl8JItknqVo+0WLwKM=";
+NSString * const FWTTestAuthResult = @"mirA07fJMiUDlMc0hmkUeqDdgSg=";
 
 NSString * const FWTTestDate = @"Thu, 21 Jan 2016 16:25:39 GMT";
 
@@ -57,6 +57,7 @@ NSString * const FWTTestDate = @"Thu, 21 Jan 2016 16:25:39 GMT";
     OCMStub([mock date]).andReturn([NSDate dateWithTimeIntervalSince1970:FWTTestDateTimestamp]);
     
     NSDictionary *headers = [self.authenticator authHeadersForPath:FWTTestPath
+                                                        httpMethod:@"METHOD"
                                                         andHeaders:@{@"Content-Type":FWTTestContent}];
     
     XCTAssertEqual(headers.count, 3);

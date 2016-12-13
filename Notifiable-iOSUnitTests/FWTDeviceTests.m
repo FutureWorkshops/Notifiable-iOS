@@ -46,7 +46,7 @@
     
     FWTNotifiableDevice *device = [[FWTNotifiableDevice alloc] initWithUserName:@"user" dictionary:@{@"id":@42,
                                                                                                      @"name":@"name",
-                                                                                                     @"customProperties": @{@"onsite":@"onsite"}}];
+                                                                                                     @"custom_properties": @{@"onsite":@"onsite"}}];
     
     XCTAssertNotNil(device.token);
     XCTAssertEqualObjects(device.tokenId, @42);

@@ -16,8 +16,6 @@ extern NSString * const FWTDeviceTokensPath;
 extern NSString * const FWTNotificationOpenPath;
 extern NSString * const FWTListDevicesPath;
 
-extern NSString * const FWTUserAliasFormat;
-
 NSString * const FWTTestURL = @"http://localhost:3000";
 
 @interface FWTHTTPRequester (Private)
@@ -86,6 +84,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
                                     failure:OCMOCK_ANY]);
     
     OCMExpect([self.authenticator authHeadersForPath:FWTDeviceTokensPath
+                                          httpMethod:@"POST"
                                           andHeaders:OCMOCK_ANY]);
     
     [self.requester registerDeviceWithParams:OCMOCK_ANY
@@ -100,12 +99,13 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 {
     NSString *path = [NSString stringWithFormat:@"%@/42",FWTDeviceTokensPath];
     
-    OCMExpect([self.httpSessionManager PUT:path
-                                parameters:OCMOCK_ANY
-                                   success:OCMOCK_ANY
-                                   failure:OCMOCK_ANY]);
+    OCMExpect([self.httpSessionManager PATCH:path
+                                  parameters:OCMOCK_ANY
+                                     success:OCMOCK_ANY
+                                     failure:OCMOCK_ANY]);
     
     OCMExpect([self.authenticator authHeadersForPath:path
+                                          httpMethod:@"PATCH"
                                           andHeaders:OCMOCK_ANY]);
     
     [self.requester updateDeviceWithTokenId:@42
@@ -117,43 +117,20 @@ NSString * const FWTTestURL = @"http://localhost:3000";
     OCMVerifyAll(self.authenticator);
 }
 
-- (void)testUnregisterDeviceWithUser
-{
-    NSString *userAlias = @"userAlias";
-    NSString *path = [NSString stringWithFormat:@"%@/42",FWTDeviceTokensPath];
-    NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-    path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    
-    OCMExpect([self.httpSessionManager DELETE:path
-                                   parameters:OCMOCK_ANY
-                                      success:OCMOCK_ANY
-                                      failure:OCMOCK_ANY]);
-    OCMExpect([self.authenticator authHeadersForPath:path
-                                          andHeaders:OCMOCK_ANY]);
-    
-    [self.requester unregisterTokenId:@42
-                            userAlias:userAlias
-                              success:nil
-                              failure:nil];
-    
-    OCMVerifyAll(self.httpSessionManager);
-    OCMVerifyAll(self.authenticator);
-}
-
 - (void)testUnregisterDevice
 {
     NSString *path = [NSString stringWithFormat:@"%@/42",FWTDeviceTokensPath];
     
-    OCMExpect([self.httpSessionManager DELETE:path
+    OCMExpect([self.httpSessionManager PATCH:path
                                    parameters:OCMOCK_ANY
                                       success:OCMOCK_ANY
                                       failure:OCMOCK_ANY]);
     
     OCMExpect([self.authenticator authHeadersForPath:path
+                                          httpMethod:@"PATCH"
                                           andHeaders:OCMOCK_ANY]);
     
     [self.requester unregisterTokenId:@42
-                            userAlias:nil
                               success:nil
                               failure:nil];
     
@@ -163,17 +140,22 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 
 - (void)testMarkNotification
 {
-    OCMExpect([self.httpSessionManager PUT:FWTNotificationOpenPath
-                                parameters:OCMOCK_ANY
-                                   success:OCMOCK_ANY
-                                   failure:OCMOCK_ANY]);
+    NSString *notificationId = @"1";
+    NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
+    OCMExpect([self.httpSessionManager POST:path
+                                 parameters:OCMOCK_ANY
+                                   progress:OCMOCK_ANY
+                                    success:OCMOCK_ANY
+                                    failure:OCMOCK_ANY]);
     
-    OCMExpect([self.authenticator authHeadersForPath:FWTNotificationOpenPath
+    OCMExpect([self.authenticator authHeadersForPath:path
+                                          httpMethod:@"POST"
                                           andHeaders:OCMOCK_ANY]);
     
-    [self.requester markNotificationAsOpenedWithParams:OCMOCK_ANY
-                                               success:nil
-                                               failure:nil];
+    [self.requester markNotificationAsOpenedWithId:notificationId
+                                     deviceTokenId:OCMOCK_ANY
+                                           success:OCMOCK_ANY
+                                           failure:OCMOCK_ANY];
     
     OCMVerifyAll(self.httpSessionManager);
     OCMVerifyAll(self.authenticator);

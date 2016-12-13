@@ -125,7 +125,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                         token:self.token
                                          name:nil
                                        locale:nil
-                            customProperties:nil
+                             customProperties:nil
                             completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -184,7 +184,8 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (void)testRegisterWithDeviceInformation
 {
     NSDictionary *info = @{@"onsite":@YES, @"test":@YES};
-    OCMExpect([self.httpRequesterMock registerDeviceWithParams:[self _registerParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:@{@"customProperties": info} count:3]]
+    NSString *jsonString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:info options:0 error:nil] encoding:NSUTF8StringEncoding];
+    OCMExpect([self.httpRequesterMock registerDeviceWithParams:[self _registerParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:@{@"custom_properties": jsonString} count:3]]
                                                        success:OCMOCK_ANY
                                                        failure:OCMOCK_ANY]);
     
@@ -204,12 +205,16 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
     NSString *name = @"name";
     NSString *locale = @"en_US";
     
-    NSDictionary *completeParams = @{ @"user": @{@"alias":userAlias},
+    NSDictionary *customProperties = @{@"onsite":@YES, @"test":@YES};
+    NSString *customPropertiesString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:customProperties options:0 error:nil] encoding:NSUTF8StringEncoding];
+    
+    NSDictionary *completeParams = @{ @"user_alias": userAlias,
                                       @"token": tokenInfo,
                                       @"name": name,
                                       @"locale": locale,
                                       @"provider": @"apns",
-                                      @"customProperties": @{@"onsite":@YES, @"test":@YES}};
+                                      @"custom_properties": customPropertiesString};
+    completeParams = @{@"device_token": completeParams};
     
     OCMExpect([self.httpRequesterMock registerDeviceWithParams:[self _registerParamsValidationWithBlock:[self _validateCompleteInformationWithTarget:completeParams]]
                                                        success:OCMOCK_ANY
@@ -405,9 +410,10 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 
 - (void)testUpdateInformation
 {
-    NSDictionary *info = @{@"onsite": @YES, @"test": @YES};
+    NSDictionary *info = @{@"onsite":@YES, @"test":@YES};
+    NSString *jsonString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:info options:0 error:nil] encoding:NSUTF8StringEncoding];
     OCMExpect([self.httpRequesterMock updateDeviceWithTokenId:@42
-                                                       params:[self _updateParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:@{@"customProperties": info} count:1]]
+                                                       params:[self _updateParamsValidationWithBlock:[self _validateDeviceInformationBlockWithTarget:@{@"custom_properties": jsonString} count:1]]
                                                       success:OCMOCK_ANY
                                                       failure:OCMOCK_ANY]);
     [self.manager updateDevice:@42
@@ -428,11 +434,15 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
     NSString *name = @"name";
     NSString *locale = @"en_US";
     
-    NSDictionary *completeParams = @{ @"user": @{@"alias":userAlias},
+    NSDictionary *customProperties = @{@"onsite":@YES, @"test":@YES};
+    NSString *customPropertiesString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:customProperties options:0 error:nil] encoding:NSUTF8StringEncoding];
+    
+    NSDictionary *completeParams = @{ @"user_alias": userAlias,
                                       @"token":tokenInfo,
                                       @"name": name,
                                       @"locale":locale,
-                                      @"customProperties": @{@"onsite":@YES, @"test":@YES}};
+                                      @"custom_properties": customPropertiesString};
+    completeParams = @{@"device_token": completeParams};
     
     OCMExpect([self.httpRequesterMock updateDeviceWithTokenId:@42
                                                        params:[self _updateParamsValidationWithBlock:[self _validateCompleteInformationWithTarget:completeParams]]
@@ -542,11 +552,9 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (void)testUnregisterDevice
 {
     OCMExpect([self.httpRequesterMock unregisterTokenId:@42
-                                              userAlias:@"test"
                                                 success:OCMOCK_ANY
                                                 failure:OCMOCK_ANY]);
     [self.manager unregisterTokenId:@42
-                          userAlias:@"test"
                   completionHandler:nil];
     
     OCMVerifyAll(self.httpRequesterMock);
@@ -554,13 +562,13 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 
 - (void)testMarkNotificationOpen
 {
-    OCMExpect([self.httpRequesterMock markNotificationAsOpenedWithParams:OCMOCK_ANY
-                                                                 success:OCMOCK_ANY
-                                                                 failure:OCMOCK_ANY]);
-    [self.manager markNotificationAsOpened:OCMOCK_ANY
-                                   forUser:OCMOCK_ANY
-                          andDeviceTokenId:OCMOCK_ANY
-                     withCompletionHandler:nil];
+    OCMExpect([self.httpRequesterMock markNotificationAsOpenedWithId:@"42"
+                                                       deviceTokenId:@"42"
+                                                             success:OCMOCK_ANY
+                                                             failure:OCMOCK_ANY]);
+    [self.manager markNotificationAsOpenedWithId:@42
+                                   deviceTokenId:@42
+                               completionHandler:nil];
     OCMVerifyAll(self.httpRequesterMock);
 }
 
@@ -607,15 +615,21 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 
 - (BOOL) _basicRegisterParamsIsValid:(id)obj
 {
-    if (![obj isKindOfClass:[NSDictionary class]]) {
+    NSDictionary *params = (NSDictionary *)obj;
+    if (![params isKindOfClass:[NSDictionary class]]) {
         return NO;
     }
-    NSDictionary *params = (NSDictionary *)obj;
     
-    FWTParameterValidationBlock tokenValidation = [self _validateToken:self.token count:params.count];
+    NSDictionary *deviceTokenDictionary = [obj valueForKeyPath:@"device_token"];
+    if (![deviceTokenDictionary isKindOfClass:[NSDictionary class]]) {
+        return NO;
+    }
+    
+    FWTParameterValidationBlock tokenValidation = [self _validateToken:self.token count:deviceTokenDictionary.count];
     tokenValidation(params);
-    XCTAssertGreaterThanOrEqual(params.count, 2);
-    XCTAssertNotNil(params[@"provider"]);
+    
+    XCTAssertGreaterThanOrEqual(deviceTokenDictionary.count, 2);
+    XCTAssertNotNil(deviceTokenDictionary[@"provider"]);
     
     return YES;
 }
@@ -624,6 +638,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (FWTParameterValidationBlock) _validateToken:(NSData *)token count:(NSInteger)count
 {
     return ^BOOL(NSDictionary *params) {
+        params = (NSDictionary *)params[@"device_token"];
         XCTAssertEqual(params.count, count);
         XCTAssertEqualObjects(params[@"token"], [token fwt_notificationTokenString]);
         return YES;
@@ -633,9 +648,9 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (FWTParameterValidationBlock)_validateUserAlias:(NSString *)alias count:(NSInteger)count
 {
     return ^BOOL(NSDictionary *params) {
-        
+        params = (NSDictionary *)params[@"device_token"];
         XCTAssertEqual(params.count, count);
-        XCTAssertEqual(params[@"user"][@"alias"], alias);
+        XCTAssertEqual(params[@"user_alias"], alias);
         
         return YES;
     };
@@ -644,7 +659,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (FWTParameterValidationBlock)_validateDeviceNameWithName:(NSString *)name count:(NSInteger)count
 {
     return ^BOOL(NSDictionary *params) {
-        
+        params = (NSDictionary *)params[@"device_token"];
         XCTAssertEqual(params.count, count);
         XCTAssertEqual(params[@"name"], name);
         
@@ -655,6 +670,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (FWTParameterValidationBlock)_validateLocationBlockWithIdentifier:(NSString *)identifier count:(NSInteger)count
 {
     return ^BOOL(NSDictionary *params) {
+        params = (NSDictionary *)params[@"device_token"];
         XCTAssertEqual(params.count, count);
         XCTAssertEqualObjects(params[@"locale"], identifier);
         return YES;
@@ -664,6 +680,7 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
 - (FWTParameterValidationBlock)_validateDeviceInformationBlockWithTarget:(NSDictionary *)target count:(NSInteger)count
 {
     return ^BOOL(NSDictionary *params) {
+        params = (NSDictionary *)params[@"device_token"];
         XCTAssertEqual(params.count, count);
         for (NSString *key in target.keyEnumerator) {
             XCTAssertEqualObjects(params[key], target[key]);

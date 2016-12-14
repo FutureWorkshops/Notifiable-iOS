@@ -456,7 +456,7 @@ static NSData * tokenDataBuffer;
 
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
-    NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
+    NSNumber *notificationID = notificationInfo[@"n_id"];
     
     if (notificationID == nil) {
         return NO;
@@ -483,7 +483,7 @@ static NSData * tokenDataBuffer;
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
            withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
-    NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
+    NSNumber *notificationID = notificationInfo[@"n_id"];
     
     if (notificationID == nil) {
         if(handler) {

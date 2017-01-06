@@ -1,3 +1,5 @@
+workspace 'Sample.xcworkspace'
+project 'Sample.xcodeproj'
 platform :ios, '8.0'
 use_frameworks!
 
@@ -8,5 +10,7 @@ plugin 'cocoapods-keys', {
     "FWTSecretKey"
 ]}
 
-pod 'Notifiable-iOS', :path => '..'
-pod 'SVProgressHUD', '~> 1.1'
+target :Sample do
+  pod 'Notifiable', :path => '..'
+  pod 'SVProgressHUD', '~> 1.1'
+end

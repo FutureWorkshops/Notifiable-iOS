@@ -36,12 +36,25 @@
         }
     }
     
+    NSMutableDictionary<NSString *, id> *mutablePlatformProperties = [[NSMutableDictionary alloc] init];
+    NSSet *excludedKeysSet = [NSSet setWithArray:@[@"id", @"name", @"custom_properties"]];
+    for (NSString *element in dict) {
+        if ([excludedKeysSet containsObject:element]) {
+            continue;
+        }
+        id value = dict[element];
+        if (![value isKindOfClass:[NSNull class]]) {
+            [mutablePlatformProperties setValue:value forKey:element];
+        }
+    }
+    
     return [self initWithToken:[[NSData alloc] init]
                        tokenId:tokenId
                         locale:[NSLocale autoupdatingCurrentLocale]
                           user:userName
                           name:name
-              customProperties:[NSDictionary dictionaryWithDictionary:customPropertiesDictionary]];
+              customProperties:[NSDictionary dictionaryWithDictionary:customPropertiesDictionary]
+            platformProperties:[NSDictionary dictionaryWithDictionary:mutablePlatformProperties]];
 }
 
 @end

@@ -15,7 +15,8 @@
                                                locale:self.locale
                                                  user:self.user
                                                  name:self.name
-                                     customProperties:self.customProperties];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
 - (instancetype)deviceWithToken:(NSData *)token
@@ -26,7 +27,8 @@
                                                locale:locale
                                                  user:self.user
                                                  name:self.name
-                                     customProperties:self.customProperties];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
 - (instancetype)deviceWithUser:(NSString *)user
@@ -38,7 +40,8 @@
                                                locale:self.locale
                                                  user:user
                                                  name:name
-                                     customProperties:customProperties];
+                                     customProperties:customProperties
+                                   platformProperties:self.platformProperties];
 }
 
 - (instancetype)deviceWithUser:(NSString *)user
@@ -48,7 +51,8 @@
                                                locale:self.locale
                                                  user:user
                                                  name:self.name
-                                     customProperties:self.customProperties];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
 - (instancetype)deviceWithName:(NSString *)name
@@ -58,7 +62,8 @@
                                                locale:self.locale
                                                  user:self.user
                                                  name:name
-                                     customProperties:self.customProperties];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
 - (instancetype)deviceWithCustomProperties:(NSDictionary *)customProperties
@@ -68,7 +73,19 @@
                                                locale:self.locale
                                                  user:self.user
                                                  name:self.name
-                                     customProperties:customProperties];
+                                     customProperties:customProperties
+                                   platformProperties:self.platformProperties];
+}
+
+- (instancetype)deviceWithPlatformProperties:(NSDictionary<NSString *,id> *)platformProperties
+{
+    return [[FWTNotifiableDevice alloc] initWithToken:self.token
+                                              tokenId:self.tokenId
+                                               locale:self.locale
+                                                 user:self.user
+                                                 name:self.name
+                                     customProperties:self.customProperties
+                                   platformProperties:platformProperties];
 }
 
 @end

@@ -154,8 +154,11 @@ NSString * const FWTTestURL = @"http://localhost:3000";
     
     [self.requester markNotificationAsOpenedWithId:notificationId
                                      deviceTokenId:OCMOCK_ANY
-                                           success:OCMOCK_ANY
-                                           failure:OCMOCK_ANY];
+                                           success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
+                                               
+                                           } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+                                               
+                                           }];
     
     OCMVerifyAll(self.httpSessionManager);
     OCMVerifyAll(self.authenticator);

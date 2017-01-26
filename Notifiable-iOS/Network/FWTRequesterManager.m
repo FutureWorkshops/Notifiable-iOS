@@ -51,6 +51,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                name:(NSString *)name
                              locale:(NSLocale *)locale
                    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                 platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     [self _registerDeviceWithUserAlias:userAlias
@@ -58,6 +59,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                   name:name
                                 locale:locale
                       customProperties:customProperties
+                    platformProperties:platformProperties
                               attempts:self.retryAttempts + 1
                          previousError:nil
                      completionHandler:handler];
@@ -68,7 +70,8 @@ NSString * const FWTNotifiableProvider             = @"apns";
                token:(NSData *)token
                 name:(NSString *)name
                locale:(NSLocale *)locale
-     customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+  platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
     completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     [self _updateDevice:deviceTokenId
@@ -77,6 +80,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                    name:name
                  locale:locale
        customProperties:customProperties
+     platformProperties:platformProperties
                attempts:self.retryAttempts + 1
           previousError:nil
       completionHandler:handler];
@@ -108,6 +112,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                           name:(NSString *)name
                                         locale:(NSLocale *)locale
                               customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                            platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                              includingProvider:(BOOL)includeProvider
 {
     NSMutableDictionary *params;
@@ -136,6 +141,9 @@ NSString * const FWTNotifiableProvider             = @"apns";
             [params setObject:jsonString forKey:FWTNotifiableCustomPropertiesKey];
         }
     }
+    if (platformProperties) {
+        [params setValuesForKeysWithDictionary:platformProperties];
+    }
     return @{@"device_token": [NSDictionary dictionaryWithDictionary:params]};
 }
 
@@ -144,6 +152,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                 name:(NSString *)name
                               locale:(NSLocale *)locale
                     customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                  platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                             attempts:(NSUInteger)attempts
                        previousError:(NSError *)previousError
                    completionHandler:(FWTDeviceTokenIdResponse)handler
@@ -170,6 +179,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                                          name:name
                                                        locale:locale
                                              customProperties:customProperties
+                                           platformProperties:platformProperties
                                             includingProvider:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -181,6 +191,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                            name:name
                                          locale:locale
                                customProperties:customProperties
+                             platformProperties:platformProperties
                                        attempts:(attempts - 1)
                                   previousError:previousError
                               completionHandler:handler];
@@ -204,6 +215,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                               name:name
                                             locale:locale
                                   customProperties:customProperties
+                                platformProperties:platformProperties
                                           attempts:(attempts - 1)
                                      previousError:error
                                  completionHandler:handler];
@@ -217,6 +229,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                  name:(NSString *)name
                locale:(NSLocale *)locale
      customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+   platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
              attempts:(NSUInteger)attempts
         previousError:(NSError *)previousError
     completionHandler:(FWTDeviceTokenIdResponse)handler
@@ -252,6 +265,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                                          name:name
                                                        locale:locale
                                              customProperties:customProperties
+                                           platformProperties:platformProperties
                                             includingProvider:NO];
     
     __weak typeof(self) weakSelf = self;
@@ -264,6 +278,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                             name:name
                           locale:locale
                 customProperties:customProperties
+              platformProperties:platformProperties
                         attempts:(attempts - 1)
                    previousError:previousError
                completionHandler:handler];
@@ -291,6 +306,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                name:name
                              locale:locale
                    customProperties:customProperties
+                 platformProperties:platformProperties
                            attempts:(attempts - 1)
                       previousError:error
                   completionHandler:handler];

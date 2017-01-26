@@ -31,7 +31,8 @@
                                                 tokenId:@42 locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
                                                    user:@"user"
                                                    name:@"name"
-                                       customProperties:@{@"onsite":@YES}];
+                                       customProperties:@{@"onsite":@YES}
+                                     platformProperties:nil];
     XCTAssertEqualObjects(device.token, [NSStringFromClass([self class]) dataUsingEncoding:NSUTF8StringEncoding]);
     XCTAssertEqualObjects(device.tokenId, @42);
     XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);

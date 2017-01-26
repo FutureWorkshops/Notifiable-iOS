@@ -136,6 +136,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 -(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
                                 locale:(NSLocale * _Nullable)locale
                       customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                    platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
@@ -156,6 +157,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                      userAlias:(NSString *)userAlias
                         locale:(NSLocale * _Nullable)locale
               customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+            platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
           andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Update device information
@@ -200,9 +202,18 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  
  @param customProperties   Aditional information about the device
  @param handler             Block called once that the operation is finished.
-*/
+ */
 - (void)updateCustomProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Update the device platform properties
+ 
+ @param platformProperties  Platform properties
+ @param handler             Block called once that the operation is finished.
+ */
+- (void)updatePlatformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
+               completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Update the informations of the device without change the user.
@@ -217,6 +228,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                deviceName:(NSString * _Nullable)deviceName
                  locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+       platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
@@ -234,6 +246,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                 userAlias:(NSString * _Nullable)userAlias
                  locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+       platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Device/user relationship

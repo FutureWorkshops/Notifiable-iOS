@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)deviceWithUser:(NSString * _Nullable)user;
 - (instancetype)deviceWithName:(NSString * _Nullable)name;
 - (instancetype)deviceWithCustomProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties;
+- (instancetype)deviceWithPlatformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties;
 
 @end
 

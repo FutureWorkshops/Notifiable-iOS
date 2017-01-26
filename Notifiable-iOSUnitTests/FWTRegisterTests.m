@@ -76,6 +76,7 @@
         [manager registerAnonymousDeviceWithName:deviceName
                                           locale:locale
                                 customProperties:@{@"test":@YES}
+                              platformProperties:nil
                             andCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                                 
                                 XCTAssertNotNil(device);
@@ -111,7 +112,8 @@
         [manager registerDeviceWithName:deviceName
                               userAlias:userAlias
                                  locale:locale
-                      customProperties:@{@"test": @YES}
+                       customProperties:@{@"test": @YES}
+                     platformProperties:nil
                    andCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                        FWTNotifiableDevice *currentDevice = manager.currentDevice;
                        XCTAssertEqualObjects(currentDevice, device);
@@ -141,7 +143,8 @@
     [self stubDeviceRegisterResponse:nil andError:[NSError errorWithDomain:@"domain" code:404 userInfo:nil] onMock:self.requesterManagerMock withBlock:^{
         [manager registerAnonymousDeviceWithName:@"name"
                                           locale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
-                               customProperties:@{@"test":@YES}
+                                customProperties:@{@"test":@YES}
+                              platformProperties:nil
                             andCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                           
                                 XCTAssertNil(device);
@@ -168,7 +171,8 @@
         [manager registerDeviceWithName:@"name"
                               userAlias:@"user"
                                  locale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
-                      customProperties:@{@"test":@YES}
+                       customProperties:@{@"test":@YES}
+                     platformProperties:nil
                    andCompletionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                           XCTAssertNil(device);
                           XCTAssertNotNil(error);

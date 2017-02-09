@@ -52,6 +52,7 @@
 		78B5D2741E4CC8DF00C585FB /* FWTHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2731E4CC8DF00C585FB /* FWTHTTPSessionManager.m */; };
 		78B5D2841E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2831E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m */; };
 		78B5D2871E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2861E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m */; };
+		78B5D2891E4CFBB500C585FB /* FWTHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2831E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m */; };
 		78BC4CC31D78602C0031B405 /* NSDate+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = ADDC47BB1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m */; };
 		78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
@@ -687,6 +688,7 @@
 			files = (
 				78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */,
 				787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
+				78B5D2891E4CFBB500C585FB /* FWTHTTPRequestSerializer.m in Sources */,
 				787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */,
 				787633101C51383B0074DE3F /* FWTTestCase.m in Sources */,
 				783AED221C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */,

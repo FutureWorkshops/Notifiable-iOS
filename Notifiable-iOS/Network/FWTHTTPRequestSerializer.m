@@ -113,8 +113,8 @@ NSString * const FWHTTPRequestSerializerQueryRegex = @"\\?([\\w-]+(=[\\w-]*)?(&[
             continue;
         }
         
-        fieldKey = [fieldKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        fieldValue = [fieldValue stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        fieldKey = [fieldKey stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        fieldValue = [fieldValue stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         
         NSString *finalString = [NSString stringWithFormat:@"%@=%@",fieldKey, fieldValue];
         [elements addObject:finalString];

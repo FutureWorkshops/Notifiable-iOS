@@ -86,6 +86,7 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 - (void)markNotificationAsOpenedWithId:(NSString *)notificationId
                          deviceTokenId:(NSString *)deviceTokenId
+                                  user:(NSString *)user
                                success:(FWTRequestManagerSuccessBlock)success
                                failure:(FWTRequestManagerFailureBlock)failure
 {
@@ -94,9 +95,10 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
     [self _updateAuthenticationForPath:path httpMethod:@"POST"];
     [self.httpSessionManager POST:path
-                       parameters:@{@"device_token_id": deviceTokenId}
-                          success:[self _defaultSuccessHandler:success]
-                          failure:[self _defaultFailureHandler:failure success:success]];
+                      parameters:@{@"device_token_id": deviceTokenId,
+                                   @"user": @{@"alias":user}}
+                         success:[self _defaultSuccessHandler:success]
+                         failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 #pragma mark - Private Methods

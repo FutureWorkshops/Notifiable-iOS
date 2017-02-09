@@ -529,6 +529,7 @@ static NSData * tokenDataBuffer;
     __weak typeof(self) weakSelf = self;
     [self.requestManager markNotificationAsOpenedWithId:notificationID
                                           deviceTokenId:self.currentDevice.tokenId
+                                                   user:self.currentDevice.user
                                       completionHandler:^(BOOL success, NSError * _Nullable error) {
                                           if (handler) {
                                               handler(weakSelf.currentDevice, error);

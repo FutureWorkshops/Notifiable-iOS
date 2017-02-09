@@ -16,7 +16,7 @@ NSString * const FWTTimestampHeader = @"Date";
 NSString * const FWTContentTypeHeader = @"Content-Type";
 NSString * const FWTContentAcceptHeader = @"Content-Accept";
 
-NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
+NSString * const FWTDefaultContentType = @"application/json; charset=utf-8";
 
 @interface FWTNotifiableAuthenticator ()
 

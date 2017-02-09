@@ -97,10 +97,12 @@ NSString * const FWTNotifiableProvider             = @"apns";
 
 - (void)markNotificationAsOpenedWithId:(NSNumber *)notificationId
                          deviceTokenId:(NSNumber *)deviceTokenId
+                                  user:(NSString *)user
                      completionHandler:(_Nullable FWTSimpleRequestResponse)handler
 {
     [self _markNotificationAsOpenedWithId:[notificationId stringValue]
                             deviceTokenId:[deviceTokenId stringValue]
+                                     user:user
                                  attempts:self.retryAttempts + 1
                                 previousError:nil
                             completionHandler:handler];
@@ -364,6 +366,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
 
 - (void)_markNotificationAsOpenedWithId:(NSString *)notificationId
                           deviceTokenId:(NSString *)deviceTokenId
+                                   user:(NSString *)user
                                attempts:(NSUInteger)attempts
                           previousError:(NSError *)error
                       completionHandler:(FWTSimpleRequestResponse)handler
@@ -376,7 +379,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requester markNotificationAsOpenedWithId:notificationId deviceTokenId:deviceTokenId success:^(NSDictionary * _Nullable response) {
+    [self.requester markNotificationAsOpenedWithId:notificationId deviceTokenId:deviceTokenId user:user success:^(NSDictionary * _Nullable response) {
         [weakSelf.logger logMessage:@"Notification flagged as opened"];
         if (handler) {
             handler(YES,nil);
@@ -389,6 +392,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _markNotificationAsOpenedWithId:notificationId
                                         deviceTokenId:deviceTokenId
+                                                 user:user
                                              attempts:(attempts - 1)
                                         previousError:error
                                     completionHandler:handler];

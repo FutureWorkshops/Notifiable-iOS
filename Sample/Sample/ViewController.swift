@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:FWTNotifiableManager! = {
         let keys = SampleKeys()
-        guard let serverURL = NSURL(string: "http://fw-notifiable-staging.herokuapp.com/") else {
+        guard let serverURL = NSURL(string: "https://notifiable.futureworkshops.com/") else {
             return nil
         }
         
@@ -80,7 +80,7 @@ extension ViewController {
     
     private func _registerAnonymousToken(token:NSData) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerAnonymousDeviceWithName(deviceName, locale: nil, customProperties: nil) { (device, error) in
+        self.manager.registerAnonymousDeviceWithName(deviceName, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
@@ -91,7 +91,7 @@ extension ViewController {
     
     private func _registerToken(token:NSData, user:String) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerDeviceWithName(deviceName, userAlias: user, locale: nil, customProperties: nil) { (device, error) in
+        self.manager.registerDeviceWithName(deviceName, userAlias: user, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {

@@ -7,7 +7,7 @@
 //
 
 #import "FWTTestCase.h"
-#import <AFNetworking/AFHTTPSessionManager.h>
+#import "FWTHTTPSessionManager.h"
 #import "FWTNotifiableAuthenticator.h"
 #import "FWTHTTPRequester.h"
 #import <OCMock/OCMock.h>
@@ -20,7 +20,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 
 @interface FWTHTTPRequester (Private)
 
-@property (nonatomic, strong) AFHTTPSessionManager *httpSessionManager;
+@property (nonatomic, strong) FWTHTTPSessionManager *httpSessionManager;
 
 @end
 
@@ -55,7 +55,7 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 - (id)httpSessionManager
 {
     if (self->_httpSessionManager == nil) {
-        self->_httpSessionManager = OCMClassMock([AFHTTPSessionManager class]);
+        self->_httpSessionManager = OCMClassMock([FWTHTTPSessionManager class]);
     }
     return self->_httpSessionManager;
 }
@@ -79,7 +79,6 @@ NSString * const FWTTestURL = @"http://localhost:3000";
 {
     OCMExpect([self.httpSessionManager POST:FWTDeviceTokensPath
                                  parameters:OCMOCK_ANY
-                                   progress:OCMOCK_ANY
                                     success:OCMOCK_ANY
                                     failure:OCMOCK_ANY]);
     
@@ -131,8 +130,8 @@ NSString * const FWTTestURL = @"http://localhost:3000";
                                           andHeaders:OCMOCK_ANY]);
     
     [self.requester unregisterTokenId:@42
-                              success:nil
-                              failure:nil];
+                              success:^(NSDictionary<NSString *, NSObject *>* _Nullable response) {}
+                              failure:^(NSInteger responseCode, NSError * error) {}];
     
     OCMVerifyAll(self.httpSessionManager);
     OCMVerifyAll(self.authenticator);
@@ -144,7 +143,6 @@ NSString * const FWTTestURL = @"http://localhost:3000";
     NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
     OCMExpect([self.httpSessionManager POST:path
                                  parameters:OCMOCK_ANY
-                                   progress:OCMOCK_ANY
                                     success:OCMOCK_ANY
                                     failure:OCMOCK_ANY]);
     

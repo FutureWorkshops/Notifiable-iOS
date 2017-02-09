@@ -6,30 +6,30 @@
 //  Copyright © 2017 Future Workshops. All rights reserved.
 //
 
-#import "FWHTTPRequestSerializer.h"
+#import "FWTHTTPRequestSerializer.h"
 
 NSString * const FWHTTPRequestSerializerQueryRegex = @"\\?([\\w-]+(=[\\w-]*)?(&[\\w-]+(=[\\w-]*)?)*)?$";
 
-@implementation FWHTTPRequestSerializer
+@implementation FWTHTTPRequestSerializer
 
 - (NSURLRequest *) buildRequestWithBaseURL:(NSURL *)baseURL
                                 parameters:(NSDictionary *)parameters
                                 andHeaders:(NSDictionary<NSString *, NSString *> *)headers
-                                 forMethod:(FWHTTPMethod)method
+                                 forMethod:(FWTHTTPMethod)method
 {
-    NSURL *finalURL = method == FWHTTPMethodGET ? [self _getCompleteURL:baseURL withParameters:parameters] : baseURL;
+    NSURL *finalURL = method == FWTHTTPMethodGET ? [self _getCompleteURL:baseURL withParameters:parameters] : baseURL;
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:finalURL
                                                                 cachePolicy:NSURLRequestReturnCacheDataElseLoad
                                                             timeoutInterval:10000];
-    [request setHTTPMethod:FWHTTPMethodString(method)];
+    [request setHTTPMethod:FWTHTTPMethodString(method)];
     [request setAllHTTPHeaderFields:headers];
     
     if (![request valueForHTTPHeaderField:@"Accept"]) {
         [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     }
     
-    if (parameters && parameters.allKeys.count > 0 && method != FWHTTPMethodGET) {
+    if (parameters && parameters.allKeys.count > 0 && method != FWTHTTPMethodGET) {
         if (![request valueForHTTPHeaderField:@"Content-Type"]) {
             [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
         }

@@ -7,7 +7,7 @@
 //
 
 #import "FWTHTTPSessionManager.h"
-#import "FWHTTPRequestSerializer.h"
+#import "FWTHTTPRequestSerializer.h"
 #import <AFNetworking/AFHTTPSessionManager.h>
 
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
@@ -17,7 +17,7 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 @property (nonatomic, strong) NSURLSession *urlSession;
 @property (nonatomic, strong) NSOperationQueue *sessionOperationQueue;
-@property (nonatomic, strong) FWHTTPRequestSerializer *requestSerializer;
+@property (nonatomic, strong) FWTHTTPRequestSerializer *requestSerializer;
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableHeaders;
 
@@ -69,10 +69,10 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     return [NSDictionary dictionaryWithDictionary: self.mutableHeaders];
 }
 
-- (FWHTTPRequestSerializer *)requestSerializer
+- (FWTHTTPRequestSerializer *)requestSerializer
 {
     if (self->_requestSerializer == nil) {
-        self->_requestSerializer = [[FWHTTPRequestSerializer alloc] init];
+        self->_requestSerializer = [[FWTHTTPRequestSerializer alloc] init];
     }
     return self->_requestSerializer;
 }
@@ -134,7 +134,7 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                              failure:failure];
 }
 
-- (NSURLRequest *) _buildRequestWithMethod:(FWHTTPMethod)method
+- (NSURLRequest *) _buildRequestWithMethod:(FWTHTTPMethod)method
                              andParameters:(NSDictionary *)paramters
 {
     NSURLRequest *request = [self.requestSerializer buildRequestWithBaseURL:self.baseURL

@@ -56,7 +56,7 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
 {
     void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
         FWTDeviceTokenIdResponse passedBlock;
-        [invocation getArgument:&passedBlock atIndex:7];
+        [invocation getArgument:&passedBlock atIndex:8];
         if (passedBlock) {
             passedBlock(deviceTokenId, error);
         }
@@ -77,7 +77,7 @@ typedef void(^FWTTestRegisterBlock)(FWTNotifiableDevice *device, NSError* error)
 {
     void (^postProxyBlock)(NSInvocation *) = ^(NSInvocation *invocation) {
         FWTDeviceTokenIdResponse passedBlock;
-        [invocation getArgument:&passedBlock atIndex:8];
+        [invocation getArgument:&passedBlock atIndex:9];
         if (passedBlock) {
             passedBlock(deviceTokenId, nil);
         }

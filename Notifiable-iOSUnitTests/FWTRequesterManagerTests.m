@@ -23,16 +23,18 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                 token:(NSData *)token
                  name:(NSString *)name
                locale:(NSLocale *)locale
-    customProperties:(NSDictionary *)customProperties
+     customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+   platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
              attempts:(NSUInteger)attempts
-        previousError:(NSError *)error
+        previousError:(NSError *)previousError
     completionHandler:(FWTDeviceTokenIdResponse)handler;
 
 - (void)_registerDeviceWithUserAlias:(NSString *)userAlias
                                token:(NSData *)token
                                 name:(NSString *)name
                               locale:(NSLocale *)locale
-                   customProperties:(NSDictionary *)customProperties
+                    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                  platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                             attempts:(NSUInteger)attempts
                        previousError:(NSError *)previousError
                    completionHandler:(FWTDeviceTokenIdResponse)handler;
@@ -278,7 +280,8 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                            token:OCMOCK_ANY
                                             name:OCMOCK_ANY
                                           locale:OCMOCK_ANY
-                               customProperties:OCMOCK_ANY
+                                customProperties:OCMOCK_ANY
+                              platformProperties:OCMOCK_ANY
                                         attempts:1
                                    previousError:OCMOCK_ANY
                                completionHandler:OCMOCK_ANY]).andForwardToRealObject();
@@ -522,7 +525,8 @@ typedef BOOL(^FWTParameterValidationBlock)(NSDictionary *params);
                                    token:OCMOCK_ANY
                                     name:OCMOCK_ANY
                                   locale:OCMOCK_ANY
-                       customProperties:OCMOCK_ANY
+                        customProperties:OCMOCK_ANY
+                      platformProperties:OCMOCK_ANY
                                 attempts:1
                            previousError:OCMOCK_ANY
                        completionHandler:OCMOCK_ANY]).andForwardToRealObject();

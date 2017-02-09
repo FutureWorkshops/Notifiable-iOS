@@ -63,9 +63,31 @@
     NSData *fullData = [NSData dataWithData:self.bufferData];
     [self _resetData];
     if (error) {
-        self.success(task, fullData);
-    } else {
         self.failure(task, error);
+        return;
+    }
+    
+    id responseData = [self _jsonFromData:fullData];
+    
+    NSURLResponse *response = task.response;
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
+        NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
+        self.failure(task, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+        return;
+    }
+    
+    self.success(task, responseData);
+}
+
+- (id) _jsonFromData:(NSData *)data
+{
+    NSError *error;
+    id jsonContent = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error || jsonContent == nil) {
+        return data;
+    } else {
+        return jsonContent;
     }
 }
 

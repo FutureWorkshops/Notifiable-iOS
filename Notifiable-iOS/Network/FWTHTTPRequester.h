@@ -33,6 +33,7 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                   failure:(FWTRequestManagerFailureBlock)failure;
 - (void)markNotificationAsOpenedWithId:(NSString *)notificationId
                          deviceTokenId:(NSString *)deviceTokenId
+                                  user:(NSString *)user
                                success:(FWTRequestManagerSuccessBlock)success
                                failure:(FWTRequestManagerFailureBlock)failure;
 

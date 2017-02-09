@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^FWTHTTPSessionManagerSuccessBlock)(NSURLSessionTask *task, id _Nullable responseObject);
+typedef void(^FWTHTTPSessionManagerFailureBlock)(NSURLSessionTask * _Nullable task, NSError *error);
+
 @interface FWTHTTPSessionManager : NSObject
 
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, NSString *> *HTTPRequestHeaders;
@@ -19,28 +22,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSURLSessionDataTask *)GET:(NSString *)URLString
                             parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters
-                               success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
-                               failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+                               success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+                               failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
 - (nullable NSURLSessionDataTask *)PATCH:(NSString *)URLString
                               parameters:(nullable NSDictionary *)parameters
-                                 success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
-                                 failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+                                 success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+                                 failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
 - (nullable NSURLSessionDataTask *)DELETE:(NSString *)URLString
                                parameters:(nullable NSDictionary *)parameters
-                                  success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
-                                  failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+                                  success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+                                  failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
 - (nullable NSURLSessionDataTask *)PUT:(NSString *)URLString
                             parameters:(nullable NSDictionary *)parameters
-                               success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
-                               failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+                               success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+                               failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
 - (nullable NSURLSessionDataTask *)POST:(NSString *)URLString
                              parameters:(nullable NSDictionary *)parameters
-                                success:(nullable void (^)(NSURLSessionDataTask *task, id _Nullable responseObject))success
-                                failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError *error))failure;
+                                success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+                                failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
 - (void) setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
 

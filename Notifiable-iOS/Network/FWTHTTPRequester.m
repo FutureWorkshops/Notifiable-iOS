@@ -9,8 +9,8 @@
 #import "NSError+FWTNotifiable.h"
 #import "FWTHTTPSessionManager.h"
 
-typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
-typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject);
+typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionTask * _Nullable task, NSError * _Nonnull error);
 
 NSString * const FWTDeviceTokensPath = @"api/v1/device_tokens";
 NSString * const FWTNotificationOpenPath = @"api/v1/notifications/%@/opened";
@@ -102,7 +102,7 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 #pragma mark - Private Methods
 - (FWTAFNetworkingSuccessBlock) _defaultSuccessHandler:(FWTRequestManagerSuccessBlock)success
 {
-    return ^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    return ^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             success(responseObject);
         } else {
@@ -113,7 +113,7 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 - (FWTAFNetworkingFailureBlock) _defaultFailureHandler:(FWTRequestManagerFailureBlock)failure success:(FWTRequestManagerSuccessBlock)success
 {
-    return ^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    return ^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
         NSHTTPURLResponse* response = (NSHTTPURLResponse*)task.response;
         if (response.statusCode == 200) {
             if (success) {

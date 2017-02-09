@@ -7,16 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FWHTTPMethod.h"
+#import "FWTHTTPMethod.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FWHTTPRequestSerializer : NSObject
+@interface FWTHTTPRequestSerializer : NSObject
 
 - (NSURLRequest *) buildRequestWithBaseURL:(NSURL *)baseURL
                                 parameters:(NSDictionary *)parameters
                                 andHeaders:(NSDictionary<NSString *, NSString *> *)headers
-                                 forMethod:(FWHTTPMethod)method;
+                                 forMethod:(FWTHTTPMethod)method;
 
 @end
 

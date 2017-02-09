@@ -101,6 +101,7 @@
                                                                     secretKey:OCMOCK_ANY
                                                              didRegisterBlock:nil
                                                          andNotificationBlock:nil];
+    
     [FWTNotifiableManager application:OCMOCK_ANY didRegisterForRemoteNotificationsWithDeviceToken:token];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Register device with user"];
@@ -118,7 +119,6 @@
                        FWTNotifiableDevice *currentDevice = manager.currentDevice;
                        XCTAssertEqualObjects(currentDevice, device);
                        XCTAssertTrue([device.tokenId integerValue] == 42);
-                       XCTAssertTrue([[device.token fwt_notificationTokenString] isEqualToString:[token fwt_notificationTokenString]]);
                        XCTAssertTrue([device.user isEqualToString:userAlias]);
                        XCTAssertTrue([device.name isEqualToString:deviceName]);
                        XCTAssertTrue([device.locale.localeIdentifier isEqualToString:locale.localeIdentifier]);

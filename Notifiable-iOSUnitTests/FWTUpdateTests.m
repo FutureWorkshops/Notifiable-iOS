@@ -92,12 +92,13 @@
 
 - (void) testUpdateDeviceNotRegistered
 {
-    [[self.requesterManagerMock reject] updateDevice:OCMOCK_ANY withUserAlias:OCMOCK_ANY token:OCMOCK_ANY name:OCMOCK_ANY locale:OCMOCK_ANY deviceInformation:OCMOCK_ANY completionHandler:OCMOCK_ANY];
+    [[self.requesterManagerMock reject] updateDevice:OCMOCK_ANY withUserAlias:OCMOCK_ANY token:OCMOCK_ANY name:OCMOCK_ANY locale:OCMOCK_ANY customProperties:OCMOCK_ANY platformProperties:OCMOCK_ANY completionHandler:OCMOCK_ANY];
     XCTAssertThrows([self.manager updateDeviceToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
                                          deviceName:@"name"
                                           userAlias:@"user"
-                                           location:[NSLocale localeWithLocaleIdentifier:@"en_US"]
-                                  deviceInformation:@{@"test":@YES}
+                                           locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
+                                   customProperties:@{@"test":@YES}
+                                 platformProperties:nil
                                   completionHandler:nil]);
     OCMVerifyAll(self.requesterManagerMock);
 }
@@ -116,15 +117,16 @@
     [self.manager updateDeviceToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
                          deviceName:@"name"
                           userAlias:@"user"
-                           location:[NSLocale localeWithLocaleIdentifier:@"en_US"]
-                  deviceInformation:@{@"test":@YES}
+                           locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
+                   customProperties:@{@"test":@YES}
+                 platformProperties:nil
                   completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                       XCTAssertEqualObjects(device.token, [@"test" dataUsingEncoding:NSUTF8StringEncoding]);
                       XCTAssertEqualObjects(device.tokenId, tokenId);
                       XCTAssertEqualObjects(device.user, @"user");
                       XCTAssertEqualObjects(device.name, @"name");
                       XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
-                      XCTAssertEqualObjects(device.information, @{@"test":@YES});
+                      XCTAssertEqualObjects(device.customProperties, @{@"test":@YES});
                       [expectation fulfill];
                   }];
     [self waitForExpectationsWithTimeout:1 handler:nil];
@@ -144,15 +146,16 @@
     [self.manager updateDeviceToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
                          deviceName:@"name"
                           userAlias:@"user"
-                           location:[NSLocale localeWithLocaleIdentifier:@"en_US"]
-                  deviceInformation:@{@"test":@YES}
+                           locale:[NSLocale localeWithLocaleIdentifier:@"en_US"]
+                   customProperties:@{@"test":@YES}
+                 platformProperties:nil
                   completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                       XCTAssertEqualObjects(device.tokenId, tokenId);
                       XCTAssertEqualObjects(device.token, [@"test" dataUsingEncoding:NSUTF8StringEncoding]);
                       XCTAssertEqualObjects(device.user, @"user");
                       XCTAssertEqualObjects(device.name, @"name");
                       XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
-                      XCTAssertEqualObjects(device.information, @{@"test":@YES});
+                      XCTAssertEqualObjects(device.customProperties, @{@"test":@YES});
                       [expectation fulfill];
                   }];
     [self waitForExpectationsWithTimeout:1 handler:nil];
@@ -269,14 +272,14 @@
 {
     [self _registerAnonymousDevice];
     XCTAssertNotNil(self.manager.currentDevice);
-    XCTAssertEqual(self.manager.currentDevice.information.count, 0);
+    XCTAssertEqual(self.manager.currentDevice.customProperties.count, 0);
     
     [self stubDeviceUpdateResponse:self.deviceTokenId onMock:self.requesterManagerMock];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Information"];
     
     [self _expectUpdateOnManager:self.manager withBlock:^(FWTNotifiableManager* manager){
-        [manager updateDeviceInformation:@{@"test":@YES} completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
-            XCTAssertEqualObjects(device.information, @{@"test":@YES});
+        [manager updateCustomProperties:@{@"test":@YES} completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+            XCTAssertEqualObjects(device.customProperties, @{@"test":@YES});
             [expectation fulfill];
         }];
     }];
@@ -284,8 +287,8 @@
 
     expectation = [self expectationWithDescription:@"Second Information"];
     [self _expectUpdateOnManager:self.manager withBlock:^(FWTNotifiableManager* manager){
-        [manager updateDeviceInformation:@{@"onsite":@YES} completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
-            XCTAssertEqualObjects(device.information, @{@"onsite":@YES});
+        [manager updateCustomProperties:@{@"onsite":@YES} completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
+            XCTAssertEqualObjects(device.customProperties, @{@"onsite":@YES});
             [expectation fulfill];
         }];
     }];
@@ -301,7 +304,7 @@
     FWTNotifiableDevice *device = self.manager.currentDevice;
     XCTAssertEqualObjects(device.token, [@"original" dataUsingEncoding:NSUTF8StringEncoding]);
     XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"en_US"]);
-    XCTAssertEqual(device.information.count, 0);
+    XCTAssertEqual(device.customProperties.count, 0);
     XCTAssertNil(device.name);
     
     [self stubDeviceUpdateResponse:self.deviceTokenId onMock:self.requesterManagerMock];
@@ -309,12 +312,13 @@
     
     [self _expectUpdateOnManager:self.manager withBlock:^(FWTNotifiableManager* manager){
         [manager updateDeviceToken:[@"test" dataUsingEncoding:NSUTF8StringEncoding]
-                        deviceName:@"name" location:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
-                 deviceInformation:@{@"test":@YES}
+                        deviceName:@"name" locale:[NSLocale localeWithLocaleIdentifier:@"pt_BR"]
+                  customProperties:@{@"test":@YES}
+                platformProperties:nil
                  completionHandler:^(FWTNotifiableDevice *device, NSError * _Nullable error) {
                      XCTAssertEqualObjects(device.token, [@"test" dataUsingEncoding:NSUTF8StringEncoding]);
                      XCTAssertEqualObjects(device.locale, [NSLocale localeWithLocaleIdentifier:@"pt_BR"]);
-                     XCTAssertEqualObjects(device.information, @{@"test":@YES});
+                     XCTAssertEqualObjects(device.customProperties, @{@"test":@YES});
                      XCTAssertEqualObjects(device.name, @"name");
                      [expectation fulfill];
                  }];
@@ -330,8 +334,9 @@
     OCMExpect([managerMock updateDeviceToken:OCMOCK_ANY
                                   deviceName:OCMOCK_ANY
                                    userAlias:OCMOCK_ANY
-                                    location:OCMOCK_ANY
-                           deviceInformation:OCMOCK_ANY
+                                      locale:OCMOCK_ANY
+                            customProperties:OCMOCK_ANY
+                          platformProperties:OCMOCK_ANY
                            completionHandler:OCMOCK_ANY]).andForwardToRealObject();
     block(manager);
     

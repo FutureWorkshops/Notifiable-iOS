@@ -32,7 +32,8 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
                               token:(NSData *)token
                                name:(NSString * _Nullable)name
                              locale:(NSLocale * _Nullable)locale
-                  deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                   customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                 platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;
 
 - (void)updateDevice:(NSNumber *)deviceTokenId
@@ -40,20 +41,17 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
                token:(NSData * _Nullable)token
                 name:(NSString * _Nullable)name
               locale:(NSLocale * _Nullable)locale
-   deviceInformation:(NSDictionary * _Nullable)deviceInformation
+    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+  platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
    completionHandler:(_Nullable FWTDeviceTokenIdResponse)handler;
 
-- (void)markNotificationAsOpened:(NSNumber *)notificationId
-                         forUser:(NSString * _Nullable)userAlias
-                andDeviceTokenId:(NSNumber *)deviceTokenId
-           withCompletionHandler:(_Nullable FWTSimpleRequestResponse)handler;
+- (void)markNotificationAsOpenedWithId:(NSNumber *)notificationId
+                         deviceTokenId:(NSNumber *)deviceTokenId
+                                  user:(NSString *)user
+                     completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
 - (void)unregisterTokenId:(NSNumber *)tokenId
-                userAlias:(NSString * _Nullable)userAlias
         completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
-
-- (void)listDevicesOfUser:(NSString *)userAlias
-        completionHandler:(_Nullable FWTDeviceListResponse)handler;
 
 @end
 

@@ -84,7 +84,6 @@
 - (void) testUnregisterWithNoDevice
 {
     [[self.requesterManagerMock reject] unregisterTokenId:OCMOCK_ANY
-                                                userAlias:OCMOCK_ANY
                                         completionHandler:OCMOCK_ANY];
     XCTAssertNil(self.manager.currentDevice);
     XCTAssertThrows([self.manager unregisterTokenWithCompletionHandler:nil]);
@@ -149,13 +148,12 @@
 {
     void (^block)(NSInvocation *) = ^(NSInvocation *invocation) {
         FWTSimpleRequestResponse passedBlock;
-        [invocation getArgument:&passedBlock atIndex:4];
+        [invocation getArgument:&passedBlock atIndex:3];
         if (passedBlock) {
             passedBlock(success, error);
         }
     };
     OCMStub([self.requesterManagerMock unregisterTokenId:@42
-                                               userAlias:OCMOCK_ANY
                                        completionHandler:OCMOCK_ANY]).andDo(block);
 }
 

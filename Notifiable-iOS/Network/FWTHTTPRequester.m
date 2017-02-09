@@ -5,22 +5,20 @@
 //
 
 #import "FWTHTTPRequester.h"
-#import <AFNetworking/AFHTTPSessionManager.h>
 #import "FWTNotifiableAuthenticator.h"
 #import "NSError+FWTNotifiable.h"
+#import "FWTHTTPSessionManager.h"
 
-typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
-typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject);
+typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionTask * _Nullable task, NSError * _Nonnull error);
 
-NSString * const FWTDeviceTokensPath = @"user_api/v1/device_tokens";
-NSString * const FWTNotificationOpenPath = @"user_api/v1/notification_statuses/opened";
-NSString * const FWTListDevicesPath = @"user_api/v1/device_tokens.json";
-
-NSString * const FWTUserAliasFormat = @"user[alias]=%@";
+NSString * const FWTDeviceTokensPath = @"api/v1/device_tokens";
+NSString * const FWTNotificationOpenPath = @"api/v1/notifications/%@/opened";
+NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 @interface FWTHTTPRequester ()
 
-@property (nonatomic, strong) AFHTTPSessionManager *httpSessionManager;
+@property (nonatomic, strong) FWTHTTPSessionManager *httpSessionManager;
 @property (nonatomic, strong) FWTNotifiableAuthenticator *authenticator;
 
 @end
@@ -38,11 +36,10 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     return self;
 }
 
-- (AFHTTPSessionManager *)httpSessionManager
+- (FWTHTTPSessionManager *)httpSessionManager
 {
     if (!self->_httpSessionManager) {
-        self->_httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:self.baseUrl];
-        self->_httpSessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
+        self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl];
     }
     return self->_httpSessionManager;
 }
@@ -53,11 +50,10 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 {
     NSAssert(params != nil, @"You need provide, at least, the device token that will be registered");
     
-    [self _updateAuthenticationForPath:FWTDeviceTokensPath];
+    [self _updateAuthenticationForPath:FWTDeviceTokensPath httpMethod:@"POST"];
     
     [self.httpSessionManager POST:FWTDeviceTokensPath
                        parameters:params
-                         progress:nil
                           success:[self _defaultSuccessHandler:success]
                           failure:[self _defaultFailureHandler:failure success:success]];
 }
@@ -71,71 +67,44 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
     NSAssert(tokenId != nil, @"Device token id missing");
     
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, [tokenId stringValue]];
-    [self _updateAuthenticationForPath:path];
-    [self.httpSessionManager PUT:path
-                      parameters:params
-                         success:[self _defaultSuccessHandler:success]
-                         failure:[self _defaultFailureHandler:failure success:success]];
+    [self _updateAuthenticationForPath:path httpMethod:@"PATCH"];
+    [self.httpSessionManager PATCH:path
+                        parameters:params
+                           success:[self _defaultSuccessHandler:success]
+                           failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 - (void)unregisterTokenId:(NSNumber *)tokenId
-                userAlias:(NSString *)userAlias
                   success:(FWTRequestManagerSuccessBlock)success
                   failure:(FWTRequestManagerFailureBlock)failure
 {
-    NSAssert(tokenId != nil, @"Device token id missing");
-    
-    NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, tokenId];
-    if (userAlias) {
-        NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    }
-    [self _updateAuthenticationForPath:path];
-    [self.httpSessionManager DELETE:path
-                         parameters:nil
-                            success:[self _defaultSuccessHandler:success]
-                            failure:[self _defaultFailureHandler:failure success:success]];
+    [self updateDeviceWithTokenId:tokenId
+                           params:@{@"device_token": @{@"user_alias": [NSNull null]}}
+                          success:success
+                          failure:failure];
 }
 
-- (void)markNotificationAsOpenedWithParams:(NSDictionary *)params
-                                   success:(FWTRequestManagerSuccessBlock)success
-                                   failure:(FWTRequestManagerFailureBlock)failure
+- (void)markNotificationAsOpenedWithId:(NSString *)notificationId
+                         deviceTokenId:(NSString *)deviceTokenId
+                                  user:(NSString *)user
+                               success:(FWTRequestManagerSuccessBlock)success
+                               failure:(FWTRequestManagerFailureBlock)failure
 {
-    NSAssert(params != nil, @"You need provide, at least, the localized_notification_id");
-    [self _updateAuthenticationForPath:FWTNotificationOpenPath];
-    [self.httpSessionManager PUT:FWTNotificationOpenPath
-                      parameters:params
+    NSAssert(deviceTokenId != nil, @"Device token id missing");
+    NSAssert(notificationId != nil, @"Notification id missing");
+    NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
+    [self _updateAuthenticationForPath:path httpMethod:@"POST"];
+    [self.httpSessionManager POST:path
+                      parameters:@{@"device_token_id": deviceTokenId,
+                                   @"user": @{@"alias":user}}
                          success:[self _defaultSuccessHandler:success]
                          failure:[self _defaultFailureHandler:failure success:success]];
-}
-
-- (void)listDevicesOfUser:(NSString *)userAlias
-                  success:(FWTRequestManagerArraySuccessBlock)success
-                  failure:(FWTRequestManagerFailureBlock)failure
-{
-    NSAssert(userAlias != nil, @"User alias missing");
-    
-    NSString *path = FWTListDevicesPath;
-    if (userAlias) {
-        NSString *userAliasInformation = [NSString stringWithFormat:FWTUserAliasFormat,userAlias];
-        path = [path stringByAppendingFormat:@"?%@",[userAliasInformation stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    }
-    [self _updateAuthenticationForPath:path];
-    [self.httpSessionManager GET:path parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        if ([responseObject isKindOfClass:[NSArray class]]) {
-            success(responseObject != nil ? responseObject : @[]);
-        } else {
-            success(@[]);
-        }
-    } failure:[self _defaultFailureHandler:failure success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
-        success(@[]);
-    }]];
 }
 
 #pragma mark - Private Methods
 - (FWTAFNetworkingSuccessBlock) _defaultSuccessHandler:(FWTRequestManagerSuccessBlock)success
 {
-    return ^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    return ^(NSURLSessionTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             success(responseObject);
         } else {
@@ -146,7 +115,7 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 
 - (FWTAFNetworkingFailureBlock) _defaultFailureHandler:(FWTRequestManagerFailureBlock)failure success:(FWTRequestManagerSuccessBlock)success
 {
-    return ^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    return ^(NSURLSessionTask * _Nullable task, NSError * _Nonnull error) {
         NSHTTPURLResponse* response = (NSHTTPURLResponse*)task.response;
         if (response.statusCode == 200) {
             if (success) {
@@ -159,11 +128,14 @@ NSString * const FWTUserAliasFormat = @"user[alias]=%@";
 }
 
 - (void) _updateAuthenticationForPath:(NSString *)path
+                           httpMethod:(NSString *)httpMethod
 {
     NSDictionary *headers = [self.authenticator authHeadersForPath:path
-                                                        andHeaders:self.httpSessionManager.requestSerializer.HTTPRequestHeaders];
+                                                        httpMethod:httpMethod
+                                                        andHeaders:self.httpSessionManager.HTTPRequestHeaders];
     for (NSString *header in headers.keyEnumerator) {
-        [self.httpSessionManager.requestSerializer setValue:headers[header] forHTTPHeaderField:header];
+        [self.httpSessionManager setValue:headers[header]
+                       forHTTPHeaderField:header];
     }
 }
 

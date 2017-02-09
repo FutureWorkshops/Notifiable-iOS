@@ -11,14 +11,14 @@
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
 
-NSString * const FWTNotifiableUserInfoKey       = @"user";
-NSString * const FWTNotifiableDeviceTokenKey    = @"token";
-NSString * const FWTNotifiableProviderKey       = @"provider";
-NSString * const FWTNotifiableUserAliasKey      = @"alias";
-NSString * const FWTNotifiableLocaleKey         = @"locale";
-NSString * const FWTNotifiableNameKey           = @"name";
+NSString * const FWTNotifiableDeviceTokenKey       = @"token";
+NSString * const FWTNotifiableProviderKey          = @"provider";
+NSString * const FWTNotifiableUserAliasKey         = @"user_alias";
+NSString * const FWTNotifiableLocaleKey            = @"locale";
+NSString * const FWTNotifiableNameKey              = @"name";
+NSString * const FWTNotifiableCustomPropertiesKey  = @"custom_properties";
 
-NSString * const FWTNotifiableProvider          = @"apns";
+NSString * const FWTNotifiableProvider             = @"apns";
 
 @interface FWTRequesterManager ()
 
@@ -50,14 +50,16 @@ NSString * const FWTNotifiableProvider          = @"apns";
                               token:(NSData *)token
                                name:(NSString *)name
                              locale:(NSLocale *)locale
-                  deviceInformation:(NSDictionary *)deviceInformation
+                   customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                 platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     [self _registerDeviceWithUserAlias:userAlias
                                  token:token
                                   name:name
                                 locale:locale
-                     deviceInformation:deviceInformation
+                      customProperties:customProperties
+                    platformProperties:platformProperties
                               attempts:self.retryAttempts + 1
                          previousError:nil
                      completionHandler:handler];
@@ -68,7 +70,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                token:(NSData *)token
                 name:(NSString *)name
                locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
+    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+  platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
     completionHandler:(FWTDeviceTokenIdResponse)handler
 {
     [self _updateDevice:deviceTokenId
@@ -76,48 +79,33 @@ NSString * const FWTNotifiableProvider          = @"apns";
                   token:token
                    name:name
                  locale:locale
-      deviceInformation:deviceInformation
+       customProperties:customProperties
+     platformProperties:platformProperties
                attempts:self.retryAttempts + 1
           previousError:nil
       completionHandler:handler];
 }
 
 - (void)unregisterTokenId:(NSNumber *)deviceTokenId
-                userAlias:(NSString *)userAlias
         completionHandler:(FWTSimpleRequestResponse)handler
 {
     [self _unregisterToken:deviceTokenId
-                 userAlias:userAlias
               withAttempts:self.retryAttempts + 1
              previousError:nil
          completionHandler:handler];
 }
 
-- (void)markNotificationAsOpened:(NSNumber *)notificationId
-                         forUser:(NSString * _Nullable)userAlias
-                andDeviceTokenId:(NSNumber *)deviceTokenId
-           withCompletionHandler:(_Nullable FWTSimpleRequestResponse)handler
+- (void)markNotificationAsOpenedWithId:(NSNumber *)notificationId
+                         deviceTokenId:(NSNumber *)deviceTokenId
+                                  user:(NSString *)user
+                     completionHandler:(_Nullable FWTSimpleRequestResponse)handler
 {
-    NSMutableDictionary *requestParameters = [NSMutableDictionary dictionary];
-    [requestParameters setObject:notificationId forKey:@"localized_notification_id"];
-    [requestParameters setObject:deviceTokenId forKey:@"device_token_id"];
-    if (userAlias) {
-        [requestParameters addEntriesFromDictionary:@{@"user":@{@"alias":userAlias}}];
-    }
-    
-    [self _markNotificationAsOpenedWithParams:requestParameters
-                                     attempts:self.retryAttempts + 1
+    [self _markNotificationAsOpenedWithId:[notificationId stringValue]
+                            deviceTokenId:[deviceTokenId stringValue]
+                                     user:user
+                                 attempts:self.retryAttempts + 1
                                 previousError:nil
                             completionHandler:handler];
-}
-
-- (void)listDevicesOfUser:(NSString *)userAlias
-        completionHandler:(FWTDeviceListResponse)handler
-{
-    [self _listDevicesOfUser:userAlias
-                    attempts:self.retryAttempts + 1
-               previousError:nil
-           completionHandler:handler];
 }
 
 #pragma mark - Private
@@ -125,7 +113,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                          token:(NSData *)token
                                           name:(NSString *)name
                                         locale:(NSLocale *)locale
-                             deviceInformation:(NSDictionary *)deviceInformation
+                              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                            platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                              includingProvider:(BOOL)includeProvider
 {
     NSMutableDictionary *params;
@@ -138,7 +127,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
         [params setObject:name forKey:FWTNotifiableNameKey];
     }
     if (userAlias) {
-        [params addEntriesFromDictionary:@{FWTNotifiableUserInfoKey: @{FWTNotifiableUserAliasKey: userAlias}}];
+        [params addEntriesFromDictionary:@{FWTNotifiableUserAliasKey: userAlias}];
     }
     if (token) {
         [params setObject:[token fwt_notificationTokenString] forKey:FWTNotifiableDeviceTokenKey];
@@ -146,17 +135,26 @@ NSString * const FWTNotifiableProvider          = @"apns";
     if (locale) {
         [params setObject:[locale localeIdentifier] forKey:FWTNotifiableLocaleKey];
     }
-    if (deviceInformation) {
-        [params addEntriesFromDictionary:deviceInformation];
+    if (customProperties) {
+        NSError *error = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:customProperties options:0 error:&error];
+        if (error == nil && jsonData.length > 0) {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            [params setObject:jsonString forKey:FWTNotifiableCustomPropertiesKey];
+        }
     }
-    return [NSDictionary dictionaryWithDictionary:params];
+    if (platformProperties) {
+        [params setValuesForKeysWithDictionary:platformProperties];
+    }
+    return @{@"device_token": [NSDictionary dictionaryWithDictionary:params]};
 }
 
 - (void)_registerDeviceWithUserAlias:(NSString *)userAlias
                                token:(NSData *)token
                                 name:(NSString *)name
                               locale:(NSLocale *)locale
-                   deviceInformation:(NSDictionary *)deviceInformation
+                    customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                  platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                             attempts:(NSUInteger)attempts
                        previousError:(NSError *)previousError
                    completionHandler:(FWTDeviceTokenIdResponse)handler
@@ -182,7 +180,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                                         token:token
                                                          name:name
                                                        locale:locale
-                                            deviceInformation:deviceInformation
+                                             customProperties:customProperties
+                                           platformProperties:platformProperties
                                             includingProvider:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -193,7 +192,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                           token:token
                                            name:name
                                          locale:locale
-                              deviceInformation:deviceInformation
+                               customProperties:customProperties
+                             platformProperties:platformProperties
                                        attempts:(attempts - 1)
                                   previousError:previousError
                               completionHandler:handler];
@@ -216,7 +216,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                              token:token
                                               name:name
                                             locale:locale
-                                 deviceInformation:deviceInformation
+                                  customProperties:customProperties
+                                platformProperties:platformProperties
                                           attempts:(attempts - 1)
                                      previousError:error
                                  completionHandler:handler];
@@ -229,7 +230,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                 token:(NSData *)token
                  name:(NSString *)name
                locale:(NSLocale *)locale
-    deviceInformation:(NSDictionary *)deviceInformation
+     customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+   platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
              attempts:(NSUInteger)attempts
         previousError:(NSError *)previousError
     completionHandler:(FWTDeviceTokenIdResponse)handler
@@ -240,7 +242,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
              token != nil ||
              name != nil ||
              locale != nil ||
-             deviceInformation != nil, @"You need provid at least one updated parameter.");
+             customProperties != nil, @"You need provid at least one updated parameter.");
     
     if (attempts == 0){
         if(handler){
@@ -264,7 +266,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                                                         token:token
                                                          name:name
                                                        locale:locale
-                                            deviceInformation:deviceInformation
+                                             customProperties:customProperties
+                                           platformProperties:platformProperties
                                             includingProvider:NO];
     
     __weak typeof(self) weakSelf = self;
@@ -276,7 +279,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                            token:token
                             name:name
                           locale:locale
-               deviceInformation:deviceInformation
+                customProperties:customProperties
+              platformProperties:platformProperties
                         attempts:(attempts - 1)
                    previousError:previousError
                completionHandler:handler];
@@ -303,7 +307,8 @@ NSString * const FWTNotifiableProvider          = @"apns";
                               token:token
                                name:name
                              locale:locale
-                  deviceInformation:deviceInformation
+                   customProperties:customProperties
+                 platformProperties:platformProperties
                            attempts:(attempts - 1)
                       previousError:error
                   completionHandler:handler];
@@ -313,7 +318,6 @@ NSString * const FWTNotifiableProvider          = @"apns";
 
 
 - (void)_unregisterToken:(NSNumber *)deviceTokenId
-               userAlias:(NSString *)userAlias
             withAttempts:(NSUInteger)attempts
            previousError:(NSError *)previousError
        completionHandler:(FWTSimpleRequestResponse)handler
@@ -337,7 +341,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requester unregisterTokenId:deviceTokenId userAlias:userAlias success:^(NSDictionary * _Nullable response) {
+    [self.requester unregisterTokenId:deviceTokenId success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself.logger logMessage:@"Did unregister for push notifications"];
         if(handler){
@@ -352,7 +356,6 @@ NSString * const FWTNotifiableProvider          = @"apns";
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _unregisterToken:deviceTokenId
-                             userAlias:userAlias
                           withAttempts:(attempts - 1)
                          previousError:error
                      completionHandler:handler];
@@ -361,10 +364,12 @@ NSString * const FWTNotifiableProvider          = @"apns";
 }
 
 
-- (void)_markNotificationAsOpenedWithParams:(NSDictionary *)params
-                                   attempts:(NSUInteger)attempts
-                              previousError:(NSError *)error
-                          completionHandler:(FWTSimpleRequestResponse)handler
+- (void)_markNotificationAsOpenedWithId:(NSString *)notificationId
+                          deviceTokenId:(NSString *)deviceTokenId
+                                   user:(NSString *)user
+                               attempts:(NSUInteger)attempts
+                          previousError:(NSError *)error
+                      completionHandler:(FWTSimpleRequestResponse)handler
 {
     if (attempts == 0) {
         if (handler) {
@@ -374,7 +379,7 @@ NSString * const FWTNotifiableProvider          = @"apns";
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requester markNotificationAsOpenedWithParams:params success:^(NSDictionary * _Nullable response) {
+    [self.requester markNotificationAsOpenedWithId:notificationId deviceTokenId:deviceTokenId user:user success:^(NSDictionary * _Nullable response) {
         [weakSelf.logger logMessage:@"Notification flagged as opened"];
         if (handler) {
             handler(YES,nil);
@@ -385,66 +390,14 @@ NSString * const FWTNotifiableProvider          = @"apns";
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [weakSelf _markNotificationAsOpenedWithParams:params
-                                                 attempts:(attempts - 1)
-                                            previousError:error
-                                        completionHandler:handler];
+            [weakSelf _markNotificationAsOpenedWithId:notificationId
+                                        deviceTokenId:deviceTokenId
+                                                 user:user
+                                             attempts:(attempts - 1)
+                                        previousError:error
+                                    completionHandler:handler];
         });
     }];
-}
-
-- (void)_listDevicesOfUser:(NSString *)userAlias
-                  attempts:(NSUInteger)attempts
-             previousError:(NSError *)error
-        completionHandler:(FWTDeviceListResponse)handler
-{
-    if (attempts == 0) {
-        if (handler) {
-            handler(@[], [NSError fwt_errorWithUnderlyingError:error]);
-        }
-        return;
-    }
-    
-    if (userAlias.length == 0) {
-        if (handler) {
-            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return;
-    }
-    
-    __weak typeof(self) weakSelf = self;
-    [self.requester listDevicesOfUser:userAlias success:^(NSArray * _Nonnull response) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        
-        NSMutableArray *parsedResponse = [[NSMutableArray alloc] initWithCapacity:response.count];
-        
-        for (NSDictionary *element in response) {
-            FWTNotifiableDevice *device = [[FWTNotifiableDevice alloc] initWithUserName:userAlias dictionary:element];
-            if (device) {
-                [parsedResponse addObject:device];
-            } else {
-                [sself.logger logMessage:@"Received an invalid device: %@", element];
-            }
-        }
-        
-        [sself.logger logMessage:@"Got the list of devices"];
-        if (handler) {
-            handler([NSArray arrayWithArray:parsedResponse], nil);
-        }
-        
-    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        __strong typeof(weakSelf) sself = weakSelf;
-        [sself.logger logMessage:@"Failed to list devices"];
-        
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^{
-            [weakSelf _listDevicesOfUser:userAlias
-                                attempts:(attempts - 1)
-                           previousError:error
-                       completionHandler:handler];
-        });
-    }];
-    
 }
 
 @end

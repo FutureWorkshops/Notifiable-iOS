@@ -130,12 +130,13 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  
  @param name                A label for the device.
  @param locale              The locale of the device.
- @param deviceInformation   Aditional information about the device.
+ @param customProperties   Aditional information about the device.
  @param handler             Block called once that the operation is finished.
  */
 -(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
                                 locale:(NSLocale * _Nullable)locale
-                     deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                      customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                    platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Register device to a specific user
@@ -149,13 +150,14 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param deviceName  A label for the device.
  @param locale      The locale of the device.
  @param userAlias   The alias of the user in the server.
- @param deviceInformation   Aditional information about the device
+ @param customProperties   Aditional information about the device
  @param handler     Block called once that the operation is finished.
  */
 - (void)registerDeviceWithName:(NSString * _Nullable)deviceName
                      userAlias:(NSString *)userAlias
                         locale:(NSLocale * _Nullable)locale
-             deviceInformation:(NSDictionary * _Nullable)deviceInformation
+              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+            platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
           andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Update device information
@@ -198,11 +200,20 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 /**
  Update the device aditional informations
  
- @param deviceInformation   Aditional information about the device
+ @param customProperties   Aditional information about the device
  @param handler             Block called once that the operation is finished.
-*/
-- (void)updateDeviceInformation:(NSDictionary *)deviceInformation
-              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+ */
+- (void)updateCustomProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Update the device platform properties
+ 
+ @param platformProperties  Platform properties
+ @param handler             Block called once that the operation is finished.
+ */
+- (void)updatePlatformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
+               completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
  Update the informations of the device without change the user.
@@ -210,13 +221,14 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param token               New device token.
  @param deviceName          The name of the device
  @param locale              New device locale.
- @param deviceInformation   Aditional information about the device
+ @param customProperties   Aditional information about the device
  @param handler             Block called once that the operation is finished.
 */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
-                 location:(NSLocale * _Nullable)locale
-        deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                 locale:(NSLocale * _Nullable)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+       platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 /**
@@ -225,15 +237,16 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param token               New device token.
  @param deviceName          The name of the device
  @param locale              New device locale.
- @param deviceInformation   Aditional information about the device.
+ @param customProperties   Aditional information about the device.
  @param userAlias   The alias of the user in the server.
  @param handler             Block called once that the operation is finished.
  */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)name
                 userAlias:(NSString * _Nullable)userAlias
-                 location:(NSLocale * _Nullable)locale
-        deviceInformation:(NSDictionary * _Nullable)deviceInformation
+                 locale:(NSLocale * _Nullable)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+       platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
 
 #pragma mark - Device/user relationship
@@ -266,17 +279,6 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler Block called once that the operation is finished.
 */
 - (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
-
-#pragma mark - Device list
-/**
- List the devices related to the current device user.
- 
- @warning If the device is not registered, the server will not be called and the list will return empty.
- @warning If the device is anonymous, the server will not be called and only the current device will be included in the list.
- 
- @param handler Block called once that the operation is finished.
-*/
-- (void)listDevicesRelatedToUserWithCompletionHandler:(_Nullable FWTNotifiableListOperationCompletionHandler)handler;
 
 @end
 

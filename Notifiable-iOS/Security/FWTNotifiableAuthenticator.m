@@ -16,7 +16,7 @@ NSString * const FWTTimestampHeader = @"Date";
 NSString * const FWTContentTypeHeader = @"Content-Type";
 NSString * const FWTContentAcceptHeader = @"Content-Accept";
 
-NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
+NSString * const FWTDefaultContentType = @"application/json; charset=utf-8";
 
 @interface FWTNotifiableAuthenticator ()
 
@@ -50,6 +50,7 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
 }
 
 - (NSDictionary *) authHeadersForPath:(NSString *)path
+                           httpMethod:(NSString *)httpMethod
                            andHeaders:(NSDictionary <NSString *, NSString *>*)headers
 {
     NSString *contentType = headers[FWTContentTypeHeader];
@@ -60,6 +61,7 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
     NSDate *timestamp = [NSDate date];
     NSString* timestampString = [self.httpDateFormatter stringFromDate:timestamp];
     NSString* canonicalString = [self _canonicalStringForPath:path
+                                                   httpMethod:httpMethod
                                                   contentType:contentType
                                                 andDateString:timestampString];
     
@@ -76,12 +78,13 @@ NSString * const FWTDefaultContentType = @"application/x-www-form-urlencoded";
 #pragma mark - Private methods
 
 - (NSString *) _canonicalStringForPath:(NSString *)path
+                            httpMethod:(NSString *)httpMethod
                            contentType:(NSString *)contentType
                          andDateString:(NSString *)date
 {
     NSString* uri = [NSString stringWithFormat:@"/%@", path];
     
-    return [NSString stringWithFormat:@"%@,,%@,%@",contentType, uri, date];
+    return [NSString stringWithFormat:@"%@,%@,,%@,%@", httpMethod, contentType, uri, date];
 }
 
 - (NSString *) _hmacHashForString:(NSString *)string

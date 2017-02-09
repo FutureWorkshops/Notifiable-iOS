@@ -135,46 +135,4 @@
     XCTAssertNil(self.manager.currentDevice.user);
 }
 
-- (void) testListDevices {
-    [self registerAnonymousDeviceWithTokenId:self.deviceTokenId andError:nil onManager:self.manager andRquesterMock:self.requesterManagerMock];
-    [self _stubDeviceList];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
-    [self.manager listDevicesRelatedToUserWithCompletionHandler:^(NSArray<FWTNotifiableDevice *> * _Nullable devices, NSError * _Nullable error) {
-        XCTAssertNotNil(devices);
-        XCTAssertNil(error);
-        XCTAssertEqual(devices.count, 1);
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:1 handler:nil];
-}
-
-- (void) testListDevicesUser {
-    [self registerDeviceWithTokenId:self.deviceTokenId error:nil andUserAlias:@"user" onManager:self.manager andRquesterMock:self.requesterManagerMock];
-    [self _stubDeviceList];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"associate"];
-    [self.manager listDevicesRelatedToUserWithCompletionHandler:^(NSArray<FWTNotifiableDevice *> * _Nullable devices, NSError * _Nullable error) {
-        XCTAssertNotNil(devices);
-        XCTAssertNil(error);
-        XCTAssertEqual(devices.count, 3);
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:1 handler:nil];
-}
-
-- (void) _stubDeviceList {
-    FWTNotifiableDevice *device = [[FWTNotifiableDevice alloc] initWithToken:[NSData data] tokenId:self.deviceTokenId andLocale:[NSLocale currentLocale]];
-    NSArray *responseArray = @[device, device, device];
-    
-    void(^block)(NSInvocation *) = ^(NSInvocation * invocation) {
-        FWTDeviceListResponse response;
-        [invocation getArgument:&response atIndex:3];
-        if (response) {
-            response(responseArray, nil);
-        }
-    };
-    
-    OCMStub([self.requesterManagerMock listDevicesOfUser:OCMOCK_ANY
-                                       completionHandler:OCMOCK_ANY]).andDo(block);
-}
-
 @end

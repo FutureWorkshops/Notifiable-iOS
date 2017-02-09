@@ -1,39 +1,24 @@
 PODS:
-  - AFNetworking (3.0.4):
-    - AFNetworking/NSURLSession (= 3.0.4)
-    - AFNetworking/Reachability (= 3.0.4)
-    - AFNetworking/Security (= 3.0.4)
-    - AFNetworking/Serialization (= 3.0.4)
-    - AFNetworking/UIKit (= 3.0.4)
-  - AFNetworking/NSURLSession (3.0.4):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.0.4)
-  - AFNetworking/Security (3.0.4)
-  - AFNetworking/Serialization (3.0.4)
-  - AFNetworking/UIKit (3.0.4):
-    - AFNetworking/NSURLSession
   - Keys (1.0.0)
-  - Notifiable-iOS (0.1.3):
-    - AFNetworking (~> 3.0.4)
+  - Notifiable (0.3.0)
   - SVProgressHUD (1.1.3)
 
 DEPENDENCIES:
   - Keys (from `Pods/CocoaPodsKeys`)
-  - Notifiable-iOS (from `..`)
+  - Notifiable (from `..`)
   - SVProgressHUD (~> 1.1)
 
 EXTERNAL SOURCES:
   Keys:
     :path: Pods/CocoaPodsKeys
-  Notifiable-iOS:
+  Notifiable:
     :path: ".."
 
 SPEC CHECKSUMS:
-  AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
-  Keys: 7d2ff6ff42f6903358267ce56e9392f83c31acfe
-  Notifiable-iOS: ba741029b0a0d5604b906152f7cd5c6b1589f9b2
+  Keys: 9c35bf00f612ee1d48556f4a4b9b4551e224e90f
+  Notifiable: 7bf817ccdf4d576476c3495e8c1d8340efc488b2
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 12237b42a2e8bfab91870ad14ae9ecbd029c2fd2
+
+COCOAPODS: 1.1.1

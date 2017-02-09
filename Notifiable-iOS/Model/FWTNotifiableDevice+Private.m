@@ -8,67 +8,84 @@
 
 @implementation FWTNotifiableDevice (Private)
 
-- (instancetype) deviceWithToken:(NSData *)token
+- (instancetype)deviceWithToken:(NSData *)token
 {
     return [[FWTNotifiableDevice alloc] initWithToken:token
                                               tokenId:self.tokenId
                                                locale:self.locale
                                                  user:self.user
                                                  name:self.name
-                                          information:self.information];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
-- (instancetype) deviceWithToken:(NSData *)token
-                       andLocale:(NSLocale *)locale
+- (instancetype)deviceWithToken:(NSData *)token
+                         locale:(NSLocale *)locale
 {
     return [[FWTNotifiableDevice alloc] initWithToken:token
                                               tokenId:self.tokenId
                                                locale:locale
                                                  user:self.user
                                                  name:self.name
-                                          information:self.information];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
-- (instancetype) deviceWithUser:(NSString *)user
-                           name:(NSString *)name
-                 andInformation:(NSDictionary *)deviceInformation
+- (instancetype)deviceWithUser:(NSString *)user
+                          name:(NSString *)name
+              customProperties:(NSDictionary<NSString *, id> *)customProperties
 {
     return [[FWTNotifiableDevice alloc] initWithToken:self.token
                                               tokenId:self.tokenId
                                                locale:self.locale
                                                  user:user
                                                  name:name
-                                          information:deviceInformation];
+                                     customProperties:customProperties
+                                   platformProperties:self.platformProperties];
 }
 
-- (instancetype) deviceWithUser:(NSString *)user
+- (instancetype)deviceWithUser:(NSString *)user
 {
     return [[FWTNotifiableDevice alloc] initWithToken:self.token
                                               tokenId:self.tokenId
                                                locale:self.locale
                                                  user:user
                                                  name:self.name
-                                          information:self.information];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
-- (instancetype) deviceWithName:(NSString *)name
+- (instancetype)deviceWithName:(NSString *)name
 {
     return [[FWTNotifiableDevice alloc] initWithToken:self.token
                                               tokenId:self.tokenId
                                                locale:self.locale
                                                  user:self.user
                                                  name:name
-                                          information:self.information];
+                                     customProperties:self.customProperties
+                                   platformProperties:self.platformProperties];
 }
 
-- (instancetype) deviceWithInformation:(NSDictionary *)deviceInformation
+- (instancetype)deviceWithCustomProperties:(NSDictionary *)customProperties
 {
     return [[FWTNotifiableDevice alloc] initWithToken:self.token
                                               tokenId:self.tokenId
                                                locale:self.locale
                                                  user:self.user
                                                  name:self.name
-                                          information:deviceInformation];
+                                     customProperties:customProperties
+                                   platformProperties:self.platformProperties];
+}
+
+- (instancetype)deviceWithPlatformProperties:(NSDictionary<NSString *,id> *)platformProperties
+{
+    return [[FWTNotifiableDevice alloc] initWithToken:self.token
+                                              tokenId:self.tokenId
+                                               locale:self.locale
+                                                 user:self.user
+                                                 name:self.name
+                                     customProperties:self.customProperties
+                                   platformProperties:platformProperties];
 }
 
 @end

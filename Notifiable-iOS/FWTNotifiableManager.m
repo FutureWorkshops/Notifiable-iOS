@@ -18,6 +18,7 @@ NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDe
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
 
+static NSHashTable *managerListeners;
 static NSHashTable *listeners;
 static NSData * tokenDataBuffer;
 
@@ -53,7 +54,11 @@ static NSData * tokenDataBuffer;
                                                                andAuthenticator:authenticator];
         self->_requestManager = [[FWTRequesterManager alloc] initWithRequester:requester];
         self->_deviceTokenData = tokenDataBuffer;
-        [FWTNotifiableManager registerManagerListener:self];
+        
+        // register self as listener
+        [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+            [managerTable addObject:self];
+        }];
     }
     return self;
 }
@@ -66,12 +71,21 @@ static NSData * tokenDataBuffer;
     return listeners;
 }
 
-+ (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table))block
++ (NSHashTable *)managerListenerTable
+{
+    if (managerListeners == nil) {
+        managerListeners = [NSHashTable weakObjectsHashTable];
+    }
+    return managerListeners;
+}
+
++ (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table, NSHashTable *managerTable))block
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSHashTable *table = [FWTNotifiableManager listenerTable];
+        NSHashTable *managerTable = [FWTNotifiableManager managerListenerTable];
         @synchronized(table) {
-            block(table);
+            block(table, managerTable);
         }
     });
 }
@@ -161,7 +175,7 @@ static NSData * tokenDataBuffer;
 
 + (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener
 {
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         if (![table containsObject:listener]) {
             [table addObject:listener];
         }
@@ -170,7 +184,7 @@ static NSData * tokenDataBuffer;
 
 + (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener
 {
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         if ([table containsObject:listener]) {
             [table removeObject:listener];
         }
@@ -180,11 +194,17 @@ static NSData * tokenDataBuffer;
 + (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
 {
     tokenDataBuffer = deviceToken;
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
-        for (id object in table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithObject)(id) = ^(id object) {
             if ([object conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [object respondsToSelector:@selector(applicationDidRegisterForRemoteNotificationsWithToken:)]) {
                 [object applicationDidRegisterForRemoteNotificationsWithToken:deviceToken];
             }
+        };
+        for (id object in managerTable) {
+            performWithObject(object);
+        }
+        for (id object in table) {
+            performWithObject(object);
         }
     }];
 }
@@ -193,7 +213,8 @@ static NSData * tokenDataBuffer;
 
 -(void)registerAnonymousDeviceWithName:(NSString *)name
                                 locale:(NSLocale *)locale
-                     deviceInformation:(NSDictionary *)deviceInformation
+                      customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                    platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   andCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     NSData *token = self.deviceTokenData;
@@ -212,12 +233,13 @@ static NSData * tokenDataBuffer;
                                                token:token
                                                 name:name
                                               locale:(locale ?: [NSLocale fwt_autoupdatingCurrentLocale])
-                                   deviceInformation:deviceInformation
+                                    customProperties:customProperties
+                                  platformProperties:platformProperties
                                    completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                                        __strong typeof(weakSelf) sself = weakSelf;
                                        sself.currentDevice = nil;
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
-                                       sself.currentDevice = [sself.currentDevice deviceWithInformation:deviceInformation];
+                                       sself.currentDevice = [sself.currentDevice deviceWithCustomProperties:customProperties];
                                        [sself _notifyNewDevice:sself.currentDevice withError:error];
                                        if (handler) {
                                            handler(sself.currentDevice, error);
@@ -228,7 +250,8 @@ static NSData * tokenDataBuffer;
 - (void)registerDeviceWithName:(NSString *)name
                      userAlias:(NSString *)userAlias
                         locale:(NSLocale *)locale
-             deviceInformation:(NSDictionary *)deviceInformation
+              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+            platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
           andCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     NSAssert(userAlias != nil && userAlias.length > 0, @"To register a non anonymous device, a user alias need to be provided!");
@@ -248,12 +271,13 @@ static NSData * tokenDataBuffer;
                                                token:token
                                                 name:name
                                               locale:(locale ?: [NSLocale fwt_autoupdatingCurrentLocale])
-                                   deviceInformation:deviceInformation
+                                    customProperties:customProperties
+                                  platformProperties:platformProperties
                                    completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                                        __strong typeof(weakSelf) sself = weakSelf;
                                        sself.currentDevice = nil;
                                        [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
-                                       sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name andInformation:deviceInformation];
+                                       sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name customProperties:customProperties];
                                        [sself _notifyNewDevice:sself.currentDevice withError:error];
                                        if (handler) {
                                            handler(sself.currentDevice, error);
@@ -266,8 +290,9 @@ static NSData * tokenDataBuffer;
     [self updateDeviceToken:nil
                  deviceName:nil
                   userAlias:self.currentDevice.user
-                   location:locale
-          deviceInformation:nil
+                     locale:locale
+           customProperties:nil
+         platformProperties:nil
           completionHandler:handler];
 }
 
@@ -276,8 +301,9 @@ static NSData * tokenDataBuffer;
     [self updateDeviceToken:token
                  deviceName:nil
                   userAlias:self.currentDevice.user
-                   location:nil
-          deviceInformation:nil
+                   locale:nil
+           customProperties:nil
+         platformProperties:nil
           completionHandler:handler];
 }
 
@@ -286,8 +312,9 @@ static NSData * tokenDataBuffer;
     [self updateDeviceToken:token
                  deviceName:nil
                   userAlias:self.currentDevice.user
-                   location:locale
-          deviceInformation:nil
+                   locale:locale
+           customProperties:nil
+         platformProperties:nil
           completionHandler:handler];
 }
 
@@ -297,45 +324,62 @@ static NSData * tokenDataBuffer;
     [self updateDeviceToken:nil
                  deviceName:name
                   userAlias:self.currentDevice.user
-                   location:nil
-          deviceInformation:nil
+                     locale:nil
+           customProperties:nil
+         platformProperties:nil
           completionHandler:handler];
 }
 
-- (void)updateDeviceInformation:(NSDictionary *)deviceInformation
-              completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+- (void)updateCustomProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:nil
                  deviceName:nil
                   userAlias:self.currentDevice.user
-                   location:nil
-          deviceInformation:deviceInformation
+                     locale:nil
+           customProperties:customProperties
+         platformProperties:nil
+          completionHandler:handler];
+}
+
+- (void)updatePlatformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
+                completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+{
+    [self updateDeviceToken:nil
+                 deviceName:nil
+                  userAlias:self.currentDevice.user
+                     locale:nil
+           customProperties:nil
+         platformProperties:platformProperties
           completionHandler:handler];
 }
 
 - (void)updateDeviceToken:(NSData *)token
                deviceName:(NSString *)name
-                 location:(NSLocale *)locale
-        deviceInformation:(NSDictionary *)deviceInformation
+                 locale:(NSLocale *)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+       platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
     [self updateDeviceToken:token
                  deviceName:name
                   userAlias:self.currentDevice.user
-                   location:locale
-          deviceInformation:deviceInformation
+                   locale:locale
+           customProperties:customProperties
+         platformProperties:platformProperties
           completionHandler:handler];
 }
 
 - (void)updateDeviceToken:(NSData *)token
                deviceName:(NSString *)name
                 userAlias:(NSString *)userAlias
-                 location:(NSLocale *)locale
-        deviceInformation:(NSDictionary *)deviceInformation
+                 locale:(NSLocale *)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+       platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
-    NSAssert(token != nil || name != nil || userAlias != nil || locale != nil || deviceInformation != nil, @"The update method was called without any information to update.");
-    NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:deviceInformation:completionHandler: instead");
+    NSAssert(token != nil || name != nil || userAlias != nil || locale != nil || customProperties != nil, @"The update method was called without any information to update.");
+    NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:customProperties:completionHandler: instead");
     
     __weak typeof(self) weakSelf = self;
     [self.requestManager updateDevice:self.currentDevice.tokenId
@@ -343,7 +387,8 @@ static NSData * tokenDataBuffer;
                                 token:token
                                  name:name
                                locale:locale
-                    deviceInformation:deviceInformation
+                     customProperties:customProperties
+                   platformProperties:platformProperties
                     completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                         __strong typeof(weakSelf) sself = weakSelf;
                         [sself _handleDeviceRegisterWithToken:(token ? token : sself.currentDevice.token)
@@ -354,7 +399,7 @@ static NSData * tokenDataBuffer;
                         if (error == nil) {
                             sself.currentDevice = [sself.currentDevice deviceWithUser:(userAlias ? userAlias : sself.currentDevice.user)
                                                                                  name:(name ? name : sself.currentDevice.name)
-                                                                       andInformation:(deviceInformation ? deviceInformation : sself.currentDevice.information)];
+                                                                     customProperties:(customProperties ?: sself.currentDevice.customProperties)];
                         }
                         
                         if (handler) {
@@ -376,8 +421,9 @@ static NSData * tokenDataBuffer;
     
     [self registerAnonymousDeviceWithName:self.currentDevice.name
                                    locale:nil
-                        deviceInformation:nil
-                     andCompletionHandler:handler];
+                         customProperties:nil
+                       platformProperties:nil
+                    andCompletionHandler:handler];
 }
 
 - (void)associateDeviceToUser:(NSString *)userAlias
@@ -397,7 +443,8 @@ static NSData * tokenDataBuffer;
     [self registerDeviceWithName:self.currentDevice.name
                        userAlias:userAlias
                           locale:self.currentDevice.locale
-               deviceInformation:self.currentDevice.information
+                customProperties:self.currentDevice.customProperties
+              platformProperties:self.currentDevice.platformProperties
             andCompletionHandler:^(FWTNotifiableDevice * _Nullable device, NSError * _Nullable error) {
                    __strong typeof(weakSelf) sself = weakSelf;
                    [sself _handleDeviceRegisterWithToken:sself.currentDevice.token
@@ -425,7 +472,6 @@ static NSData * tokenDataBuffer;
     
     __weak typeof(self) weakSelf = self;
     [self.requestManager unregisterTokenId:self.currentDevice.tokenId
-                                 userAlias:self.currentDevice.user
                          completionHandler:^(BOOL success, NSError * _Nullable error) {
                              __strong typeof(weakSelf) sself = weakSelf;
                              if (success) {
@@ -437,18 +483,24 @@ static NSData * tokenDataBuffer;
 
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
-    NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
+    NSNumber *notificationID = notificationInfo[@"n_id"];
     
     if (notificationID == nil) {
         return NO;
     }
     
     NSDictionary *notificationCopy = [notificationInfo copy];
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
-        for(id listener in table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithListener)(id) = ^(id listener) {
             if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
                 [listener applicationDidReciveNotification:notificationCopy];
             }
+        };
+        for (id listener in managerTable) {
+            performWithListener(listener);
+        }
+        for(id listener in table) {
+            performWithListener(listener);
         }
     }];
     
@@ -458,7 +510,7 @@ static NSData * tokenDataBuffer;
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
            withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
-    NSNumber *notificationID = notificationInfo[@"localized_notification_id"];
+    NSNumber *notificationID = notificationInfo[@"n_id"];
     
     if (notificationID == nil) {
         if(handler) {
@@ -475,40 +527,15 @@ static NSData * tokenDataBuffer;
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requestManager markNotificationAsOpened:notificationID
-                                          forUser:self.currentDevice.user
-                                 andDeviceTokenId:self.currentDevice.tokenId
-                            withCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-                                if (handler) {
-                                    handler(weakSelf.currentDevice, error);
-                                }
-                            }];
+    [self.requestManager markNotificationAsOpenedWithId:notificationID
+                                          deviceTokenId:self.currentDevice.tokenId
+                                                   user:self.currentDevice.user
+                                      completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                          if (handler) {
+                                              handler(weakSelf.currentDevice, error);
+                                          }
+                                      }];
     return YES;
-}
-
-- (void)listDevicesRelatedToUserWithCompletionHandler:(FWTNotifiableListOperationCompletionHandler)handler
-{
-    NSAssert(self.currentDevice != nil, @"The device need to be registered to perform this method.");
-    
-    if (self.currentDevice == nil) {
-        if (handler) {
-            handler(@[], [NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return;
-    }
-    
-    if (self.currentDevice.user.length == 0) {
-        if (handler) {
-            handler(@[self.currentDevice], nil);
-        }
-        return;
-    }
-    
-    [self.requestManager listDevicesOfUser:self.currentDevice.user completionHandler:^(NSArray<FWTNotifiableDevice *> * _Nonnull devices, NSError * _Nullable error) {
-        if(handler) {
-            handler(devices, error);
-        }
-    }];
 }
 
 #pragma mark - FWTManagerListener
@@ -542,7 +569,7 @@ static NSData * tokenDataBuffer;
         if (self.currentDevice == nil) {
             self.currentDevice = [[FWTNotifiableDevice alloc] initWithToken:token tokenId:deviceTokenId andLocale:locale];
         } else {
-            self.currentDevice = [self.currentDevice deviceWithToken:token andLocale:locale];
+            self.currentDevice = [self.currentDevice deviceWithToken:token locale:locale];
         }
         self.currentDevice = [self.currentDevice deviceWithName:name];
     }
@@ -550,10 +577,10 @@ static NSData * tokenDataBuffer;
 
 - (void) _notifyNewDevice:(FWTNotifiableDevice *)device withError:(NSError *)error
 {
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table) {
-        for (id listener in table) {
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithListener)(id) = ^(id listener) {
             if (![listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)]) {
-                continue;
+                return;
             }
             
             if (error) {
@@ -565,6 +592,12 @@ static NSData * tokenDataBuffer;
                     [listener notifiableManager:self didRegisterDevice:device];
                 }
             }
+        };
+        for (id listener in managerTable) {
+            performWithListener(listener);
+        }
+        for (id listener in table) {
+            performWithListener(listener);
         }
     }];
 }

@@ -21,7 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** The name of the this device on the server */
 @property (nonatomic, copy, readonly, nullable) NSString *name;
 /** Other saved informations about the device */
-@property (nonatomic, copy, readonly, nullable) NSDictionary *information;
+@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id> *customProperties;
+/** Other saved platform protperties */
+@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id> *platformProperties;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithToken:(NSData *)deviceToken
@@ -33,7 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
                        locale:(NSLocale *)locale
                          user:(NSString * _Nullable)user
                          name:(NSString * _Nullable)name
-                  information:(NSDictionary * _Nullable)information NS_DESIGNATED_INITIALIZER;
+             customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+           platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties NS_DESIGNATED_INITIALIZER;
 
 @end
 

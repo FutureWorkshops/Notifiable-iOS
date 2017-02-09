@@ -17,9 +17,6 @@
 		783AED251C57D2AA00066EE7 /* FWTNSErrorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */; };
 		783AED321C57E9E500066EE7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632FC1C50FD9E0074DE3F /* SystemConfiguration.framework */; };
 		783AED391C57E9EA00066EE7 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632F61C50FD440074DE3F /* MobileCoreServices.framework */; };
-		783AED521C57FA8B00066EE7 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 783AED451C57FA7800066EE7 /* AFNetworking.framework */; };
-		783AED531C57FB1300066EE7 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 783AED451C57FA7800066EE7 /* AFNetworking.framework */; };
-		783AED541C57FB1700066EE7 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 783AED451C57FA7800066EE7 /* AFNetworking.framework */; };
 		787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* FWTRegisterTests.m */; };
 		7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
 		787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
@@ -49,6 +46,11 @@
 		78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */; };
 		78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = 78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */; };
 		788ED7171C527A2600694DC7 /* FWTUnregisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */; };
+		78B5D2741E4CC8DF00C585FB /* FWTHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2731E4CC8DF00C585FB /* FWTHTTPSessionManager.m */; };
+		78B5D2841E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2831E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m */; };
+		78B5D2871E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2861E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m */; };
+		78B5D2891E4CFBB500C585FB /* FWTHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D2831E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m */; };
+		78B5D28C1E4D04F900C585FB /* FWTSessionTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B5D28B1E4D04F900C585FB /* FWTSessionTaskDelegate.m */; };
 		78BC4CC31D78602C0031B405 /* NSDate+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = ADDC47BB1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m */; };
 		78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */; };
 		8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119CC17E9B9D1000CD6F3 /* Foundation.framework */; };
@@ -57,55 +59,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		783AED441C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 299522391BBF104D00859F49;
-			remoteInfo = "AFNetworking iOS";
-		};
-		783AED461C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 299522651BBF129200859F49;
-			remoteInfo = "AFNetworking watchOS";
-		};
-		783AED481C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 299522771BBF136400859F49;
-			remoteInfo = "AFNetworking OS X";
-		};
-		783AED4A1C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2987B0A51BC408A200179A4C;
-			remoteInfo = "AFNetworking tvOS";
-		};
-		783AED4C1C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 298D7C3B1BC2C79500FD3B3E;
-			remoteInfo = "AFNetworking iOS Tests";
-		};
-		783AED4E1C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 298D7C4A1BC2C7B200FD3B3E;
-			remoteInfo = "AFNetworking Mac OS X Tests";
-		};
-		783AED501C57FA7800066EE7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2987B0AE1BC408A200179A4C;
-			remoteInfo = "AFNetworking tvOS Tests";
-		};
 		7876324B1C50EC220074DE3F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8E4119C117E9B9D1000CD6F3 /* Project object */;
@@ -178,7 +131,7 @@
 
 /* Begin PBXFileReference section */
 		65598A0F187C59EB00C46A51 /* FWTNotifiableManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableManager.h; path = "Notifiable-iOS/FWTNotifiableManager.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableManager.m; path = "Notifiable-iOS/FWTNotifiableManager.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableManager.m; path = "Notifiable-iOS/FWTNotifiableManager.m"; sourceTree = SOURCE_ROOT; };
 		7837C7BC1C4D63A4007B2F61 /* NSData+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "NSData+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSData+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7837C7BF1C4D7258007B2F61 /* NSError+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "NSError+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -187,7 +140,6 @@
 		783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSLocale+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSLocale+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTRequestIntegrationTests.m; sourceTree = "<group>"; };
 		783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTNSErrorTests.m; sourceTree = "<group>"; };
-		783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AFNetworking.xcodeproj; path = "Support Libraries/AFNetworking/AFNetworking.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSUnitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		787632471C50EC220074DE3F /* FWTRegisterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTRegisterTests.m; sourceTree = "<group>"; };
 		787632491C50EC220074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -205,12 +157,12 @@
 		787633161C5165E10074DE3F /* FWTDeviceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTDeviceTests.m; sourceTree = "<group>"; };
 		787633181C5169D10074DE3F /* FWTHTTPRequesterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTHTTPRequesterTests.m; sourceTree = "<group>"; };
 		7876331A1C51739E0074DE3F /* FWTUpdateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTUpdateTests.m; sourceTree = "<group>"; };
-		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTHTTPRequester.h; path = "Notifiable-iOS/Network/FWTHTTPRequester.h"; sourceTree = SOURCE_ROOT; };
 		7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTHTTPRequester.m; path = "Notifiable-iOS/Network/FWTHTTPRequester.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7879F7241C49549400C6176C /* FWTNotifiableAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableAuthenticator.h; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableAuthenticator.m; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		78843C661C4E55360044CE25 /* FWTRequesterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTRequesterManager.h; path = "Notifiable-iOS/Network/FWTRequesterManager.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		78843C671C4E55360044CE25 /* FWTRequesterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTRequesterManager.m; path = "Notifiable-iOS/Network/FWTRequesterManager.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		7879F7251C49549500C6176C /* FWTNotifiableAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableAuthenticator.m; path = "Notifiable-iOS/Security/FWTNotifiableAuthenticator.m"; sourceTree = SOURCE_ROOT; };
+		78843C661C4E55360044CE25 /* FWTRequesterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTRequesterManager.h; path = "Notifiable-iOS/Network/FWTRequesterManager.h"; sourceTree = SOURCE_ROOT; };
+		78843C671C4E55360044CE25 /* FWTRequesterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTRequesterManager.m; path = "Notifiable-iOS/Network/FWTRequesterManager.m"; sourceTree = SOURCE_ROOT; };
 		78843C6B1C4E657B0044CE25 /* FWTNotifiableLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTNotifiableLogger.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78843C6D1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTDefaultNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTDefaultNotifiableLogger.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78843C6E1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTDefaultNotifiableLogger.m; path = "Notifiable-iOS/Logger/FWTDefaultNotifiableLogger.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -221,6 +173,14 @@
 		78843C831C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "FWTNotifiableDevice+Parser.h"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Parser.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "FWTNotifiableDevice+Parser.m"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Parser.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTUnregisterTests.m; sourceTree = "<group>"; };
+		78B5D2721E4CC8DF00C585FB /* FWTHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPSessionManager.h; path = "Notifiable-iOS/Network/FWTHTTPSessionManager.h"; sourceTree = SOURCE_ROOT; };
+		78B5D2731E4CC8DF00C585FB /* FWTHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPSessionManager.m; path = "Notifiable-iOS/Network/FWTHTTPSessionManager.m"; sourceTree = SOURCE_ROOT; };
+		78B5D2821E4CD2BE00C585FB /* FWTHTTPRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTHTTPRequestSerializer.h; path = "Notifiable-iOS/Network/FWTHTTPRequestSerializer.h"; sourceTree = SOURCE_ROOT; };
+		78B5D2831E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTHTTPRequestSerializer.m; path = "Notifiable-iOS/Network/FWTHTTPRequestSerializer.m"; sourceTree = SOURCE_ROOT; };
+		78B5D2851E4CD34400C585FB /* FWTHTTPMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FWTHTTPMethod.h; path = "Notifiable-iOS/Network/FWTHTTPMethod.h"; sourceTree = SOURCE_ROOT; };
+		78B5D2861E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTHTTPRequestSerializerTests.m; sourceTree = "<group>"; };
+		78B5D28A1E4D04F900C585FB /* FWTSessionTaskDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTSessionTaskDelegate.h; path = "Notifiable-iOS/Network/FWTSessionTaskDelegate.h"; sourceTree = SOURCE_ROOT; };
+		78B5D28B1E4D04F900C585FB /* FWTSessionTaskDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FWTSessionTaskDelegate.m; path = "Notifiable-iOS/Network/FWTSessionTaskDelegate.m"; sourceTree = SOURCE_ROOT; };
 		78CC4C421C47E62A0048A3A2 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Framework/module.modulemap; sourceTree = SOURCE_ROOT; };
 		78CC4C431C47E96C0048A3A2 /* FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FWTNotifiable.h; path = Framework/FWTNotifiable.h; sourceTree = SOURCE_ROOT; };
 		78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTUserOperationTests.m; sourceTree = "<group>"; };
@@ -237,7 +197,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783AED531C57FB1300066EE7 /* AFNetworking.framework in Frameworks */,
 				787632FD1C50FD9E0074DE3F /* SystemConfiguration.framework in Frameworks */,
 				787632FA1C50FD610074DE3F /* MobileCoreServices.framework in Frameworks */,
 				787632F51C50EEAC0074DE3F /* OCMock.framework in Frameworks */,
@@ -249,7 +208,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783AED541C57FB1700066EE7 /* AFNetworking.framework in Frameworks */,
 				783AED391C57E9EA00066EE7 /* MobileCoreServices.framework in Frameworks */,
 				783AED321C57E9E500066EE7 /* SystemConfiguration.framework in Frameworks */,
 				787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */,
@@ -260,7 +218,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783AED521C57FA8B00066EE7 /* AFNetworking.framework in Frameworks */,
 				8E4119F617E9BC53000CD6F3 /* UIKit.framework in Frameworks */,
 				8E4119CD17E9B9D1000CD6F3 /* Foundation.framework in Frameworks */,
 			);
@@ -284,20 +241,6 @@
 			name = Category;
 			sourceTree = "<group>";
 		};
-		783AED3B1C57FA7800066EE7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				783AED451C57FA7800066EE7 /* AFNetworking.framework */,
-				783AED471C57FA7800066EE7 /* AFNetworking.framework */,
-				783AED491C57FA7800066EE7 /* AFNetworking.framework */,
-				783AED4B1C57FA7800066EE7 /* AFNetworking.framework */,
-				783AED4D1C57FA7800066EE7 /* AFNetworking iOS Tests.xctest */,
-				783AED4F1C57FA7800066EE7 /* AFNetworking Mac OS X Tests.xctest */,
-				783AED511C57FA7800066EE7 /* AFNetworking tvOS Tests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		787632461C50EC220074DE3F /* Notifiable-iOSUnitTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,6 +258,7 @@
 				788ED7161C527A2600694DC7 /* FWTUnregisterTests.m */,
 				78FC21091C52AE6C004E41DB /* FWTUserOperationTests.m */,
 				783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */,
+				78B5D2861E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m */,
 			);
 			path = "Notifiable-iOSUnitTests";
 			sourceTree = "<group>";
@@ -356,6 +300,13 @@
 				78843C671C4E55360044CE25 /* FWTRequesterManager.m */,
 				7879F6EA1C494D8E00C6176C /* FWTHTTPRequester.h */,
 				7879F6EB1C494D8E00C6176C /* FWTHTTPRequester.m */,
+				78B5D2721E4CC8DF00C585FB /* FWTHTTPSessionManager.h */,
+				78B5D2731E4CC8DF00C585FB /* FWTHTTPSessionManager.m */,
+				78B5D2821E4CD2BE00C585FB /* FWTHTTPRequestSerializer.h */,
+				78B5D2831E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m */,
+				78B5D2851E4CD34400C585FB /* FWTHTTPMethod.h */,
+				78B5D28A1E4D04F900C585FB /* FWTSessionTaskDelegate.h */,
+				78B5D28B1E4D04F900C585FB /* FWTSessionTaskDelegate.m */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -429,7 +380,6 @@
 		8E4119CE17E9B9D1000CD6F3 /* Notifiable-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */,
 				78843C701C4E9AF00044CE25 /* Model */,
 				78843C6A1C4E65610044CE25 /* Logger */,
 				7837C7BB1C4D637E007B2F61 /* Category */,
@@ -537,10 +487,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 783AED3B1C57FA7800066EE7 /* Products */;
-					ProjectRef = 783AED3A1C57FA7800066EE7 /* AFNetworking.xcodeproj */;
-				},
-				{
 					ProductGroup = 787632E11C50EE950074DE3F /* Products */;
 					ProjectRef = 787632E01C50EE950074DE3F /* OCMock.xcodeproj */;
 				},
@@ -555,55 +501,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		783AED451C57FA7800066EE7 /* AFNetworking.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AFNetworking.framework;
-			remoteRef = 783AED441C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		783AED471C57FA7800066EE7 /* AFNetworking.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AFNetworking.framework;
-			remoteRef = 783AED461C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		783AED491C57FA7800066EE7 /* AFNetworking.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AFNetworking.framework;
-			remoteRef = 783AED481C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		783AED4B1C57FA7800066EE7 /* AFNetworking.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AFNetworking.framework;
-			remoteRef = 783AED4A1C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		783AED4D1C57FA7800066EE7 /* AFNetworking iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "AFNetworking iOS Tests.xctest";
-			remoteRef = 783AED4C1C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		783AED4F1C57FA7800066EE7 /* AFNetworking Mac OS X Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "AFNetworking Mac OS X Tests.xctest";
-			remoteRef = 783AED4E1C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		783AED511C57FA7800066EE7 /* AFNetworking tvOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "AFNetworking tvOS Tests.xctest";
-			remoteRef = 783AED501C57FA7800066EE7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		787632EA1C50EE950074DE3F /* OCMock.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -672,6 +569,7 @@
 			files = (
 				78FC210A1C52AE6C004E41DB /* FWTUserOperationTests.m in Sources */,
 				787633001C5115900074DE3F /* FWTNotifiableDevice+Parser.m in Sources */,
+				78B5D2891E4CFBB500C585FB /* FWTHTTPRequestSerializer.m in Sources */,
 				787633021C5115AF0074DE3F /* NSData+FWTNotifiable.m in Sources */,
 				787633101C51383B0074DE3F /* FWTTestCase.m in Sources */,
 				783AED221C57BF4800066EE7 /* NSLocale+FWTNotifiable.m in Sources */,
@@ -685,6 +583,7 @@
 				787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */,
 				78BC4CC31D78602C0031B405 /* NSDate+FWTNotifiable.m in Sources */,
 				788ED7171C527A2600694DC7 /* FWTUnregisterTests.m in Sources */,
+				78B5D2871E4CF38600C585FB /* FWTHTTPRequestSerializerTests.m in Sources */,
 				787633191C5169D10074DE3F /* FWTHTTPRequesterTests.m in Sources */,
 				787633131C51605C0074DE3F /* FWTAuthorizationTests.m in Sources */,
 			);
@@ -719,6 +618,9 @@
 				7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */,
 				783AED111C57AC9400066EE7 /* NSLocale+FWTNotifiable.m in Sources */,
 				7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */,
+				78B5D2841E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m in Sources */,
+				78B5D28C1E4D04F900C585FB /* FWTSessionTaskDelegate.m in Sources */,
+				78B5D2741E4CC8DF00C585FB /* FWTHTTPSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,9 +10,9 @@
 #import "FWTHTTPRequester.h"
 #import "FWTNotifiableAuthenticator.h"
 
-NSString * const FWTTestServerURL = @"http://fw-notifiable-staging2.herokuapp.com";
-NSString * const FWTTestServerAccessId = @"9wx22jXs_f5HVaayKWLs";
-NSString * const FWTTestServerSecretKey = @"AJpBYTZN2Jb++lwxwaRHXjfDvfiAPRyv6PzqW/u9lpXsuUpk31ctSxXO3Mq9dNls/hEQhOcPvtW0eNbTL1vE+g==";
+NSString * const FWTTestServerURL = @"https://notifiable.futureworkshops.com";
+NSString * const FWTTestServerAccessId = @"9zzf-xy_nB8g58agSaw_";
+NSString * const FWTTestServerSecretKey = @"pi7fIjOSZizZaG06owhnRR0a7JmR1Ntai7AK1QG3RUUZORq5tyM9uOl22g4UxwsdyN16VKDi5SFbEs5FI7L+GA==";
 
 NSString * const FWTToken = @"test";
 NSString * const FWTLocale = @"en";
@@ -204,59 +204,6 @@ NSString * const FWTUser = @"test_user";
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
-- (void) testListDeviceClientError
-{
-    NSString *invalidUser = [NSString stringWithFormat:@"%f",[NSDate date].timeIntervalSince1970];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Failure"];
-    [self.requester listDevicesOfUser:invalidUser success:^(NSArray * _Nonnull response) {
-        XCTAssertTrue(NO, @"The test shoudl fail");
-        [expectation fulfill];
-    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        XCTAssertNotNil(error);
-        XCTAssertEqual(responseCode, 404);
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-    
-    NSString *user = nil;
-    XCTAssertThrows([self.requester listDevicesOfUser:user success:nil failure:nil]);
-}
-
-- (void) testListDevice
-{
-    XCTestExpectation *expectation = [self expectationWithDescription:@"List device"];
-    [self.requester listDevicesOfUser:FWTUser success:^(NSArray * _Nonnull response) {
-        XCTAssertNotNil(response);
-        XCTAssertEqual(response.count, 0);
-        [expectation fulfill];
-    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        XCTAssertTrue(NO, @"This method should succed");
-    }];
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-    
-    expectation = [self expectationWithDescription:@"register"];
-    __block NSNumber *deviceTokenId;
-    [self _registerDeviceAnonymous:NO andPerformBlock:^(FWTHTTPRequester *requester, NSNumber *tokenId) {
-        deviceTokenId = tokenId;
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-    
-    expectation = [self expectationWithDescription:@"list"];
-    [self.requester listDevicesOfUser:FWTUser success:^(NSArray * _Nonnull response) {
-        XCTAssertNotNil(response);
-        XCTAssertGreaterThanOrEqual(response.count, 1);
-        [expectation fulfill];
-    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        XCTAssertTrue(NO, @"This method should succed");
-        [expectation fulfill];
-    }];
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-    
-    [self _unregisterDeviceTokenId:deviceTokenId withUser:FWTUser andFullfillExpectation:[self expectationWithDescription:@"unregister"]];
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-}
-
 - (void) _registerDeviceAnonymous:(BOOL)anonymous andPerformBlock:(void(^)(FWTHTTPRequester *requester, NSNumber *tokenId))block
 {
     NSString *name = [NSString stringWithFormat:@"test_%@", [UIDevice currentDevice].name];
@@ -283,14 +230,12 @@ NSString * const FWTUser = @"test_user";
 
 - (void) _unregisterDeviceTokenId:(NSNumber *)tokenId withUser:(NSString *)user andFullfillExpectation:(XCTestExpectation *)expectation
 {
-    [self.requester unregisterTokenId:tokenId
-                            userAlias:user
-                              success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
-                                  [expectation fulfill];
-                              } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-                                  XCTAssertTrue(NO, @"This method should succed");
-                                  [expectation fulfill];
-                              }];
+    [self.requester unregisterTokenId:tokenId success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
+        [expectation fulfill];
+    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+        XCTAssertTrue(NO, @"This method should succed");
+        [expectation fulfill];
+    }];
 }
 
 @end

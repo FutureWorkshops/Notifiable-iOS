@@ -16,11 +16,11 @@ class ViewController: UIViewController {
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:FWTNotifiableManager! = {
         let keys = SampleKeys()
-        guard let serverURL = NSURL(string: "http://fw-notifiable-staging.herokuapp.com/") else {
+        guard let serverURL = NSURL(string: "https://notifiable.futureworkshops.com/") else {
             return nil
         }
         
-        let manager = FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID(), secretKey: keys.fWTSecretKey(), didRegisterBlock: { [unowned self] (manager, token) -> Void in
+        let manager = FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, didRegisterBlock: { [unowned self] (manager, token) -> Void in
             self.registerCompleted?(token: token)
         }, andNotificationBlock: nil)
         manager.retryAttempts = 0
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     }
     
     func updateScreen() {
-        guard let information = self.manager.currentDevice?.information?["onsite"] as? NSNumber else {
+        guard let information = self.manager?.currentDevice?.customProperties?["onsite"] as? NSNumber else {
             onSiteSwitch.on = false
             return
         }
@@ -80,7 +80,7 @@ extension ViewController {
     
     private func _registerAnonymousToken(token:NSData) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerAnonymousDeviceWithName(deviceName, locale: nil, deviceInformation: nil) { (device, error) in
+        self.manager.registerAnonymousDeviceWithName(deviceName, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
@@ -91,7 +91,7 @@ extension ViewController {
     
     private func _registerToken(token:NSData, user:String) {
         let deviceName = UIDevice.currentDevice().name
-        self.manager.registerDeviceWithName(deviceName, userAlias: user, locale: nil, deviceInformation: nil) { (device, error) in
+        self.manager.registerDeviceWithName(deviceName, userAlias: user, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
@@ -171,7 +171,7 @@ extension ViewController {
         let onSite = sender.on
         let deviceInformation = ["onsite":NSNumber(bool: onSite)]
         SVProgressHUD.showWithStatus(nil)
-        self.manager.updateDeviceInformation(deviceInformation) { [weak self] (device, error) -> Void in
+        self.manager.updateCustomProperties(deviceInformation) { [weak self] (device, error) in
             if let error = error {
                 SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
             } else {
@@ -203,15 +203,6 @@ extension ViewController {
             } else {
                 SVProgressHUD.showSuccessWithStatus("Device unregistered")
             }
-        }
-    }
-}
-
-//MARK - List
-extension ViewController {
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let destination = segue.destinationViewController as? DeviceListTableViewController where segue.identifier == FWTDeviceListSegue {
-            destination.manager = self.manager
         }
     }
 }

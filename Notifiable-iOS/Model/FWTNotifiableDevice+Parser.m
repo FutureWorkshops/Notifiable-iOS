@@ -10,8 +10,6 @@
 
 - (instancetype)initWithUserName:(NSString *)userName dictionary:(NSDictionary*)dict
 {
-    NSMutableDictionary *mutableElement = [[NSMutableDictionary alloc] init];
-    
     NSNumber *tokenId = dict[@"id"];
     if ([tokenId isKindOfClass:[NSNull class]]) {
         return nil;
@@ -22,13 +20,31 @@
         name = nil;
     }
     
+    NSDictionary *customPropertiesDictionary = nil;
+    id customPropertiesObject = dict[@"custom_properties"];
+    if ([customPropertiesObject isKindOfClass:[NSNull class]]) {
+        customPropertiesDictionary = nil;
+    } else if ([customPropertiesObject isKindOfClass:[NSDictionary class]]) {
+        customPropertiesDictionary = customPropertiesObject;
+    } else if ([customPropertiesObject isKindOfClass:[NSString class]]) {
+        NSString *jsonString = customPropertiesObject;
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+        if (error == nil & jsonObject != nil && [jsonObject isKindOfClass:[NSDictionary class]]) {
+            customPropertiesDictionary = jsonObject;
+        }
+    }
+    
+    NSMutableDictionary<NSString *, id> *mutablePlatformProperties = [[NSMutableDictionary alloc] init];
+    NSSet *excludedKeysSet = [NSSet setWithArray:@[@"id", @"name", @"custom_properties"]];
     for (NSString *element in dict) {
-        if ([element isEqualToString:@"id"] || [element isEqualToString:@"name"]) {
+        if ([excludedKeysSet containsObject:element]) {
             continue;
         }
         id value = dict[element];
         if (![value isKindOfClass:[NSNull class]]) {
-            [mutableElement setValue:value forKey:element];
+            [mutablePlatformProperties setValue:value forKey:element];
         }
     }
     
@@ -37,7 +53,8 @@
                         locale:[NSLocale autoupdatingCurrentLocale]
                           user:userName
                           name:name
-                   information:[NSDictionary dictionaryWithDictionary:mutableElement]];
+              customProperties:[NSDictionary dictionaryWithDictionary:customPropertiesDictionary]
+            platformProperties:[NSDictionary dictionaryWithDictionary:mutablePlatformProperties]];
 }
 
 @end

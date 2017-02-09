@@ -5,9 +5,9 @@
 //
 
 #import "FWTHTTPRequester.h"
-#import <AFNetworking/AFHTTPSessionManager.h>
 #import "FWTNotifiableAuthenticator.h"
 #import "NSError+FWTNotifiable.h"
+#import "FWTHTTPSessionManager.h"
 
 typedef void(^FWTAFNetworkingSuccessBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
 typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
@@ -18,7 +18,7 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 @interface FWTHTTPRequester ()
 
-@property (nonatomic, strong) AFHTTPSessionManager *httpSessionManager;
+@property (nonatomic, strong) FWTHTTPSessionManager *httpSessionManager;
 @property (nonatomic, strong) FWTNotifiableAuthenticator *authenticator;
 
 @end
@@ -36,11 +36,10 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     return self;
 }
 
-- (AFHTTPSessionManager *)httpSessionManager
+- (FWTHTTPSessionManager *)httpSessionManager
 {
     if (!self->_httpSessionManager) {
-        self->_httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:self.baseUrl];
-        self->_httpSessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
+        self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl];
     }
     return self->_httpSessionManager;
 }
@@ -55,7 +54,6 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     
     [self.httpSessionManager POST:FWTDeviceTokensPath
                        parameters:params
-                         progress:nil
                           success:[self _defaultSuccessHandler:success]
                           failure:[self _defaultFailureHandler:failure success:success]];
 }
@@ -97,7 +95,6 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     [self _updateAuthenticationForPath:path httpMethod:@"POST"];
     [self.httpSessionManager POST:path
                        parameters:@{@"device_token_id": deviceTokenId}
-                         progress:nil
                           success:[self _defaultSuccessHandler:success]
                           failure:[self _defaultFailureHandler:failure success:success]];
 }
@@ -133,9 +130,10 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 {
     NSDictionary *headers = [self.authenticator authHeadersForPath:path
                                                         httpMethod:httpMethod
-                                                        andHeaders:self.httpSessionManager.requestSerializer.HTTPRequestHeaders];
+                                                        andHeaders:self.httpSessionManager.HTTPRequestHeaders];
     for (NSString *header in headers.keyEnumerator) {
-        [self.httpSessionManager.requestSerializer setValue:headers[header] forHTTPHeaderField:header];
+        [self.httpSessionManager setValue:headers[header]
+                       forHTTPHeaderField:header];
     }
 }
 

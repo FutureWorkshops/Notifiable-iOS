@@ -74,7 +74,7 @@ NSString * const FWHTTPRequestSerializerQueryRegex = @"\\?([\\w-]+(=[\\w-]*)?(&[
 {
     NSError *error = nil;
     NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:FWHTTPRequestSerializerQueryRegex
-                                                                      options:NSRegularExpressionAnchorsMatchLines
+                                                                      options:NSRegularExpressionCaseInsensitive
                                                                         error:&error];
     
     if (error) {
@@ -82,7 +82,7 @@ NSString * const FWHTTPRequestSerializerQueryRegex = @"\\?([\\w-]+(=[\\w-]*)?(&[
     }
     
     NSTextCheckingResult *match = [regex firstMatchInString:url
-                                                    options:NSMatchingAnchored
+                                                    options:NSMatchingReportCompletion
                                                       range:NSMakeRange(0, url.length)];
     if (match) {
         return @"&";
@@ -98,9 +98,9 @@ NSString * const FWHTTPRequestSerializerQueryRegex = @"\\?([\\w-]+(=[\\w-]*)?(&[
         return nil;
     }
     
-    NSMutableArray<NSString *> *elements = [[NSMutableArray alloc] initWithCapacity:parameters.allKeys.count];
+    NSMutableArray<NSString *> *elements = [[NSMutableArray alloc] initWithCapacity:parameters.count];
     
-    for (NSString *key in parameters.allKeys) {
+    for (NSString *key in parameters) {
         id value = parameters[key];
         if (![value isKindOfClass:[NSString class]]) {
             continue;

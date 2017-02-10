@@ -125,12 +125,29 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 
 /**
  Register a device, without a user associated to it, but with a name to represent the device.
+ If the token already exists in the server, the device locale will be updated.
+ Otherwise, a new device will be created with the token and locale provided.
+ 
+ @param name                A label for the device.
+ @param locale              The locale of the device.
+ @param customProperties   Aditional information about the device.
+ @param platformProperties  Aditional information that can be send as extra settings on the server
+ @param handler             Block called once that the operation is finished.
+ */
+-(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
+                                locale:(NSLocale * _Nullable)locale
+                      customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                  andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Register a device, without a user associated to it, but with a name to represent the device.
  If the token already exists in the server, the device locale will be updated. 
  Otherwise, a new device will be created with the token and locale provided.
  
  @param name                A label for the device.
  @param locale              The locale of the device.
  @param customProperties   Aditional information about the device.
+ @param platformProperties  Aditional information that can be send as extra settings on the server
  @param handler             Block called once that the operation is finished.
  */
 -(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
@@ -151,6 +168,26 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param locale      The locale of the device.
  @param userAlias   The alias of the user in the server.
  @param customProperties   Aditional information about the device
+ @param platformProperties  Aditional information that can be send as extra settings on the server
+ @param handler     Block called once that the operation is finished.
+ */
+- (void)registerDeviceWithName:(NSString * _Nullable)deviceName
+                     userAlias:(NSString *)userAlias
+                        locale:(NSLocale * _Nullable)locale
+              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+          andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Register a device, with a user associated to it, but with a name to represent the device.
+ If the token already exists in the server, the device locale will be updated.
+ Otherwise, a new device will be created with the token and locale provided.
+ If the user alias doesn't exist, a new user will be created.
+ 
+ @param deviceName  A label for the device.
+ @param locale      The locale of the device.
+ @param userAlias   The alias of the user in the server.
+ @param customProperties   Aditional information about the device
+ @param platformProperties  Aditional information that can be send as extra settings on the server
  @param handler     Block called once that the operation is finished.
  */
 - (void)registerDeviceWithName:(NSString * _Nullable)deviceName
@@ -226,6 +263,22 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
+                   locale:(NSLocale * _Nullable)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Update the informations of the device without change the user.
+ 
+ @param token               New device token.
+ @param deviceName          The name of the device
+ @param locale              New device locale.
+ @param customProperties   Aditional information about the device
+ @param platformProperties  Aditional information that can be send as extra settings on the server
+ @param handler             Block called once that the operation is finished.
+ */
+- (void)updateDeviceToken:(NSData * _Nullable)token
+               deviceName:(NSString * _Nullable)deviceName
                  locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
        platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
@@ -238,6 +291,24 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param deviceName          The name of the device
  @param locale              New device locale.
  @param customProperties   Aditional information about the device.
+ @param userAlias   The alias of the user in the server.
+ @param handler             Block called once that the operation is finished.
+ */
+- (void)updateDeviceToken:(NSData * _Nullable)token
+               deviceName:(NSString * _Nullable)name
+                userAlias:(NSString * _Nullable)userAlias
+                   locale:(NSLocale * _Nullable)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+
+/**
+ Update the informations of the device and change the user.
+ 
+ @param token               New device token.
+ @param deviceName          The name of the device
+ @param locale              New device locale.
+ @param customProperties    Aditional information about the device.
+ @param platformProperties  Aditional information that can be send as extra settings on the server
  @param userAlias   The alias of the user in the server.
  @param handler             Block called once that the operation is finished.
  */

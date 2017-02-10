@@ -214,6 +214,18 @@ static NSData * tokenDataBuffer;
 -(void)registerAnonymousDeviceWithName:(NSString *)name
                                 locale:(NSLocale *)locale
                       customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+                  andCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self registerAnonymousDeviceWithName:name
+                                   locale:locale
+                         customProperties:customProperties
+                       platformProperties:nil
+                     andCompletionHandler:handler];
+}
+
+-(void)registerAnonymousDeviceWithName:(NSString *)name
+                                locale:(NSLocale *)locale
+                      customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                     platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
                   andCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
 {
@@ -245,6 +257,20 @@ static NSData * tokenDataBuffer;
                                            handler(sself.currentDevice, error);
                                        }
                                    }];
+}
+
+- (void)registerDeviceWithName:(NSString *)name
+                     userAlias:(NSString *)userAlias
+                        locale:(NSLocale *)locale
+              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+          andCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self registerDeviceWithName:name
+                       userAlias:userAlias
+                          locale:locale
+                customProperties:customProperties
+              platformProperties:nil
+            andCompletionHandler:handler];
 }
 
 - (void)registerDeviceWithName:(NSString *)name
@@ -356,6 +382,20 @@ static NSData * tokenDataBuffer;
 
 - (void)updateDeviceToken:(NSData *)token
                deviceName:(NSString *)name
+                   locale:(NSLocale *)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+        completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self updateDeviceToken: token
+                 deviceName:name
+                     locale:locale
+           customProperties:customProperties
+         platformProperties:nil
+          completionHandler:handler];
+}
+
+- (void)updateDeviceToken:(NSData *)token
+               deviceName:(NSString *)name
                  locale:(NSLocale *)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
        platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
@@ -367,6 +407,22 @@ static NSData * tokenDataBuffer;
                    locale:locale
            customProperties:customProperties
          platformProperties:platformProperties
+          completionHandler:handler];
+}
+
+
+- (void)updateDeviceToken:(NSData *)token
+               deviceName:(NSString *)name
+                userAlias:(NSString *)userAlias
+                   locale:(NSLocale *)locale
+         customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
+        completionHandler:(FWTNotifiableOperationCompletionHandler)handler
+{
+    [self updateDeviceToken:token
+                 deviceName:name
+                     locale:locale
+           customProperties:customProperties
+         platformProperties:nil
           completionHandler:handler];
 }
 

@@ -92,6 +92,15 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 {
     NSAssert(deviceTokenId != nil, @"Device token id missing");
     NSAssert(notificationId != nil, @"Notification id missing");
+    NSAssert(user != nil, @"User name is missing");
+    
+    if (user.length == 0 || deviceTokenId.length == 0) {
+        if (failure) {
+            failure(404,[NSError fwt_invalidOperationErrorWithUnderlyingError:nil]);
+        }
+        return;
+    }
+    
     NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
     [self _updateAuthenticationForPath:path httpMethod:@"POST"];
     [self.httpSessionManager POST:path

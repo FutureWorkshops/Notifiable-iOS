@@ -582,6 +582,13 @@ static NSData * tokenDataBuffer;
         return NO;
     }
     
+    if (self.currentDevice.user.length == 0 || self.currentDevice.tokenId == nil) {
+        if (handler) {
+            handler(self.currentDevice, nil);
+        }
+        return YES;
+    }
+    
     __weak typeof(self) weakSelf = self;
     [self.requestManager markNotificationAsOpenedWithId:notificationID
                                           deviceTokenId:self.currentDevice.tokenId

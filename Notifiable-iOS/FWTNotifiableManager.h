@@ -78,6 +78,11 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  */
 + (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener;
 
+/**
+ Remove all the registered listeners
+ */
++ (void) cleanUp;
+
 #pragma mark - Read receipts can be delivered back to server via this method
 /**
  Notify the server that a notification was read.

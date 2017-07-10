@@ -63,6 +63,15 @@ static NSData * tokenDataBuffer;
     return self;
 }
 
+- (void)dealloc
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        if ([managerTable containsObject:self]) {
+            [managerTable removeObject:self];
+        }
+    }];
+}
+
 + (NSHashTable *)listenerTable
 {
     if (listeners == nil) {
@@ -88,6 +97,14 @@ static NSData * tokenDataBuffer;
             block(table, managerTable);
         }
     });
+}
+
++ (void) cleanUp
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        [table removeAllObjects];
+        [managerTable removeAllObjects];
+    }];
 }
 
 - (NSNotificationCenter *)notificationCenter

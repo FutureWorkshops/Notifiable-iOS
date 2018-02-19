@@ -16,18 +16,18 @@ class ViewController: UIViewController {
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:FWTNotifiableManager! = {
         let keys = SampleKeys()
-        guard let serverURL = NSURL(string: "https://notifiable.futureworkshops.com/") else {
+        guard let serverURL = URL(string: "https://notifiable.futureworkshops.com/") else {
             return nil
         }
-        
-        let manager = FWTNotifiableManager(URL: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, didRegisterBlock: { [unowned self] (manager, token) -> Void in
-            self.registerCompleted?(token: token)
+        let manager = FWTNotifiableManager(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, didRegister: { [weak self] (_, token) in
+            self?.registerCompleted?(token as NSData)
         }, andNotificationBlock: nil)
+        
         manager.retryAttempts = 0
         return manager
     }()
     
-    typealias FWTRegisterCompleted = (token:NSData!)->Void;
+    typealias FWTRegisterCompleted = (NSData!)->Void;
     var registerCompleted:FWTRegisterCompleted?
     
     @IBOutlet weak var onSiteSwitch: UISwitch!
@@ -39,11 +39,11 @@ class ViewController: UIViewController {
     
     func updateScreen() {
         guard let information = self.manager?.currentDevice?.customProperties?["onsite"] as? NSNumber else {
-            onSiteSwitch.on = false
+            onSiteSwitch.isOn = false
             return
         }
         
-        onSiteSwitch.on = information.boolValue
+        onSiteSwitch.isOn = information.boolValue
     }
 }
 
@@ -53,58 +53,58 @@ extension ViewController {
     
     @IBAction func registerAnonymous(sender: AnyObject) {
         self._registerForNotifications { [weak self] (token) in
-            self?._registerAnonymousToken(token)
+            self?._registerAnonymousToken(token: token)
         }
     }
     
     @IBAction func registerToUser(sender: AnyObject) {
-        let alertController = UIAlertController(title: "User", message: "Please, insert the user name", preferredStyle: .Alert)
-        alertController.addTextFieldWithConfigurationHandler {
+        let alertController = UIAlertController(title: "User", message: "Please, insert the user name", preferredStyle: .alert)
+        alertController.addTextField {
             $0.placeholder = "User Name"
         }
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Ok", style: .Default) { [weak self] (alertAction) -> Void in
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default) { [weak self] (alertAction) -> Void in
             guard let userName = alertController.textFields?.first?.text else {
                 return
             }
-            self?._registerWithUser(userName)
+            self?._registerWithUser(user: userName)
         })
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     private func _registerWithUser(user:String) {
         self._registerForNotifications { [weak self] (token) -> Void in
-            self?._registerToken(token, user: user)
+            self?._registerToken(token: token, user: user)
         }
     }
     
     private func _registerAnonymousToken(token:NSData) {
-        let deviceName = UIDevice.currentDevice().name
-        self.manager.registerAnonymousDeviceWithName(deviceName, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
+        let deviceName = UIDevice.current.name
+        self.manager.registerAnonymousDevice(withName: deviceName, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("Anonymous device registered")
+                SVProgressHUD.showSuccess(withStatus: "Anonymous device registered")
             }
         }
     }
     
     private func _registerToken(token:NSData, user:String) {
-        let deviceName = UIDevice.currentDevice().name
-        self.manager.registerDeviceWithName(deviceName, userAlias: user, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
+        let deviceName = UIDevice.current.name
+        self.manager.registerDevice(withName: deviceName, userAlias: user, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("Device registered to user \(user)")
+                SVProgressHUD.showSuccess(withStatus: "Device registered to user \(user)")
             }
         }
     }
     
-    private func _registerForNotifications(completion:FWTRegisterCompleted) {
+    private func _registerForNotifications(completion:@escaping FWTRegisterCompleted) {
         self.registerCompleted = completion
         SVProgressHUD.show()
-        let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
-        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+        let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+        UIApplication.shared.registerUserNotificationSettings(notificationSettings)
     }
 }
 
@@ -112,38 +112,38 @@ extension ViewController {
 
 extension ViewController {
     @IBAction func associateToUser(sender: AnyObject) {
-        let alertController = UIAlertController(title: "User", message: "Please, insert the user name", preferredStyle: .Alert)
-        alertController.addTextFieldWithConfigurationHandler {
+        let alertController = UIAlertController(title: "User", message: "Please, insert the user name", preferredStyle: .alert)
+        alertController.addTextField {
             $0.placeholder = "User Name"
         }
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Ok", style: .Default) { [weak self] (alertAction) -> Void in
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default) { [weak self] (alertAction) -> Void in
             guard let userName = alertController.textFields?.first?.text else {
                 return
             }
-            self?._associateToUser(userName)
+            self?._associateToUser(user: userName)
         })
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     private func _associateToUser(user:String) {
-        SVProgressHUD.showWithStatus(nil)
-        self.manager.associateDeviceToUser(user, completionHandler: { (device, error) -> Void in
+        SVProgressHUD.show(withStatus: nil)
+        self.manager.associateDevice(toUser: user, completionHandler: { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("Device associated with the user \(user)")
+                SVProgressHUD.showSuccess(withStatus: "Device associated with the user \(user)")
             }
         })
     }
     
     @IBAction func anonymiseDevice(sender: AnyObject) {
-        SVProgressHUD.showWithStatus(nil)
-        self.manager.anonymiseTokenWithCompletionHandler { (device, error) -> Void in
+        SVProgressHUD.show(withStatus: nil)
+        self.manager.anonymiseToken { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("Device is now anonymous")
+                SVProgressHUD.showSuccess(withStatus: "Device is now anonymous")
             }
         }
     }
@@ -153,41 +153,41 @@ extension ViewController {
 
 extension ViewController {
     @IBAction func updateDeviceName(sender: AnyObject) {
-        let alertController = UIAlertController(title: "Device Name", message: "Please, insert the device name", preferredStyle: .Alert)
-        alertController.addTextFieldWithConfigurationHandler {
+        let alertController = UIAlertController(title: "Device Name", message: "Please, insert the device name", preferredStyle: .alert)
+        alertController.addTextField {
             $0.placeholder = "Device Name"
         }
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Ok", style: .Default) { [weak self] (alertAction) -> Void in
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default) { [weak self] (alertAction) -> Void in
             guard let deviceName = alertController.textFields?.first?.text else {
                 return
             }
-            self?._updateDeviceName(deviceName)
+            self?._updateDeviceName(name: deviceName)
         })
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     @IBAction func updateOnSite(sender: UISwitch) {
-        let onSite = sender.on
-        let deviceInformation = ["onsite":NSNumber(bool: onSite)]
-        SVProgressHUD.showWithStatus(nil)
+        let onSite = sender.isOn
+        let deviceInformation = ["onsite":NSNumber(value: onSite)]
+        SVProgressHUD.show(withStatus: nil)
         self.manager.updateCustomProperties(deviceInformation) { [weak self] (device, error) in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("On site updated")
+                SVProgressHUD.showSuccess(withStatus: "On site updated")
             }
             self?.updateScreen()
         }
     }
     
     private func _updateDeviceName(name:String) {
-        SVProgressHUD.showWithStatus(nil)
+        SVProgressHUD.show(withStatus: nil)
         self.manager.updateDeviceName(name) { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("Device name updated to \(name)")
+                SVProgressHUD.showSuccess(withStatus: "Device name updated to \(name)")
             }
         }
     }
@@ -196,12 +196,12 @@ extension ViewController {
 //MARK - Unregister
 extension ViewController {
     @IBAction func unregisterDevice(sender: AnyObject) {
-        SVProgressHUD.showWithStatus(nil)
-        self.manager.unregisterTokenWithCompletionHandler { (device, error) -> Void in
+        SVProgressHUD.show(withStatus: nil)
+        self.manager.unregisterToken { (device, error) -> Void in
             if let error = error {
-                SVProgressHUD.showErrorWithStatus(error.fwt_localizedMessage())
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
-                SVProgressHUD.showSuccessWithStatus("Device unregistered")
+                SVProgressHUD.showSuccess(withStatus: "Device unregistered")
             }
         }
     }

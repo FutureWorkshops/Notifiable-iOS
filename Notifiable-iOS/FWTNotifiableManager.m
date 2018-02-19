@@ -98,8 +98,8 @@ static NSData * tokenDataBuffer;
 
 + (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table, NSHashTable *managerTable))block
 {
-    __block NSHashTable *table = [FWTNotifiableManager listenerTable];
-    __block NSHashTable *managerTable = [FWTNotifiableManager managerListenerTable];
+    NSHashTable *table = [FWTNotifiableManager listenerTable];
+    NSHashTable *managerTable = [FWTNotifiableManager managerListenerTable];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         @synchronized(table) {

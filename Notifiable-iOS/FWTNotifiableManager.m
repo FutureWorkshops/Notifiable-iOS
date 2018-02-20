@@ -63,31 +63,57 @@ static NSData * tokenDataBuffer;
     return self;
 }
 
+- (void)dealloc
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        if ([managerTable containsObject:self]) {
+            [managerTable removeObject:self];
+        }
+    }];
+}
+
 + (NSHashTable *)listenerTable
 {
-    if (listeners == nil) {
-        listeners = [NSHashTable weakObjectsHashTable];
+    __block NSHashTable* table;
+    @synchronized(self) {
+        if (listeners == nil) {
+            listeners = [NSHashTable weakObjectsHashTable];
+        }
+        table = listeners;
     }
-    return listeners;
+    return table;
 }
 
 + (NSHashTable *)managerListenerTable
 {
-    if (managerListeners == nil) {
-        managerListeners = [NSHashTable weakObjectsHashTable];
+    __block NSHashTable* table;
+    @synchronized(self) {
+        if (managerListeners == nil) {
+            managerListeners = [NSHashTable weakObjectsHashTable];
+        }
+        table = managerListeners;
     }
-    return managerListeners;
+    return table;
 }
 
 + (void) operateOnListenerTableOnBackground:(void(^)(NSHashTable *table, NSHashTable *managerTable))block
 {
+    NSHashTable *table = [FWTNotifiableManager listenerTable];
+    NSHashTable *managerTable = [FWTNotifiableManager managerListenerTable];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSHashTable *table = [FWTNotifiableManager listenerTable];
-        NSHashTable *managerTable = [FWTNotifiableManager managerListenerTable];
         @synchronized(table) {
             block(table, managerTable);
         }
     });
+}
+
++ (void) cleanUp
+{
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        [table removeAllObjects];
+        [managerTable removeAllObjects];
+    }];
 }
 
 - (NSNotificationCenter *)notificationCenter

@@ -541,7 +541,7 @@ static NSData * tokenDataBuffer;
                }];
 }
 
-- (void)unregisterTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
+- (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
     NSAssert(self.currentDevice.token, @"This device is not registered.");
     
@@ -556,10 +556,16 @@ static NSData * tokenDataBuffer;
     [self.requestManager unregisterTokenId:self.currentDevice.tokenId
                          completionHandler:^(BOOL success, NSError * _Nullable error) {
                              __strong typeof(weakSelf) sself = weakSelf;
+                             FWTNotifiableDevice *responseDevice;
                              if (success) {
                                  sself.currentDevice = nil;
+                                 responseDevice = nil;
+                             } else {
+                                 responseDevice = sself.currentDevice;
                              }
-                             handler(sself.currentDevice, error);
+                             if (handler) {
+                                 handler(responseDevice, error);
+                             }
                          }];
 }
 

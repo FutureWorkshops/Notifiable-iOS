@@ -79,7 +79,7 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
                   failure:(FWTRequestManagerFailureBlock)failure
 {
     [self updateDeviceWithTokenId:tokenId
-                           params:@{@"device_token": @{@"user_alias": [NSNull null]}}
+                           params:@{@"device_token": @{@"user_alias": @""}}
                           success:success
                           failure:failure];
 }

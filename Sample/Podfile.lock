@@ -1,6 +1,6 @@
 PODS:
   - Keys (1.0.0)
-  - Notifiable (0.3.1)
+  - Notifiable (0.3.4)
   - SVProgressHUD (1.1.3)
 
 DEPENDENCIES:
@@ -12,13 +12,13 @@ EXTERNAL SOURCES:
   Keys:
     :path: Pods/CocoaPodsKeys
   Notifiable:
-    :path: ".."
+    :path: ..
 
 SPEC CHECKSUMS:
-  Keys: 9c35bf00f612ee1d48556f4a4b9b4551e224e90f
-  Notifiable: ed62baf079180f4322c3305450e4353f001289ad
+  Keys: af65e23feef2a047b3277b1ef0399f1209ef9d46
+  Notifiable: 3505d9042e457808f49af78dd5472868e809468f
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
-PODFILE CHECKSUM: 12237b42a2e8bfab91870ad14ae9ecbd029c2fd2
+PODFILE CHECKSUM: 9aa3c3c59ca2d99c5cb326705fbc0c6869fe17af
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.4.0

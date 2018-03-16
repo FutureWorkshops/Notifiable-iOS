@@ -161,11 +161,14 @@
                                         <constraints>
                                             <constraint firstItem="CHl-M4-67i" firstAttribute="top" secondItem="oFb-qJ-iVC" secondAttribute="bottom" constant="8" id="0m6-y6-gUO"/>
                                             <constraint firstItem="JWO-ZR-Ngq" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="1e7-il-wD2"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="uh7-1f-oNC" secondAttribute="trailing" constant="8" id="4jc-XK-sEC"/>
                                             <constraint firstItem="f4F-9z-1Mc" firstAttribute="centerX" secondItem="MQi-bh-iNQ" secondAttribute="centerX" id="5E1-ti-Abu"/>
                                             <constraint firstItem="1bE-or-NVK" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="8OT-ZL-LIC"/>
                                             <constraint firstItem="vx7-M5-e2A" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="BJ1-Yj-LEl"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1bE-or-NVK" secondAttribute="trailing" constant="8" id="D3p-HA-Wzp"/>
                                             <constraint firstAttribute="trailing" secondItem="Q3U-LD-pN5" secondAttribute="trailing" constant="8" id="GpX-Q6-itG"/>
                                             <constraint firstItem="3F0-Vo-vvp" firstAttribute="top" secondItem="uh7-1f-oNC" secondAttribute="bottom" constant="8" id="Izm-HH-2fX"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="3iy-3F-294" secondAttribute="trailing" constant="8" id="Jo5-GH-spT"/>
                                             <constraint firstItem="Q3U-LD-pN5" firstAttribute="top" secondItem="1bE-or-NVK" secondAttribute="bottom" constant="8" id="KN9-ZJ-YZf"/>
                                             <constraint firstItem="oFb-qJ-iVC" firstAttribute="top" secondItem="JWO-ZR-Ngq" secondAttribute="bottom" constant="8" id="Ket-vz-yiH"/>
                                             <constraint firstItem="uh7-1f-oNC" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="NOh-De-6Qt"/>
@@ -185,6 +188,7 @@
                                             <constraint firstItem="Q3U-LD-pN5" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="v9D-g3-YvM"/>
                                             <constraint firstItem="3F0-Vo-vvp" firstAttribute="leading" secondItem="MQi-bh-iNQ" secondAttribute="leading" constant="8" id="vTO-a1-K8s"/>
                                             <constraint firstItem="vx7-M5-e2A" firstAttribute="top" secondItem="3iy-3F-294" secondAttribute="bottom" constant="8" id="yu9-Ml-IoM"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="JWO-ZR-Ngq" secondAttribute="trailing" constant="8" id="yxe-T7-tkp"/>
                                             <constraint firstItem="3iy-3F-294" firstAttribute="top" secondItem="CHl-M4-67i" secondAttribute="bottom" constant="8" id="zCq-3A-tpM"/>
                                             <constraint firstAttribute="trailing" secondItem="oFb-qJ-iVC" secondAttribute="trailing" constant="8" id="zLq-3M-dMq"/>
                                         </constraints>
@@ -215,7 +219,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="581" y="699"/>
+            <point key="canvasLocation" x="580" y="698.5007496251875"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Gye-bk-wu1">

@@ -271,25 +271,10 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                             includingProvider:NO];
     
     __weak typeof(self) weakSelf = self;
+    NSNumber *tokenId = [deviceTokenId copy];
     [self.requester updateDeviceWithTokenId:deviceTokenId params:params success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
-        if (response == nil || ![response isKindOfClass:[NSDictionary class]]) {
-            [sself _updateDevice:deviceTokenId
-                   withUserAlias:alias
-                           token:token
-                            name:name
-                          locale:locale
-                customProperties:customProperties
-              platformProperties:platformProperties
-                        attempts:(attempts - 1)
-                   previousError:previousError
-               completionHandler:handler];
-            return;
-        }
-        
-        NSNumber *tokenId = response[@"id"];
-        [sself.logger logMessage:@"Did update device with deviceTokenId: %@", tokenId];
-        
+        [sself.logger logMessage:@"Did unregister for push notifications"];
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(tokenId, nil);

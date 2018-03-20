@@ -24,5 +24,7 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Notifiable-iOS/FWTNotifiableManager.h', 'Notifiable-iOS/Logger/FWTNotifiableLogger.h', 'Notifiable-iOS/Model/FWTNotifiableDevice.h', 'Notifiable-iOS/Category/*.h'
   s.module_name = 'FWTNotifiable'
   s.requires_arc = true 
+  s.deprecated = true
+  s.deprecated_in_favor_of = 'Notifiable'
 
 end

@@ -136,7 +136,6 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param name                A label for the device.
  @param locale              The locale of the device.
  @param customProperties   Aditional information about the device.
- @param platformProperties  Aditional information that can be send as extra settings on the server
  @param handler             Block called once that the operation is finished.
  */
 -(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
@@ -173,7 +172,6 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param locale      The locale of the device.
  @param userAlias   The alias of the user in the server.
  @param customProperties   Aditional information about the device
- @param platformProperties  Aditional information that can be send as extra settings on the server
  @param handler     Block called once that the operation is finished.
  */
 - (void)registerDeviceWithName:(NSString * _Nullable)deviceName
@@ -300,7 +298,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler             Block called once that the operation is finished.
  */
 - (void)updateDeviceToken:(NSData * _Nullable)token
-               deviceName:(NSString * _Nullable)name
+               deviceName:(NSString * _Nullable)deviceName
                 userAlias:(NSString * _Nullable)userAlias
                    locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
@@ -318,7 +316,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler             Block called once that the operation is finished.
  */
 - (void)updateDeviceToken:(NSData * _Nullable)token
-               deviceName:(NSString * _Nullable)name
+               deviceName:(NSString * _Nullable)deviceName
                 userAlias:(NSString * _Nullable)userAlias
                  locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties

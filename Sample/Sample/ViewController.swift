@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         return manager
     }()
     
-    typealias FWTRegisterCompleted = (NSData!)->Void;
+    typealias FWTRegisterCompleted = (NSData)->Void;
     var registerCompleted:FWTRegisterCompleted?
     
     @IBOutlet weak var onSiteSwitch: UISwitch!

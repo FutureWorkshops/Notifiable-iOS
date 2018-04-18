@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "Notifiable"
-  s.version      = "0.3.6"
+  s.version      = "0.3.7"
   s.platform     = :ios, '8.0'
   s.summary      = "Utility classes to integrate with Notifiable-Rails gem"
 
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/FutureWorkshops/Notifiable-iOS"
   s.license      = { :type => 'Apache License Version 2.0', :file => 'LICENSE' }
-  s.author       = { "Future Workshops" => "fabio@futureworkshops.com" }
+  s.author       = { "Future Workshops" => "info@futureworkshops.com" }
 
   s.source       = { :git => "https://github.com/FutureWorkshops/Notifiable-iOS.git", :tag => s.version }
 

@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, FWTError) {
  
  @param underlyingError Original error.
 */
-+ (instancetype) fwt_errorWithUnderlyingError:(NSError * _Nullable)error;
++ (instancetype) fwt_errorWithUnderlyingError:(NSError * _Nullable)underlyingError;
 
 /**
  Create an error with the code FWTErrorUserAliasMissing.

@@ -1,4 +1,4 @@
 source "https://rubygems.org"
 
-gem 'cocoapods', '~> 1.4.0'
-gem 'cocoapods-keys', '~> 2.0.1'
+gem 'cocoapods', '~> 1.5.0'
+gem 'cocoapods-keys', '~> 2.0.3'

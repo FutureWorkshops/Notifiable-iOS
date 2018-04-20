@@ -12,7 +12,7 @@ plugin 'cocoapods-keys', {
 
 target :Sample do
   pod 'Notifiable', :path => '..'
-  pod 'SVProgressHUD', '~> 1.1'
+  pod 'SVProgressHUD', '~> 2.2.5'
 end
 
 post_install do | installer |

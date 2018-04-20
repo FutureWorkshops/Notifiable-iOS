@@ -10,6 +10,7 @@ import UIKit
 import Keys
 import FWTNotifiable
 import SVProgressHUD
+import UserNotifications
 
 class ViewController: UIViewController {
     
@@ -103,8 +104,22 @@ extension ViewController {
     private func _registerForNotifications(completion:@escaping FWTRegisterCompleted) {
         self.registerCompleted = completion
         SVProgressHUD.show()
-        let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-        UIApplication.shared.registerUserNotificationSettings(notificationSettings)
+        
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (authorized, error) in
+                guard authorized else {
+                    SVProgressHUD.showError(withStatus: error?.localizedDescription ?? "Permission not granted")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
+        } else {
+            let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(notificationSettings)
+        }
     }
 }
 

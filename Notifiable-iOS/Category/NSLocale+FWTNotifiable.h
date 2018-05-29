@@ -9,5 +9,6 @@
 @interface NSLocale (FWTNotifiable)
 
 + (NSLocale *)fwt_autoupdatingCurrentLocale;
+- (NSString *)fwt_countryCode;
 
 @end

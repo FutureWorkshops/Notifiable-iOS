@@ -19,4 +19,13 @@
     return [NSLocale localeWithLocaleIdentifier:identifier];
 }
 
+- (NSString *)fwt_countryCode {
+    NSString *code = [self countryCode];
+    if (code == nil) {
+        return  @"";
+    } else {
+        return code;
+    }
+}
+
 @end

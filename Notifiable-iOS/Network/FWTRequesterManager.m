@@ -10,11 +10,13 @@
 #import "FWTDefaultNotifiableLogger.h"
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
+#import "NSLocale+FWTNotifiable.h"
 
 NSString * const FWTNotifiableDeviceTokenKey       = @"token";
 NSString * const FWTNotifiableProviderKey          = @"provider";
 NSString * const FWTNotifiableUserAliasKey         = @"user_alias";
-NSString * const FWTNotifiableLocaleKey            = @"locale";
+NSString * const FWTNotifiableLanguageKey          = @"language";
+NSString * const FWTNotifiableRegionKey            = @"region";
 NSString * const FWTNotifiableNameKey              = @"name";
 NSString * const FWTNotifiableCustomPropertiesKey  = @"custom_properties";
 
@@ -133,7 +135,8 @@ NSString * const FWTNotifiableProvider             = @"apns";
         [params setObject:[token fwt_notificationTokenString] forKey:FWTNotifiableDeviceTokenKey];
     }
     if (locale) {
-        [params setObject:[locale localeIdentifier] forKey:FWTNotifiableLocaleKey];
+        [params setObject:[locale languageCode] forKey:FWTNotifiableLanguageKey];
+        [params setObject:[locale fwt_countryCode] forKey:FWTNotifiableRegionKey];
     }
     if (customProperties) {
         NSError *error = nil;

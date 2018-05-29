@@ -390,7 +390,6 @@
 				8E4119CF17E9B9D1000CD6F3 /* Supporting Files */,
 			);
 			name = "Notifiable-iOS";
-			path = FWTPushNotifications;
 			sourceTree = "<group>";
 		};
 		8E4119CF17E9B9D1000CD6F3 /* Supporting Files */ = {

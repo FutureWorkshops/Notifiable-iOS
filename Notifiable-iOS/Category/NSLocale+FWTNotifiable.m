@@ -8,24 +8,46 @@
 
 @implementation NSLocale (FWTNotifiable)
 
-+ (NSLocale *)fwt_autoupdatingCurrentLocale
++ (NSLocale *)fwt_currentLocale
 {
-    NSLocale *locale = [NSLocale autoupdatingCurrentLocale];
-    NSString *identifier = locale.localeIdentifier;
-    identifier = [identifier stringByReplacingOccurrencesOfString:@"[_-]+[\\w]*"
-                                                       withString:@""
-                                                          options:NSRegularExpressionSearch
-                                                            range:NSMakeRange(0, identifier.length)];
-    return [NSLocale localeWithLocaleIdentifier:identifier];
+    NSString *baseLocation = @"";
+    
+    if (@available(iOS 10.5, *)) {
+        baseLocation = [[NSLocale preferredLanguages] firstObject];
+    } else {
+        baseLocation = [[[NSBundle mainBundle] preferredLocalizations] firstObject];
+    }
+    
+    if (baseLocation == nil || baseLocation.length == 0) {
+        return [NSLocale autoupdatingCurrentLocale];
+    }
+    
+    NSLocale *locale = [NSLocale localeWithLocaleIdentifier:baseLocation];
+    return locale ?: [NSLocale autoupdatingCurrentLocale];
 }
 
 - (NSString *)fwt_countryCode {
-    NSString *code = [self countryCode];
-    if (code == nil) {
-        return  @"";
+    NSString *code = @"";
+    
+    if (@available(iOS 10.0, *)) {
+        code = [self countryCode];
     } else {
-        return code;
+        code = [self objectForKey:NSLocaleCountryCode];
     }
+    
+    return code ?: @"";
+}
+
+- (NSString *)fwt_languageCode {
+    NSString *languageCode = @"";
+    
+    if (@available(iOS 10.0, *)) {
+        languageCode = [self languageCode];
+    } else {
+        languageCode = [self objectForKey:NSLocaleLanguageCode];
+    }
+    
+    return languageCode ?: @"";
 }
 
 @end

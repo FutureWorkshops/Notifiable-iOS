@@ -16,7 +16,7 @@ NSString * const FWTNotifiableDeviceTokenKey       = @"token";
 NSString * const FWTNotifiableProviderKey          = @"provider";
 NSString * const FWTNotifiableUserAliasKey         = @"user_alias";
 NSString * const FWTNotifiableLanguageKey          = @"language";
-NSString * const FWTNotifiableRegionKey            = @"region";
+NSString * const FWTNotifiableRegionKey            = @"country";
 NSString * const FWTNotifiableNameKey              = @"name";
 NSString * const FWTNotifiableCustomPropertiesKey  = @"custom_properties";
 
@@ -135,7 +135,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
         [params setObject:[token fwt_notificationTokenString] forKey:FWTNotifiableDeviceTokenKey];
     }
     if (locale) {
-        [params setObject:[locale languageCode] forKey:FWTNotifiableLanguageKey];
+        [params setObject:[locale fwt_languageCode] forKey:FWTNotifiableLanguageKey];
         [params setObject:[locale fwt_countryCode] forKey:FWTNotifiableRegionKey];
     }
     if (customProperties) {

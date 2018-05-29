@@ -265,12 +265,12 @@ static NSData * tokenDataBuffer;
         return;
     }
     
-    NSLocale *deviceLocale = locale ?: [NSLocale fwt_autoupdatingCurrentLocale];
+    NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
     [self.requestManager registerDeviceWithUserAlias:nil
                                                token:token
                                                 name:name
-                                              locale:(locale ?: [NSLocale fwt_autoupdatingCurrentLocale])
+                                              locale:deviceLocale
                                     customProperties:customProperties
                                   platformProperties:platformProperties
                                    completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
@@ -317,12 +317,12 @@ static NSData * tokenDataBuffer;
         return;
     }
     
-    NSLocale *deviceLocale = locale ?: [NSLocale fwt_autoupdatingCurrentLocale];
+    NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
     [self.requestManager registerDeviceWithUserAlias:userAlias
                                                token:token
                                                 name:name
-                                              locale:(locale ?: [NSLocale fwt_autoupdatingCurrentLocale])
+                                              locale:deviceLocale
                                     customProperties:customProperties
                                   platformProperties:platformProperties
                                    completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {

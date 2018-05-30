@@ -43,6 +43,7 @@ NSString * const FWTDefaultContentType = @"application/json; charset=utf-8";
 {
     if (!self->_httpDateFormatter) {
         self->_httpDateFormatter = [[NSDateFormatter alloc] init];
+        self->_httpDateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
         self->_httpDateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         [self->_httpDateFormatter setDateFormat:@"EEE',' dd' 'MMM' 'yyyy HH':'mm':'ss 'GMT'"];
     }

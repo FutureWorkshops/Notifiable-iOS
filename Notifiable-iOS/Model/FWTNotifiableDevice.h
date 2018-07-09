@@ -8,6 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(NotifiableDevice)
 @interface FWTNotifiableDevice : NSObject
 
 /** The registered token for this device */
@@ -21,14 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 /** The name of the this device on the server */
 @property (nonatomic, copy, readonly, nullable) NSString *name;
 /** Other saved informations about the device */
-@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id> *customProperties;
+@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id> *customProperties NS_SWIFT_NAME(properties);
 /** Other saved platform protperties */
-@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id> *platformProperties;
+@property (nonatomic, copy, readonly, nullable) NSDictionary<NSString *, id> *platformProperties NS_SWIFT_NAME(platform);
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithToken:(NSData *)deviceToken
                       tokenId:(NSNumber *)deviceTokenId
-                    andLocale:(NSLocale *)locale;
+                    andLocale:(NSLocale *)locale NS_SWIFT_NAME(init(token:tokenId:locale:));
 
 - (instancetype)initWithToken:(NSData *)deviceToken
                       tokenId:(NSNumber *)deviceTokenId
@@ -36,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
                          user:(NSString * _Nullable)user
                          name:(NSString * _Nullable)name
              customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-           platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties NS_DESIGNATED_INITIALIZER;
+           platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties NS_SWIFT_NAME(init(token:tokenId:locale:user:name:properties:platform:)) NS_DESIGNATED_INITIALIZER;
 
 @end
 

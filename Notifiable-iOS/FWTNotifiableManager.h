@@ -39,6 +39,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  
  @see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
 */
+NS_SWIFT_NAME(NotifiableManager)
 @interface FWTNotifiableManager : NSObject
 
 /** Number of times that the manager will try to resend the informations in case of error */

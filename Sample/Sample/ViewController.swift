@@ -15,14 +15,15 @@ import UserNotifications
 class ViewController: UIViewController {
     
     let FWTDeviceListSegue = "FWTDeviceListSegue"
-    lazy var manager:FWTNotifiableManager! = {
+    lazy var manager:NotifiableManager! = {
         let keys = SampleKeys()
         guard let serverURL = URL(string: "https://notifiable.futureworkshops.com/") else {
             return nil
         }
-        let manager = FWTNotifiableManager(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, didRegister: { [weak self] (_, token) in
+        let manager = NotifiableManager(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey,
+            didRegister: { [weak self] (_, token) in
             self?.registerCompleted?(token as NSData)
-        }, andNotificationBlock: nil)
+        }, didRecieve: nil)
         
         manager.retryAttempts = 0
         return manager
@@ -39,7 +40,7 @@ class ViewController: UIViewController {
     }
     
     func updateScreen() {
-        guard let information = self.manager?.currentDevice?.customProperties?["onsite"] as? NSNumber else {
+        guard let information = self.manager?.currentDevice?.properties?["onsite"] as? NSNumber else {
             onSiteSwitch.isOn = false
             return
         }
@@ -81,7 +82,7 @@ extension ViewController {
     
     private func _registerAnonymousToken(token:NSData) {
         let deviceName = UIDevice.current.name
-        self.manager.registerAnonymousDevice(withName: deviceName, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
+        self.manager.register(name: deviceName, locale: nil, properties: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
@@ -92,7 +93,7 @@ extension ViewController {
     
     private func _registerToken(token:NSData, user:String) {
         let deviceName = UIDevice.current.name
-        self.manager.registerDevice(withName: deviceName, userAlias: user, locale: nil, customProperties: nil, platformProperties: nil) { (device, error) in
+        self.manager.register(name: deviceName, userAlias: user, locale: nil, properties: nil) { (device, error) in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
@@ -143,7 +144,7 @@ extension ViewController {
     
     private func _associateToUser(user:String) {
         SVProgressHUD.show(withStatus: nil)
-        self.manager.associateDevice(toUser: user, completionHandler: { (device, error) -> Void in
+        self.manager.associated(to: user, completion: { (device, error) -> Void in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
@@ -154,7 +155,7 @@ extension ViewController {
     
     @IBAction func anonymiseDevice(sender: AnyObject) {
         SVProgressHUD.show(withStatus: nil)
-        self.manager.anonymiseToken { (device, error) -> Void in
+        self.manager.anonymise { (device, error) -> Void in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
@@ -186,7 +187,7 @@ extension ViewController {
         let onSite = sender.isOn
         let deviceInformation = ["onsite":NSNumber(value: onSite)]
         SVProgressHUD.show(withStatus: nil)
-        self.manager.updateCustomProperties(deviceInformation) { [weak self] (device, error) in
+        self.manager.update(properties: deviceInformation) { [weak self] (device, error) in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
@@ -198,7 +199,7 @@ extension ViewController {
     
     private func _updateDeviceName(name:String) {
         SVProgressHUD.show(withStatus: nil)
-        self.manager.updateDeviceName(name) { (device, error) -> Void in
+        self.manager.update(name: name) { (device, error) -> Void in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {
@@ -212,7 +213,7 @@ extension ViewController {
 extension ViewController {
     @IBAction func unregisterDevice(sender: AnyObject) {
         SVProgressHUD.show(withStatus: nil)
-        self.manager.unregisterToken { (device, error) -> Void in
+        self.manager.unregister { (device, error) -> Void in
             if let error = error {
                 SVProgressHUD.showError(withStatus: error.localizedDescription)
             } else {

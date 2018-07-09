@@ -50,11 +50,13 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 /** Current device. If the device is not registered, it will be nil. */
 @property (nonatomic, copy, readonly, nullable) FWTNotifiableDevice *currentDevice;
 
+#ifndef __IPHONE_10_0
 /**
  Checks if the user have allowed the application to use push notifications with a specific UIUserNotificationType
  @param types   Notification setting that is expected to be registered
 */
 + (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
+#endif
 
 #pragma mark - Permission notification
 /**

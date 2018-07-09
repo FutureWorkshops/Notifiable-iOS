@@ -27,10 +27,10 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 @protocol FWTNotifiableManagerListener <NSObject>
 
 @optional
-- (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token;
-- (void)applicationDidReciveNotification:(NSDictionary *)notification;
-- (void)notifiableManager:(FWTNotifiableManager *)manager didRegisterDevice:(FWTNotifiableDevice *)device;
-- (void)notifiableManager:(FWTNotifiableManager *)manager didFailToRegisterDeviceWithError:(NSError *)error;
+- (void)applicationDidRegisterForRemoteNotificationsWithToken:(NSData *)token NS_SWIFT_NAME(applicationDidRegisterForRemoteNotification(token:));
+- (void)applicationDidReciveNotification:(NSDictionary *)notification NS_SWIFT_NAME(applicationDidReceive(notification:));
+- (void)notifiableManager:(FWTNotifiableManager *)manager didRegisterDevice:(FWTNotifiableDevice *)device NS_SWIFT_NAME(manager(_:didRegisterDevice:));
+- (void)notifiableManager:(FWTNotifiableManager *)manager didFailToRegisterDeviceWithError:(NSError *)error NS_SWIFT_NAME(manager(_:didFailToRegisterDevice:));
 
 @end
 
@@ -55,7 +55,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  Checks if the user have allowed the application to use push notifications with a specific UIUserNotificationType
  @param types   Notification setting that is expected to be registered
 */
-+ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types;
++ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types NS_SWIFT_NAME(userAllows(types:));
 #endif
 
 #pragma mark - Permission notification
@@ -65,20 +65,20 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param application Application that was registered
  @param deviceToken Device APNS token
  */
-+ (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken;
++ (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken NS_SWIFT_NAME(application(_:didRegisterForRemoteNotificationsWithDeviceToken:));
 
 #pragma mark - Listener operations
 /**
  Register an object to be informed when a asynchronous operation related to the managers is performed
  @param listener    Object to listen for the notifications
  */
-+ (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener;
++ (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener NS_SWIFT_NAME(register(_:));
 
 /**
  Unregister an object previously registered as listener
  @param listener    Object previously registered
  */
-+ (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener;
++ (void)unregisterManagerListener:(id<FWTNotifiableManagerListener>)listener NS_SWIFT_NAME(unregister(_:));
 
 /**
  Remove all the registered listeners
@@ -104,7 +104,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @return A flag to indicate if the notifications is from Notifiable server or not
  */
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
-           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
 
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -126,7 +126,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                    accessId:(NSString *)accessId
                   secretKey:(NSString *)secretKey
            didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
-       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock  NS_DESIGNATED_INITIALIZER;
+       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(url:accessId:secretKey:didRegister:didRecieve:))  NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - Register Anonymous device
 
@@ -143,7 +143,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 -(void)registerAnonymousDeviceWithName:(NSString * _Nullable)name
                                 locale:(NSLocale * _Nullable)locale
                       customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-                  andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+                  andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(register(name:locale:properties:completion:));
 
 /**
  Register a device, without a user associated to it, but with a name to represent the device.
@@ -160,7 +160,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                                 locale:(NSLocale * _Nullable)locale
                       customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
                     platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
-                  andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+                  andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(register(name:locale:properties:platform:completion:));
 
 #pragma mark - Register device to a specific user
 
@@ -180,7 +180,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                      userAlias:(NSString *)userAlias
                         locale:(NSLocale * _Nullable)locale
               customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-          andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+          andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(register(name:userAlias:locale:properties:completion:));
 
 /**
  Register a device, with a user associated to it, but with a name to represent the device.
@@ -200,7 +200,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                         locale:(NSLocale * _Nullable)locale
               customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
             platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
-          andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+          andCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(register(name:userAlias:locale:properties:platform:completion:));
 
 #pragma mark - Update device information
 /**
@@ -210,7 +210,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler Block called once that the operation is finished.
 */
 - (void)updateDeviceToken:(NSData *)token
-        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:completion:));
 /**
  Update the device locale.
  
@@ -218,7 +218,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler Block called once that the operation is finished.
 */
 - (void)updateDeviceLocale:(NSLocale *)locale
-         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(locale:completion:));
 /**
  Update the device token and locale.
  
@@ -228,7 +228,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 */
 - (void)updateDeviceToken:(NSData *)token
               andLocation:(NSLocale *)locale
-        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:locale:completion:));
 
 /**
  Update the device name
@@ -237,7 +237,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler Block called once that the operation is finished.
 */
 - (void)updateDeviceName:(NSString *)name
-       completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+       completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(name:completion:));
 
 /**
  Update the device aditional informations
@@ -246,7 +246,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler             Block called once that the operation is finished.
  */
 - (void)updateCustomProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+             completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(properties:completion:));
 
 /**
  Update the device platform properties
@@ -255,7 +255,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler             Block called once that the operation is finished.
  */
 - (void)updatePlatformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
-               completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+               completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(platform:completion:));
 
 /**
  Update the informations of the device without change the user.
@@ -270,7 +270,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                deviceName:(NSString * _Nullable)deviceName
                    locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:name:locale:properties:completion:));
 
 /**
  Update the informations of the device without change the user.
@@ -287,7 +287,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                  locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
        platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
-        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:name:locale:properties:platform:completion:));
 
 /**
  Update the informations of the device and change the user.
@@ -304,7 +304,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                 userAlias:(NSString * _Nullable)userAlias
                    locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
-        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:name:userAlias:locale:properties:completion:));
 
 /**
  Update the informations of the device and change the user.
@@ -323,7 +323,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
                  locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
        platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
-        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+        completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:name:userAlias:locale:properties:platform:completion:));
 
 #pragma mark - Device/user relationship
 /**
@@ -336,7 +336,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  @param handler     Block called once that the operation is finished.
 */
 - (void)associateDeviceToUser:(NSString *)userAlias
-            completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+            completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(associated(to:completion:));
 
 /**
  Remove a token from a specific user and anonymise it. 
@@ -346,7 +346,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
  
  @param handler Block called once that the operation is finished.
 */
-- (void)anonymiseTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+- (void)anonymiseTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(anonymise(completion:));
 
 #pragma mark - Unregister
 /**
@@ -354,7 +354,7 @@ typedef void (^FWTNotifiableDidReceiveNotificationBlock)(FWTNotifiableManager *m
 
  @param handler Block called once that the operation is finished.
 */
-- (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler;
+- (void)unregisterTokenWithCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(unregister(completion:));
 
 @end
 

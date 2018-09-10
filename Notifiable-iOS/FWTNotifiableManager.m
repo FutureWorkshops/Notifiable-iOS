@@ -619,7 +619,7 @@ static NSData * tokenDataBuffer;
     return YES;
 }
 
-- (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+- (BOOL)_markNotificationAsReceived:(NSDictionary *)notificationInfo
              withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
 {
     NSNumber *notificationID = notificationInfo[@"n_id"];
@@ -670,8 +670,8 @@ static NSData * tokenDataBuffer;
 - (void)applicationDidReciveNotification:(NSDictionary *)notification
 {
     @synchronized(self) {
-        [self markNotificationAsOpened:notification
-                 withCompletionHandler:nil];
+        [self _markNotificationAsReceived:notification
+                   withCompletionHandler:nil];
         if (self.notificationBlock) {
             self.notificationBlock(self, self.currentDevice, notification);
         }

@@ -52,7 +52,6 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
 
 - (void)markNotificationAsReceivedWithId:(NSNumber *)notificationId
                            deviceTokenId:(NSNumber *)deviceTokenId
-                                    user:(NSString *)user
                        completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
 - (void)unregisterTokenId:(NSNumber *)tokenId

@@ -14,6 +14,7 @@ typedef void(^FWTAFNetworkingFailureBlock)(NSURLSessionTask * _Nullable task, NS
 
 NSString * const FWTDeviceTokensPath = @"api/v1/device_tokens";
 NSString * const FWTNotificationOpenPath = @"api/v1/notifications/%@/opened";
+NSString * const FWTNotificationReceivedPath = @"api/v1/notifications/%@/delivered";
 NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 @interface FWTHTTPRequester ()
@@ -108,6 +109,28 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
                                    @"user": @{@"alias":user}}
                          success:[self _defaultSuccessHandler:success]
                          failure:[self _defaultFailureHandler:failure success:success]];
+}
+
+- (void)markNotificationAsReceivedWithId:(NSString *)notificationId
+                           deviceTokenId:(NSString *)deviceTokenId
+                                 success:(FWTRequestManagerSuccessBlock)success
+                                 failure:(FWTRequestManagerFailureBlock)failure {
+    NSAssert(deviceTokenId != nil, @"Device token id missing");
+    NSAssert(notificationId != nil, @"Notification id missing");
+    
+    if (notificationId.length == 0 || deviceTokenId.length == 0) {
+        if (failure) {
+            failure(404,[NSError fwt_invalidOperationErrorWithUnderlyingError:nil]);
+        }
+        return;
+    }
+    
+    NSString *path = [NSString stringWithFormat:FWTNotificationReceivedPath, notificationId];
+    [self _updateAuthenticationForPath:path httpMethod:@"POST"];
+    [self.httpSessionManager POST:path
+                       parameters:@{@"device_token_id": deviceTokenId}
+                          success:[self _defaultSuccessHandler:success]
+                          failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 #pragma mark - Private Methods

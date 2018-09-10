@@ -96,6 +96,8 @@ NS_SWIFT_NAME(NotifiableManager)
  */
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
 
+#pragma mark - Notification operations
+
 /**
  Notify the server that a notification was read and listen for the server response
  
@@ -106,6 +108,18 @@ NS_SWIFT_NAME(NotifiableManager)
  */
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
            withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
+
+
+/**
+Notify the server that a notification was received by the device. This should not means that the notification was tapped, or openned, just received.
+
+ @param notificationInfo    The information of the notification given by the system
+ @param handler             Block called once that the operation is finished.
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
+- (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+             withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsReceived(notification:completion:));
 
 
 - (instancetype)init NS_UNAVAILABLE;

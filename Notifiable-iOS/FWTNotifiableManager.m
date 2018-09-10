@@ -600,25 +600,11 @@ static NSData * tokenDataBuffer;
 {
     NSNumber *notificationID = notificationInfo[@"n_id"];
     
-    if (notificationID == nil) {
+    if (![self _isNotificationValid:notificationID]) {
         if(handler) {
             handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
         }
         return NO;
-    }
-    
-    if(self.currentDevice == nil) {
-        if(handler) {
-            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return NO;
-    }
-    
-    if (self.currentDevice.user.length == 0 || self.currentDevice.tokenId == nil) {
-        if (handler) {
-            handler(self.currentDevice, nil);
-        }
-        return YES;
     }
     
     __weak typeof(self) weakSelf = self;
@@ -630,6 +616,46 @@ static NSData * tokenDataBuffer;
                                               handler(weakSelf.currentDevice, error);
                                           }
                                       }];
+    return YES;
+}
+
+- (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+             withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+{
+    NSNumber *notificationID = notificationInfo[@"n_id"];
+    
+    if (![self _isNotificationValid:notificationID]) {
+        if(handler) {
+            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return NO;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.requestManager markNotificationAsReceivedWithId:notificationID
+                                            deviceTokenId:self.currentDevice.tokenId
+                                                     user:self.currentDevice.user
+                                        completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                            if (handler) {
+                                                handler(weakSelf.currentDevice, error);
+                                            }
+                                        }];
+    return YES;
+}
+
+- (BOOL) _isNotificationValid:(NSNumber *)notificationID {
+    if (notificationID == nil) {
+        return NO;
+    }
+    
+    if(self.currentDevice == nil) {
+        return NO;
+    }
+    
+    if (self.currentDevice.user.length == 0 || self.currentDevice.tokenId == nil) {
+        return NO;
+    }
+    
     return YES;
 }
 

@@ -110,6 +110,14 @@ NSString * const FWTNotifiableProvider             = @"apns";
                             completionHandler:handler];
 }
 
+- (void)markNotificationAsReceivedWithId:(NSNumber *)notificationId
+                           deviceTokenId:(NSNumber *)deviceTokenId
+                                    user:(NSString *)user
+                       completionHandler:(_Nullable FWTSimpleRequestResponse)handler
+{
+    
+}
+
 #pragma mark - Private
 - (NSDictionary *)_buildParametersForUserAlias:(NSString *)userAlias
                                          token:(NSData *)token

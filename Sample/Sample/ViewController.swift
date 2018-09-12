@@ -26,12 +26,6 @@ class ViewController: UIViewController {
     typealias FWTRegisterCompleted = (NSData)->Void;
     var registerCompleted:FWTRegisterCompleted?
     
-    lazy var userNotificationCenter: UNUserNotificationCenter = {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        return center
-    }()
-    
     @IBOutlet weak var onSiteSwitch: UISwitch!
     
     override func viewDidLoad() {
@@ -105,7 +99,7 @@ extension ViewController {
     private func _registerForNotifications(completion:@escaping FWTRegisterCompleted) {
         self.registerCompleted = completion
         SVProgressHUD.show()
-        self.userNotificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (authorized, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (authorized, error) in
             guard authorized else {
                 SVProgressHUD.showError(withStatus: error?.localizedDescription ?? "Permission not granted")
                 return
@@ -114,16 +108,6 @@ extension ViewController {
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
             }
-        }
-    }
-}
-
-//MARK - User
-
-extension ViewController: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        self.manager.markAsOpen(notification: response.notification.request.content.userInfo) { (_, _) in
-            completionHandler()
         }
     }
 }

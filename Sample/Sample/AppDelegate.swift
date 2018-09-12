@@ -15,9 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [String: AnyObject]?) -> Bool {
-        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification.rawValue] as? [NSObject:AnyObject] {
-            self.application(application: application, didReceiveRemoteNotification: remoteNotification)
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject] {
+            NotifiableManager.applicationDidReceiveRemoteNotification(remoteNotification)
         }
         
         if let serverURL = URL(string: "https://notifiable.futureworkshops.com/") {
@@ -27,10 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
-    private func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if (NotifiableManager.applicationDidReceiveRemoteNotification(userInfo)) {
-            print("Notifiable server notification")
+            completionHandler(.newData)
+        } else {
+            completionHandler(.noData)
         }
     }
     

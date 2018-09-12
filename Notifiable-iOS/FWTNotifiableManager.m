@@ -12,14 +12,13 @@
 #import "FWTNotifiableDevice+Private.h"
 #import "NSError+FWTNotifiable.h"
 #import "NSLocale+FWTNotifiable.h"
+#import "FWTServerConfiguration.h"
 
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
-NSString * const FWTNotifiableServerURL = @"";
-NSString * const FWTNotifiableAccessId = @"";
-NSString * const FWTNotifiableSecretKey = @"";
+NSString * const FWTNotifiableServerConfiguration = @"FWTNotifiableServerConfiguration";
 
 static NSHashTable *managerListeners;
 static NSHashTable *listeners;
@@ -52,26 +51,39 @@ static FWTRequesterManager *sharedRequesterManager;
     return sharedRequesterManager;
 }
 
++ (FWTServerConfiguration *)savedConfiguration
+{
+    NSData *configurationData = (NSData *)[[NSUserDefaults standardUserDefaults] objectForKey:FWTNotifiableServerConfiguration];
+    FWTServerConfiguration *configuration = (FWTServerConfiguration *)[NSKeyedUnarchiver unarchiveObjectWithData:configurationData];
+    return configuration;
+}
+
 + (NSURL *) serverURL
 {
-    return nil;
+    return [self savedConfiguration].serverURL;
 }
 
 + (NSString *) serverAccessId
 {
-    return @"";
+    return [self savedConfiguration].serverAccessId;
 }
 
 + (NSString *) serverSecretKey
 {
-    return @"";
+    return [self savedConfiguration].serverSecretKey;
 }
 
 + (void) configureWithURL:(NSURL *)url
                  accessId:(NSString *)accessId
                 secretKey:(NSString *)secretKey
 {
-    
+    FWTServerConfiguration *configuration = [[FWTServerConfiguration alloc] initWithServerURL:url
+                                                                                     accessId:accessId
+                                                                                 andSecretKey:secretKey];
+    NSData *configurationData = [NSKeyedArchiver archivedDataWithRootObject:configuration];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:configurationData forKey:FWTNotifiableServerConfiguration];
+    [userDefaults synchronize];
 }
 
 - (instancetype)initWithURL:(NSURL *)url

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Keys
 import FWTNotifiable
 
 @UIApplicationMain
@@ -17,6 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [String: AnyObject]?) -> Bool {
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification.rawValue] as? [NSObject:AnyObject] {
             self.application(application: application, didReceiveRemoteNotification: remoteNotification)
+        }
+        
+        if let serverURL = URL(string: "https://notifiable.futureworkshops.com/") {
+            let keys = SampleKeys()
+            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey)
         }
         
         return true

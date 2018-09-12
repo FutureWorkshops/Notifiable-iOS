@@ -156,7 +156,7 @@ Init a notifiable manager with the configurations of the Notifiable-Rails server
  */
 + (void) configureWithURL:(NSURL *)url
                  accessId:(NSString *)accessId
-                secretKey:(NSString *)secretKey;
+                secretKey:(NSString *)secretKey NS_SWIFT_NAME(configure(url:accessId:secretKey:));
 
 #pragma mark - Register Anonymous device
 

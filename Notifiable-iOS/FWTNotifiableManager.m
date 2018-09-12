@@ -73,6 +73,13 @@ static FWTRequesterManager *sharedRequesterManager;
     return [self savedConfiguration].serverSecretKey;
 }
 
++ (FWTNotifiableDevice *)storedDevice {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *deviceData = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    FWTNotifiableDevice *currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
+    return currentDevice;
+}
+
 + (void) configureWithURL:(NSURL *)url
                  accessId:(NSString *)accessId
                 secretKey:(NSString *)secretKey
@@ -631,14 +638,13 @@ andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notific
     
     NSDictionary *notificationCopy = [notificationInfo copy];
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSData *deviceData = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
-    FWTNotifiableDevice *currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
-    
-    //TODO: Use the completion handler to enqueue actions for save upload state
-    [FWTNotifiableManager _markNotificationAsReceived:notificationCopy
-                                        deviceTokenId:currentDevice.tokenId
-                                withCompletionHandler:nil];
+    NSNumber *tokenId = [self storedDevice].tokenId;
+    if (tokenId != nil) {
+        //TODO: Use the completion handler to enqueue actions for save upload state
+        [FWTNotifiableManager _markNotificationAsReceived:notificationCopy
+                                            deviceTokenId:[self storedDevice].tokenId
+                                    withCompletionHandler:nil];
+    }
     
     [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         void (^performWithListener)(id) = ^(id listener) {
@@ -658,24 +664,37 @@ andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notific
 }
 
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
-           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:))
+{
+    __weak typeof(self) weakSelf = self;
+    return [FWTNotifiableManager markNotificationAsOpened:notificationInfo withCompletionHandler:^(NSError * _Nullable error) {
+        if (handler) {
+            handler(weakSelf.currentDevice, error);
+        }
+    }];
+}
+
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+           withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler
 {
     NSNumber *notificationID = notificationInfo[@"n_id"];
+    FWTNotifiableDevice *device = [self storedDevice];
+    NSNumber *tokenId = device.tokenId;
+    NSString *user = device.user;
     
-    if (![self _isNotificationValid:notificationID]) {
+    if (tokenId == nil || notificationID == nil || user == nil) {
         if(handler) {
-            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
+            handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
         return NO;
     }
     
-    __weak typeof(self) weakSelf = self;
     [[FWTNotifiableManager requestManager] markNotificationAsOpenedWithId:notificationID
-                                          deviceTokenId:self.currentDevice.tokenId
-                                                   user:self.currentDevice.user
+                                          deviceTokenId:tokenId
+                                                   user:user
                                       completionHandler:^(BOOL success, NSError * _Nullable error) {
                                           if (handler) {
-                                              handler(weakSelf.currentDevice, error);
+                                              handler(error);
                                           }
                                       }];
     return YES;

@@ -107,7 +107,18 @@ NS_SWIFT_NAME(NotifiableManager)
  @return A flag to indicate if the notifications is from Notifiable server or not
  */
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
-           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:)) DEPRECATED_MSG_ATTRIBUTE("Use class method instead");
+
+/**
+ Notify the server that a notification was read and listen for the server response
+ 
+ @param notificationInfo    The information of the notification given by the system
+ @param handler             Block called once that the operation is finished.
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+           withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
 
 
 #pragma mark - Initialization

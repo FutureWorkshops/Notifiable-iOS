@@ -110,6 +110,17 @@ NSString * const FWTNotifiableProvider             = @"apns";
                             completionHandler:handler];
 }
 
+- (void)markNotificationAsReceivedWithId:(NSNumber *)notificationId
+                           deviceTokenId:(NSNumber *)deviceTokenId
+                       completionHandler:(_Nullable FWTSimpleRequestResponse)handler
+{
+    [self _markNotificationAsReceivedWithId:[notificationId stringValue]
+                              deviceTokenId:[deviceTokenId stringValue]
+                                   attempts:self.retryAttempts + 1
+                              previousError:nil
+                          completionHandler:handler];
+}
+
 #pragma mark - Private
 - (NSDictionary *)_buildParametersForUserAlias:(NSString *)userAlias
                                          token:(NSData *)token
@@ -381,6 +392,40 @@ NSString * const FWTNotifiableProvider             = @"apns";
             [weakSelf _markNotificationAsOpenedWithId:notificationId
                                         deviceTokenId:deviceTokenId
                                                  user:user
+                                             attempts:(attempts - 1)
+                                        previousError:error
+                                    completionHandler:handler];
+        });
+    }];
+}
+
+- (void)_markNotificationAsReceivedWithId:(NSString *)notificationId
+                            deviceTokenId:(NSString *)deviceTokenId
+                                 attempts:(NSUInteger)attempts
+                            previousError:(NSError *)error
+                        completionHandler:(FWTSimpleRequestResponse)handler
+{
+    if (attempts == 0) {
+        if (handler) {
+            handler(NO, [NSError fwt_errorWithUnderlyingError:error]);
+        }
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.requester markNotificationAsReceivedWithId:notificationId deviceTokenId:deviceTokenId success:^(NSDictionary * _Nullable response) {
+        [weakSelf.logger logMessage:@"Notification flagged as opened"];
+        if (handler) {
+            handler(YES,nil);
+        }
+    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+        __strong typeof(weakSelf) sself = weakSelf;
+        [sself.logger logMessage:@"Failed to mark notification as opened"];
+        
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [weakSelf _markNotificationAsReceivedWithId:notificationId
+                                        deviceTokenId:deviceTokenId
                                              attempts:(attempts - 1)
                                         previousError:error
                                     completionHandler:handler];

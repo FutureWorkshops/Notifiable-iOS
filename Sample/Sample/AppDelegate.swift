@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject] {
-            NotifiableManager.applicationDidReceiveRemoteNotification(remoteNotification)
+            NotifiableManager.markAsOpen(notification: remoteNotification, completion: nil)
         }
         
         let center = UNUserNotificationCenter.current()

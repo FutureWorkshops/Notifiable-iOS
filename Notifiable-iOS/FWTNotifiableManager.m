@@ -95,6 +95,12 @@ static FWTRequesterManager *sharedRequesterManager;
     [FWTNotifiableManager configureWithURL:url
                                   accessId:accessId
                                  secretKey:secretKey];
+    return [self initWithDidRegisterBlock:registerBlock andNotificationBlock:notificationBlock];
+}
+
+- (instancetype)initWithDidRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock
+{
     self = [super init];
     if (self) {
         self->_registerBlock = registerBlock;

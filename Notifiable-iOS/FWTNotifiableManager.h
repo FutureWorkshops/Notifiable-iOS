@@ -110,6 +110,8 @@ NS_SWIFT_NAME(NotifiableManager)
            withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
 
 
+#pragma mark - Initialization
+
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
@@ -129,7 +131,32 @@ NS_SWIFT_NAME(NotifiableManager)
                    accessId:(NSString *)accessId
                   secretKey:(NSString *)secretKey
            didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
-       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(url:accessId:secretKey:didRegister:didRecieve:))  NS_DESIGNATED_INITIALIZER;
+       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(url:accessId:secretKey:didRegister:didRecieve:))   DEPRECATED_MSG_ATTRIBUTE("Use the configureWithURL:accessId:secretKey: and simpler initializer instead");
+
+/**
+Init a notifiable manager with the configurations of the Notifiable-Rails server
+ 
+@see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
+
+@param registerBlock       Block that is called once that the device is registered for receiving notifications
+@param notificationBlock   Block that is called once that the device receives a notification;
+
+@return Manager configured to access a specific Notifiable-Rails server
+*/
+- (instancetype)initWithDidRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+                    andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(didRegister:didRecieve:)) NS_DESIGNATED_INITIALIZER;
+
+
+/**
+ This method configures the SDK to a specific Notifiable configuration
+
+ @param url URL of the Notifiable server
+ @param accessId Access Id of the specific application
+ @param secretKey Secret Key of the specific application
+ */
++ (void) configureWithURL:(NSURL *)url
+                 accessId:(NSString *)accessId
+                secretKey:(NSString *)secretKey;
 
 #pragma mark - Register Anonymous device
 

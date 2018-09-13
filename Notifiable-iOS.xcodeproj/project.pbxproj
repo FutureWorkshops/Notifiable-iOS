@@ -17,6 +17,7 @@
 		783AED251C57D2AA00066EE7 /* FWTNSErrorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */; };
 		783AED321C57E9E500066EE7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632FC1C50FD9E0074DE3F /* SystemConfiguration.framework */; };
 		783AED391C57E9EA00066EE7 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787632F61C50FD440074DE3F /* MobileCoreServices.framework */; };
+		784EE1DC21494349004A2741 /* FWTServerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 784EE1DB21494349004A2741 /* FWTServerConfiguration.m */; };
 		787632481C50EC220074DE3F /* FWTRegisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 787632471C50EC220074DE3F /* FWTRegisterTests.m */; };
 		7876324A1C50EC220074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
 		787632591C50EC360074DE3F /* libFWTNotifiable.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4119C917E9B9D1000CD6F3 /* libFWTNotifiable.a */; };
@@ -140,6 +141,8 @@
 		783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSLocale+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSLocale+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		783AED201C57BD6800066EE7 /* FWTRequestIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTRequestIntegrationTests.m; sourceTree = "<group>"; };
 		783AED241C57D2AA00066EE7 /* FWTNSErrorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FWTNSErrorTests.m; sourceTree = "<group>"; };
+		784EE1DA21494349004A2741 /* FWTServerConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FWTServerConfiguration.h; path = "Notifiable-iOS/Model/FWTServerConfiguration.h"; sourceTree = "<group>"; };
+		784EE1DB21494349004A2741 /* FWTServerConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FWTServerConfiguration.m; path = "Notifiable-iOS/Model/FWTServerConfiguration.m"; sourceTree = "<group>"; };
 		787632451C50EC220074DE3F /* Notifiable-iOSUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Notifiable-iOSUnitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		787632471C50EC220074DE3F /* FWTRegisterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FWTRegisterTests.m; sourceTree = "<group>"; };
 		787632491C50EC220074DE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -166,7 +169,7 @@
 		78843C6B1C4E657B0044CE25 /* FWTNotifiableLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTNotifiableLogger.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78843C6D1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTDefaultNotifiableLogger.h; path = "Notifiable-iOS/Logger/FWTDefaultNotifiableLogger.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78843C6E1C4E68AE0044CE25 /* FWTDefaultNotifiableLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTDefaultNotifiableLogger.m; path = "Notifiable-iOS/Logger/FWTDefaultNotifiableLogger.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		78843C711C4E9B090044CE25 /* FWTNotifiableDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableDevice.h; path = "Notifiable-iOS/Model/FWTNotifiableDevice.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		78843C711C4E9B090044CE25 /* FWTNotifiableDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableDevice.h; path = "Notifiable-iOS/Model/FWTNotifiableDevice.h"; sourceTree = SOURCE_ROOT; };
 		78843C721C4E9B090044CE25 /* FWTNotifiableDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableDevice.m; path = "Notifiable-iOS/Model/FWTNotifiableDevice.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		78843C771C4E9D130044CE25 /* FWTNotifiableDevice+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "FWTNotifiableDevice+Private.h"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Private.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "FWTNotifiableDevice+Private.m"; path = "Notifiable-iOS/Model/FWTNotifiableDevice+Private.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -339,6 +342,8 @@
 				78843C781C4E9D130044CE25 /* FWTNotifiableDevice+Private.m */,
 				78843C831C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.h */,
 				78843C841C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m */,
+				784EE1DA21494349004A2741 /* FWTServerConfiguration.h */,
+				784EE1DB21494349004A2741 /* FWTServerConfiguration.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -608,6 +613,7 @@
 				78843C731C4E9B090044CE25 /* FWTNotifiableDevice.m in Sources */,
 				ADDC47BC1CC6E74200C9BE58 /* NSDate+FWTNotifiable.m in Sources */,
 				7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */,
+				784EE1DC21494349004A2741 /* FWTServerConfiguration.m in Sources */,
 				78843C851C4EB82D0044CE25 /* FWTNotifiableDevice+Parser.m in Sources */,
 				78843C791C4E9D130044CE25 /* FWTNotifiableDevice+Private.m in Sources */,
 				65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */,

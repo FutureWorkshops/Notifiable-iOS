@@ -7,29 +7,47 @@
 //
 
 import UIKit
+import Keys
 import FWTNotifiable
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [String: AnyObject]?) -> Bool {
-        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification.rawValue] as? [NSObject:AnyObject] {
-            self.application(application: application, didReceiveRemoteNotification: remoteNotification)
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        
+        if let serverURL = URL(string: "https://notifiable.futureworkshops.com/") {
+            let keys = SampleKeys()
+            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey)
         }
+        
+        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject] {
+            NotifiableManager.markAsOpen(notification: remoteNotification, completion: nil)
+        }
+        
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
         
         return true
     }
-    
-    private func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        if (NotifiableManager.applicationDidReceiveRemoteNotification(userInfo)) {
-            print("Notifiable server notification")
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+            completionHandler(.noData)
+            return
         }
-    }
-    
-    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        application.registerForRemoteNotifications()
+        
+        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+            if let _ = error {
+                completionHandler(.failed)
+            } else {
+                completionHandler(.newData)
+            }
+        }
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -38,5 +56,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         dump(error)
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        NotifiableManager.markAsOpen(notification: response.notification.request.content.userInfo) { (_) in
+            completionHandler()
+        }
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        let userInfo = notification.request.content.userInfo
+        
+        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+            return
+        }
+        
+        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+            completionHandler(.alert)
+        }
     }
 }

@@ -96,6 +96,8 @@ NS_SWIFT_NAME(NotifiableManager)
  */
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
 
+#pragma mark - Notification operations
+
 /**
  Notify the server that a notification was read and listen for the server response
  
@@ -105,8 +107,32 @@ NS_SWIFT_NAME(NotifiableManager)
  @return A flag to indicate if the notifications is from Notifiable server or not
  */
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
-           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:)) DEPRECATED_MSG_ATTRIBUTE("Use class method instead");
 
+/**
+ Notify the server that a notification was read and listen for the server response
+ 
+ @param notificationInfo    The information of the notification given by the system
+ @param handler             Block called once that the operation is finished.
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+           withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
+
+
+/**
+ This informs the server that a notification was delivered to the device
+
+ @param notificationInfo The payload that is provided in the notification
+ @param handler Method that is called once the method is completed
+ @return An indication if it is a valid notification or not
+ */
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+             withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler NS_SWIFT_NAME(markAsReceived(notification:completion:));
+
+
+#pragma mark - Initialization
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -127,7 +153,32 @@ NS_SWIFT_NAME(NotifiableManager)
                    accessId:(NSString *)accessId
                   secretKey:(NSString *)secretKey
            didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
-       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(url:accessId:secretKey:didRegister:didRecieve:))  NS_DESIGNATED_INITIALIZER;
+       andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(url:accessId:secretKey:didRegister:didRecieve:))   DEPRECATED_MSG_ATTRIBUTE("Use the configureWithURL:accessId:secretKey: and simpler initializer instead");
+
+/**
+Init a notifiable manager with the configurations of the Notifiable-Rails server
+ 
+@see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
+
+@param registerBlock       Block that is called once that the device is registered for receiving notifications
+@param notificationBlock   Block that is called once that the device receives a notification;
+
+@return Manager configured to access a specific Notifiable-Rails server
+*/
+- (instancetype)initWithDidRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+                    andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(didRegister:didRecieve:)) NS_DESIGNATED_INITIALIZER;
+
+
+/**
+ This method configures the SDK to a specific Notifiable configuration
+
+ @param url URL of the Notifiable server
+ @param accessId Access Id of the specific application
+ @param secretKey Secret Key of the specific application
+ */
++ (void) configureWithURL:(NSURL *)url
+                 accessId:(NSString *)accessId
+                secretKey:(NSString *)secretKey NS_SWIFT_NAME(configure(url:accessId:secretKey:));
 
 #pragma mark - Register Anonymous device
 

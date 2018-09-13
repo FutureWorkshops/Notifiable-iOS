@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Keys
 import FWTNotifiable
 import SVProgressHUD
 import UserNotifications
@@ -16,12 +15,7 @@ class ViewController: UIViewController {
     
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:NotifiableManager! = {
-        let keys = SampleKeys()
-        guard let serverURL = URL(string: "https://notifiable.futureworkshops.com/") else {
-            return nil
-        }
-        let manager = NotifiableManager(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey,
-            didRegister: { [weak self] (_, token) in
+        let manager = NotifiableManager(didRegister: { [weak self] (_, token) in
             self?.registerCompleted?(token as NSData)
         }, didRecieve: nil)
         
@@ -105,26 +99,18 @@ extension ViewController {
     private func _registerForNotifications(completion:@escaping FWTRegisterCompleted) {
         self.registerCompleted = completion
         SVProgressHUD.show()
-        
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (authorized, error) in
-                guard authorized else {
-                    SVProgressHUD.showError(withStatus: error?.localizedDescription ?? "Permission not granted")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (authorized, error) in
+            guard authorized else {
+                SVProgressHUD.showError(withStatus: error?.localizedDescription ?? "Permission not granted")
+                return
             }
-        } else {
-            let notificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            UIApplication.shared.registerUserNotificationSettings(notificationSettings)
+            
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
         }
     }
 }
-
-//MARK - User
 
 extension ViewController {
     @IBAction func associateToUser(sender: AnyObject) {

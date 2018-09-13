@@ -12,19 +12,21 @@
 #import "FWTNotifiableDevice+Private.h"
 #import "NSError+FWTNotifiable.h"
 #import "NSLocale+FWTNotifiable.h"
+#import "FWTServerConfiguration.h"
 
 NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
 NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
+NSString * const FWTNotifiableServerConfiguration = @"FWTNotifiableServerConfiguration";
 
 static NSHashTable *managerListeners;
 static NSHashTable *listeners;
 static NSData * tokenDataBuffer;
+static FWTRequesterManager *sharedRequesterManager;
 
 @interface FWTNotifiableManager () <FWTNotifiableManagerListener>
 
-@property (nonatomic, strong) FWTRequesterManager *requestManager;
 @property (nonatomic, copy, readwrite, nullable) FWTNotifiableDevice *currentDevice;
 @property (nonatomic, strong) NSData *deviceTokenData;
 @property (nonatomic, strong) NSNotificationCenter *notificationCenter;
@@ -37,22 +39,79 @@ static NSData * tokenDataBuffer;
 
 @synthesize currentDevice = _currentDevice;
 
++ (FWTRequesterManager *)requestManager
+{
+    if (sharedRequesterManager == nil) {
+        FWTNotifiableAuthenticator *authenticator = [[FWTNotifiableAuthenticator alloc] initWithAccessId:[FWTNotifiableManager serverAccessId]
+                                                                                            andSecretKey:[FWTNotifiableManager serverSecretKey]];
+        FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseURL:[FWTNotifiableManager serverURL]
+                                                               andAuthenticator:authenticator];
+        sharedRequesterManager = [[FWTRequesterManager alloc] initWithRequester:requester];
+    }
+    return sharedRequesterManager;
+}
+
++ (FWTServerConfiguration *)savedConfiguration
+{
+    NSData *configurationData = (NSData *)[[NSUserDefaults standardUserDefaults] objectForKey:FWTNotifiableServerConfiguration];
+    FWTServerConfiguration *configuration = (FWTServerConfiguration *)[NSKeyedUnarchiver unarchiveObjectWithData:configurationData];
+    return configuration;
+}
+
++ (NSURL *) serverURL
+{
+    return [self savedConfiguration].serverURL;
+}
+
++ (NSString *) serverAccessId
+{
+    return [self savedConfiguration].serverAccessId;
+}
+
++ (NSString *) serverSecretKey
+{
+    return [self savedConfiguration].serverSecretKey;
+}
+
++ (FWTNotifiableDevice *)storedDevice {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *deviceData = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    FWTNotifiableDevice *currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
+    return currentDevice;
+}
+
++ (void) configureWithURL:(NSURL *)url
+                 accessId:(NSString *)accessId
+                secretKey:(NSString *)secretKey
+{
+    FWTServerConfiguration *configuration = [[FWTServerConfiguration alloc] initWithServerURL:url
+                                                                                     accessId:accessId
+                                                                                 andSecretKey:secretKey];
+    NSData *configurationData = [NSKeyedArchiver archivedDataWithRootObject:configuration];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:configurationData forKey:FWTNotifiableServerConfiguration];
+    [userDefaults synchronize];
+}
+
 - (instancetype)initWithURL:(NSURL *)url
                    accessId:(NSString *)accessId
                   secretKey:(NSString *)secretKey
            didRegisterBlock:(FWTNotifiableDidRegisterBlock)registerBlock
        andNotificationBlock:(FWTNotifiableDidReceiveNotificationBlock)notificationBlock
 {
+    [FWTNotifiableManager configureWithURL:url
+                                  accessId:accessId
+                                 secretKey:secretKey];
+    return [self initWithDidRegisterBlock:registerBlock andNotificationBlock:notificationBlock];
+}
+
+- (instancetype)initWithDidRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock
+{
     self = [super init];
     if (self) {
         self->_registerBlock = registerBlock;
         self->_notificationBlock = notificationBlock;
-        
-        FWTNotifiableAuthenticator *authenticator = [[FWTNotifiableAuthenticator alloc] initWithAccessId:accessId
-                                                                                            andSecretKey:secretKey];
-        FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseURL:url
-                                                               andAuthenticator:authenticator];
-        self->_requestManager = [[FWTRequesterManager alloc] initWithRequester:requester];
         self->_deviceTokenData = tokenDataBuffer;
         
         // register self as listener
@@ -154,32 +213,32 @@ static NSData * tokenDataBuffer;
 
 - (NSInteger)retryAttempts
 {
-    return self.requestManager.retryAttempts;
+    return [FWTNotifiableManager requestManager].retryAttempts;
 }
 
 - (void)setRetryAttempts:(NSInteger)retryAttempts
 {
-    self.requestManager.retryAttempts = retryAttempts;
+    [FWTNotifiableManager requestManager].retryAttempts = retryAttempts;
 }
 
 -(NSTimeInterval)retryDelay
 {
-    return self.requestManager.retryDelay;
+    return [FWTNotifiableManager requestManager].retryDelay;
 }
 
 - (void)setRetryDelay:(NSTimeInterval)retryDelay
 {
-    self.requestManager.retryDelay = retryDelay;
+    [FWTNotifiableManager requestManager].retryDelay = retryDelay;
 }
 
 - (id<FWTNotifiableLogger>)logger
 {
-    return self.requestManager.logger;
+    return [FWTNotifiableManager requestManager].logger;
 }
 
 - (void)setLogger:(id<FWTNotifiableLogger>)logger
 {
-    self.requestManager.logger = logger;
+    [FWTNotifiableManager requestManager].logger = logger;
 }
 
 #pragma mark - Public static methods
@@ -267,7 +326,7 @@ static NSData * tokenDataBuffer;
     
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
-    [self.requestManager registerDeviceWithUserAlias:nil
+    [[FWTNotifiableManager requestManager] registerDeviceWithUserAlias:nil
                                                token:token
                                                 name:name
                                               locale:deviceLocale
@@ -319,7 +378,7 @@ static NSData * tokenDataBuffer;
     
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
-    [self.requestManager registerDeviceWithUserAlias:userAlias
+    [[FWTNotifiableManager requestManager] registerDeviceWithUserAlias:userAlias
                                                token:token
                                                 name:name
                                               locale:deviceLocale
@@ -464,7 +523,7 @@ static NSData * tokenDataBuffer;
     NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:customProperties:completionHandler: instead");
     
     __weak typeof(self) weakSelf = self;
-    [self.requestManager updateDevice:self.currentDevice.tokenId
+    [[FWTNotifiableManager requestManager] updateDevice:self.currentDevice.tokenId
                         withUserAlias:userAlias
                                 token:token
                                  name:name
@@ -553,7 +612,7 @@ static NSData * tokenDataBuffer;
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.requestManager unregisterTokenId:self.currentDevice.tokenId
+    [[FWTNotifiableManager requestManager] unregisterTokenId:self.currentDevice.tokenId
                          completionHandler:^(BOOL success, NSError * _Nullable error) {
                              __strong typeof(weakSelf) sself = weakSelf;
                              FWTNotifiableDevice *responseDevice;
@@ -578,6 +637,7 @@ static NSData * tokenDataBuffer;
     }
     
     NSDictionary *notificationCopy = [notificationInfo copy];
+    
     [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         void (^performWithListener)(id) = ^(id listener) {
             if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
@@ -596,40 +656,62 @@ static NSData * tokenDataBuffer;
 }
 
 - (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
-           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler
+           withCompletionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(markAsOpen(notification:completion:))
+{
+    __weak typeof(self) weakSelf = self;
+    return [FWTNotifiableManager markNotificationAsOpened:notificationInfo withCompletionHandler:^(NSError * _Nullable error) {
+        if (handler) {
+            handler(weakSelf.currentDevice, error);
+        }
+    }];
+}
+
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+           withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler
 {
     NSNumber *notificationID = notificationInfo[@"n_id"];
+    FWTNotifiableDevice *device = [self storedDevice];
+    NSNumber *tokenId = device.tokenId;
+    NSString *user = device.user;
     
-    if (notificationID == nil) {
+    if (tokenId == nil || notificationID == nil || user == nil) {
         if(handler) {
-            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
+            handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
         return NO;
     }
     
-    if(self.currentDevice == nil) {
-        if(handler) {
-            handler(self.currentDevice, [NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return NO;
-    }
-    
-    if (self.currentDevice.user.length == 0 || self.currentDevice.tokenId == nil) {
-        if (handler) {
-            handler(self.currentDevice, nil);
-        }
-        return YES;
-    }
-    
-    __weak typeof(self) weakSelf = self;
-    [self.requestManager markNotificationAsOpenedWithId:notificationID
-                                          deviceTokenId:self.currentDevice.tokenId
-                                                   user:self.currentDevice.user
+    [[FWTNotifiableManager requestManager] markNotificationAsOpenedWithId:notificationID
+                                          deviceTokenId:tokenId
+                                                   user:user
                                       completionHandler:^(BOOL success, NSError * _Nullable error) {
                                           if (handler) {
-                                              handler(weakSelf.currentDevice, error);
+                                              handler(error);
                                           }
                                       }];
+    return YES;
+}
+
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+             withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler
+{
+    NSNumber *notificationID = notificationInfo[@"n_id"];
+    NSNumber *deviceTokenId = [self storedDevice].tokenId;
+    
+    if (deviceTokenId == nil) {
+        if(handler) {
+            handler([NSError fwt_invalidDeviceInformationError:nil]);
+        }
+        return NO;
+    }
+    
+    [[FWTNotifiableManager requestManager] markNotificationAsReceivedWithId:notificationID
+                                                              deviceTokenId:deviceTokenId
+                                                          completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                                              if (handler) {
+                                                                  handler(error);
+                                                              }
+                                                          }];
     return YES;
 }
 
@@ -645,8 +727,6 @@ static NSData * tokenDataBuffer;
 - (void)applicationDidReciveNotification:(NSDictionary *)notification
 {
     @synchronized(self) {
-        [self markNotificationAsOpened:notification
-                 withCompletionHandler:nil];
         if (self.notificationBlock) {
             self.notificationBlock(self, self.currentDevice, notification);
         }
@@ -654,6 +734,7 @@ static NSData * tokenDataBuffer;
 }
 
 #pragma mark - Private
+
 - (void) _handleDeviceRegisterWithToken:(NSData *)token
                                 tokenId:(NSNumber *)deviceTokenId
                                  locale:(NSLocale *)locale

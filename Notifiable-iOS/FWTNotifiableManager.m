@@ -638,14 +638,6 @@ andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notific
     
     NSDictionary *notificationCopy = [notificationInfo copy];
     
-    NSNumber *tokenId = [self storedDevice].tokenId;
-    if (tokenId != nil) {
-        //TODO: Use the completion handler to enqueue actions for save upload state
-        [FWTNotifiableManager _markNotificationAsReceived:notificationCopy
-                                            deviceTokenId:[self storedDevice].tokenId
-                                    withCompletionHandler:nil];
-    }
-    
     [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
         void (^performWithListener)(id) = ^(id listener) {
             if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
@@ -700,19 +692,26 @@ andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notific
     return YES;
 }
 
-- (BOOL) _isNotificationValid:(NSNumber *)notificationID {
-    if (notificationID == nil) {
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+             withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler
+{
+    NSNumber *notificationID = notificationInfo[@"n_id"];
+    NSNumber *deviceTokenId = [self storedDevice].tokenId;
+    
+    if (deviceTokenId == nil) {
+        if(handler) {
+            handler([NSError fwt_invalidDeviceInformationError:nil]);
+        }
         return NO;
     }
     
-    if(self.currentDevice == nil) {
-        return NO;
-    }
-    
-    if (self.currentDevice.user.length == 0 || self.currentDevice.tokenId == nil) {
-        return NO;
-    }
-    
+    [[FWTNotifiableManager requestManager] markNotificationAsReceivedWithId:notificationID
+                                                              deviceTokenId:deviceTokenId
+                                                          completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                                              if (handler) {
+                                                                  handler(error);
+                                                              }
+                                                          }];
     return YES;
 }
 
@@ -735,29 +734,6 @@ andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notific
 }
 
 #pragma mark - Private
-
-+ (BOOL)_markNotificationAsReceived:(NSDictionary *)notificationInfo
-                      deviceTokenId:(NSNumber *)deviceTokenId
-             withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler
-{
-    NSNumber *notificationID = notificationInfo[@"n_id"];
-
-    if (deviceTokenId == nil) {
-        if(handler) {
-            handler([NSError fwt_invalidDeviceInformationError:nil]);
-        }
-        return NO;
-    }
-
-    [[FWTNotifiableManager requestManager] markNotificationAsReceivedWithId:notificationID
-                                            deviceTokenId:deviceTokenId
-                                        completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                            if (handler) {
-                                                handler(error);
-                                            }
-                                        }];
-    return YES;
-}
 
 - (void) _handleDeviceRegisterWithToken:(NSData *)token
                                 tokenId:(NSNumber *)deviceTokenId

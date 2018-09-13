@@ -121,6 +121,17 @@ NS_SWIFT_NAME(NotifiableManager)
            withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler NS_SWIFT_NAME(markAsOpen(notification:completion:));
 
 
+/**
+ This informs the server that a notification was delivered to the device
+
+ @param notificationInfo The payload that is provided in the notification
+ @param handler Method that is called once the method is completed
+ @return An indication if it is a valid notification or not
+ */
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+             withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler NS_SWIFT_NAME(markAsReceived(notification:completion:));
+
+
 #pragma mark - Initialization
 
 - (instancetype)init NS_UNAVAILABLE;

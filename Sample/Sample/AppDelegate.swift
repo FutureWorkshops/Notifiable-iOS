@@ -35,10 +35,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if (NotifiableManager.applicationDidReceiveRemoteNotification(userInfo)) {
-            completionHandler(.newData)
-        } else {
+        
+        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
             completionHandler(.noData)
+            return
+        }
+        
+        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+            if let _ = error {
+                completionHandler(.failed)
+            } else {
+                completionHandler(.newData)
+            }
         }
     }
     
@@ -59,6 +67,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        NotifiableManager.applicationDidReceiveRemoteNotification(notification.request.content.userInfo)
+        
+        let userInfo = notification.request.content.userInfo
+        
+        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+            return
+        }
+        
+        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+            completionHandler(.alert)
+        }
     }
 }

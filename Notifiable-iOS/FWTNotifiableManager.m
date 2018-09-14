@@ -259,21 +259,6 @@ static FWTRequesterManager *sharedRequesterManager;
 
 #pragma mark - Public static methods
 
-+ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types
-{
-    UIApplication *app = [UIApplication sharedApplication];
-    
-    if(![app isRegisteredForRemoteNotifications]) {
-        return NO;
-    }
-    
-    UIUserNotificationSettings *settings = [app currentUserNotificationSettings];
-    UIUserNotificationType typesAllowed = settings.types;
-    
-    return typesAllowed == types;
-}
-
-
 + (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener
 {
     [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {

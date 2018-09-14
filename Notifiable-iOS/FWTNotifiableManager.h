@@ -51,14 +51,6 @@ NS_SWIFT_NAME(NotifiableManager)
 /** Current device. If the device is not registered, it will be nil. */
 @property (nonatomic, copy, readonly, nullable) FWTNotifiableDevice *currentDevice;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_10_0
-/**
- Checks if the user have allowed the application to use push notifications with a specific UIUserNotificationType
- @param types   Notification setting that is expected to be registered
-*/
-+ (BOOL)userAllowsPushNotificationsForType:(UIUserNotificationType)types NS_SWIFT_NAME(userAllows(types:));
-#endif
-
 #pragma mark - Permission notification
 /**
  Inform the Notifiable Manager that the application did register for remote notifications

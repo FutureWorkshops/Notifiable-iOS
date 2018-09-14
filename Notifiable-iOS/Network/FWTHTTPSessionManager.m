@@ -67,64 +67,64 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 
 #pragma mark - Public methods
 
-- (nullable NSURLSessionDataTask *)GET:(NSString *)URLString
-                            parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters
-                               success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-                               failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+- (void)GET:(NSString *)URLString
+ parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters
+    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+    failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
-    return [self _buildTaskForPath:URLString
-                            method:FWTHTTPMethodGET
-                          parameters:parameters
-                             success:success
-                          andFailure:failure];
+    [self _buildTaskForPath:URLString
+                     method:FWTHTTPMethodGET
+                 parameters:parameters
+                    success:success
+                 andFailure:failure];
 }
 
-- (nullable NSURLSessionDataTask *)PATCH:(NSString *)URLString
-                              parameters:(nullable NSDictionary *)parameters
-                                 success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-                                 failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+- (void)PATCH:(NSString *)URLString
+   parameters:(nullable NSDictionary *)parameters
+      success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+      failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
-    return [self _buildTaskForPath:URLString
-                            method:FWTHTTPMethodPATCH
-                          parameters:parameters
-                             success:success
-                          andFailure:failure];
+    [self _buildTaskForPath:URLString
+                     method:FWTHTTPMethodPATCH
+                 parameters:parameters
+                    success:success
+                 andFailure:failure];
 }
 
-- (nullable NSURLSessionDataTask *)DELETE:(NSString *)URLString
-                               parameters:(nullable NSDictionary *)parameters
-                                  success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-                                  failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+- (void)DELETE:(NSString *)URLString
+    parameters:(nullable NSDictionary *)parameters
+       success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+       failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
-    return [self _buildTaskForPath:URLString
-                            method:FWTHTTPMethodDELETE
-                          parameters:parameters
-                             success:success
-                          andFailure:failure];
+    [self _buildTaskForPath:URLString
+                     method:FWTHTTPMethodDELETE
+                 parameters:parameters
+                    success:success
+                 andFailure:failure];
 }
 
-- (nullable NSURLSessionDataTask *)PUT:(NSString *)URLString
-                            parameters:(nullable NSDictionary *)parameters
-                               success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-                               failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+- (void)PUT:(NSString *)URLString
+ parameters:(nullable NSDictionary *)parameters
+    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+    failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
-    return [self _buildTaskForPath:URLString
-                            method:FWTHTTPMethodPUT
-                          parameters:parameters
-                             success:success
-                          andFailure:failure];
+    [self _buildTaskForPath:URLString
+                     method:FWTHTTPMethodPUT
+                 parameters:parameters
+                    success:success
+                 andFailure:failure];
 }
 
-- (nullable NSURLSessionDataTask *)POST:(NSString *)URLString
-                             parameters:(nullable NSDictionary *)parameters
-                                success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-                                failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+- (void)POST:(NSString *)URLString
+  parameters:(nullable NSDictionary *)parameters
+     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
-    return [self _buildTaskForPath:URLString
-                            method:FWTHTTPMethodPOST
-                          parameters:parameters
-                             success:success
-                          andFailure:failure];
+    [self _buildTaskForPath:URLString
+                     method:FWTHTTPMethodPOST
+                 parameters:parameters
+                    success:success
+                 andFailure:failure];
 }
 
 - (void) setValue:(NSString *)value forHTTPHeaderField:(NSString *)field
@@ -135,35 +135,34 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 
 #pragma mark - Private methods
 
-- (NSURLSessionDataTask *) _buildTaskForPath:(NSString *)path
-                                      method:(FWTHTTPMethod)method
-                                    parameters:(NSDictionary*)parameters
-                                       success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-                                    andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+- (void) _buildTaskForPath:(NSString *)path
+                    method:(FWTHTTPMethod)method
+                parameters:(NSDictionary*)parameters
+                   success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+                andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
 
     __weak typeof(self) weakSelf = self;
     [NSURLConnection sendAsynchronousRequest:request queue:self.sessionOperationQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         NSLog(@"Response with Error: %@", connectionError);
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        
         if (connectionError) {
-            failure(nil, connectionError);
+            failure(httpResponse.statusCode, connectionError);
             return;
         }
         
         id responseData = [weakSelf _jsonFromData:data];
         
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
             NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
-            failure(nil, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+            failure(404, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
             return;
         }
         
-        success(nil, responseData);
+        success(responseData);
     }];
-    
-    return nil;
 }
 
 - (NSURLRequest *) _buildRequestWithPath:(NSString *)path

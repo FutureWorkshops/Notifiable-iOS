@@ -11,9 +11,8 @@
 
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
-@interface FWTHTTPSessionManager () <NSURLSessionDownloadDelegate>
+@interface FWTHTTPSessionManager ()
 
-@property (nonatomic, strong) NSURLSession *urlSession;
 @property (nonatomic, strong) NSOperationQueue *sessionOperationQueue;
 @property (nonatomic, strong) FWTHTTPRequestSerializer *requestSerializer;
 @property (nonatomic, strong) NSURL *baseURL;
@@ -43,15 +42,6 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
         self->_sessionOperationQueue.qualityOfService = NSQualityOfServiceUtility;
     }
     return self->_sessionOperationQueue;
-}
-
-- (NSURLSession *)urlSession
-{
-    if (self->_urlSession == nil) {
-        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:FWTHTTPSessionManagerIdentifier];
-        self->_urlSession = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:self.sessionOperationQueue];
-    }
-    return self->_urlSession;
 }
 
 - (NSMutableDictionary *)mutableHeaders
@@ -176,12 +166,6 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     return nil;
 }
 
-- (NSURLSessionDataTask *) _buildTaskForRequest:(NSURLRequest *)request
-{
-    NSURLSessionDataTask *dataTask = [self.urlSession dataTaskWithRequest:request];
-    return dataTask;
-}
-
 - (NSURLRequest *) _buildRequestWithPath:(NSString *)path
                                   method:(FWTHTTPMethod)method
                            andParameters:(NSDictionary *)paramters
@@ -203,26 +187,6 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     } else {
         return jsonContent;
     }
-}
-
-#pragma mark - URLSession delegate
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
-didCompleteWithError:(nullable NSError *)error
-{
-    
-}
-
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
-    didReceiveData:(NSData *)data
-{
-    
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
-didFinishDownloadingToURL:(NSURL *)location
-{
-    
 }
 
 @end

@@ -259,6 +259,11 @@ static FWTRequesterManager *sharedRequesterManager;
 
 #pragma mark - Public static methods
 
++ (void) syncronizeDataWithGroupId:(NSString *)groupId
+{
+    [[NSUserDefaults standardUserDefaults] syncronizeToGroupId:groupId];
+}
+
 + (void)registerManagerListener:(id<FWTNotifiableManagerListener>)listener
 {
     [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {

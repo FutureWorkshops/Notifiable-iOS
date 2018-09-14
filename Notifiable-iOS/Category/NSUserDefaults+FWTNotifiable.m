@@ -23,6 +23,13 @@
     }
 }
 
+- (void) syncronizeToGroupId:(NSString * _Nullable)groupId {
+    NSUserDefaults *destination = [NSUserDefaults userDefaultsWithGroupId:groupId];
+    [destination setObject:[self objectForKey:FWTNotifiableServerConfiguration] forKey:FWTNotifiableServerConfiguration];
+    [destination setObject:[self objectForKey:FWTUserInfoNotifiableCurrentDeviceKey] forKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    [destination synchronize];
+}
+
 - (FWTServerConfiguration * _Nullable)storedConfiguration {
     NSData *configurationData = (NSData *)[self objectForKey:FWTNotifiableServerConfiguration];
     FWTServerConfiguration *configuration = (FWTServerConfiguration *)[NSKeyedUnarchiver unarchiveObjectWithData:configurationData];

@@ -51,6 +51,16 @@ NS_SWIFT_NAME(NotifiableManager)
 /** Current device. If the device is not registered, it will be nil. */
 @property (nonatomic, copy, readonly, nullable) FWTNotifiableDevice *currentDevice;
 
+#pragma mark - Support Methods
+
+
+/**
+ This is a support method that allows you to move an old Notifiable data to a shared container
+
+ @param groupId Group Id where the data will be copied to
+ */
++ (void) syncronizeDataWithGroupId:(NSString *)groupId;
+
 #pragma mark - Permission notification
 /**
  Inform the Notifiable Manager that the application did register for remote notifications

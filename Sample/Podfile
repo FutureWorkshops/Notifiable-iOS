@@ -1,18 +1,25 @@
 workspace 'Sample.xcworkspace'
 project 'Sample.xcodeproj'
-platform :ios, '8.0'
+platform :ios, '10.0'
 use_frameworks!
 
-plugin 'cocoapods-keys', {
-    :project => "Sample",
-    :keys => [
-    "FWTAccessID",
-    "FWTSecretKey"
-]}
+def common
+    plugin 'cocoapods-keys', {
+        :project => "Sample",
+        :keys => [
+        "FWTAccessID",
+        "FWTSecretKey"
+        ]}
+    pod 'Notifiable', :path => '..'
+end
 
-target :Sample do
-  pod 'Notifiable', :path => '..'
-  pod 'SVProgressHUD', '~> 2.2.5'
+target 'Sample' do
+    common
+    pod 'SVProgressHUD', '~> 2.2.5'
+end
+
+target 'NotificationService' do
+    common
 end
 
 post_install do | installer |

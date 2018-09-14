@@ -220,7 +220,7 @@ static FWTRequesterManager *sharedRequesterManager;
         self->_currentDevice = currentDevice;
         self->_deviceTokenData = self->_currentDevice.token;
         if (self->_currentDevice) {
-            [self.userDefaults storedDevice];
+            [self.userDefaults storeDevice:self->_currentDevice];
         } else {
             [self.userDefaults clearStoredDevice];
         }

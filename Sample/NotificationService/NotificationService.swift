@@ -7,6 +7,9 @@
 //
 
 import UserNotifications
+import FWTNotifiable
+
+let kAppGroupId = "group.com.futureworkshops.notifiable.Sample"
 
 class NotificationService: UNNotificationServiceExtension {
 
@@ -15,20 +18,18 @@ class NotificationService: UNNotificationServiceExtension {
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
-        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        self.bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
-        if let bestAttemptContent = bestAttemptContent {
-            // Modify the notification content here...
-            bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
-            
-            contentHandler(bestAttemptContent)
+        NotifiableManager.markAsReceived(notification: request.content.userInfo, groupId: kAppGroupId) { [weak self] (_) in
+            guard let contentHandler = self?.contentHandler, let bestAttempt = self?.bestAttemptContent else { return }
+            contentHandler(bestAttempt)
         }
     }
     
     override func serviceExtensionTimeWillExpire() {
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+        if let contentHandler = self.contentHandler, let bestAttemptContent =  self.bestAttemptContent {
             contentHandler(bestAttemptContent)
         }
     }

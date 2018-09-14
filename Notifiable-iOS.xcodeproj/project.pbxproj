@@ -132,7 +132,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		65598A0F187C59EB00C46A51 /* FWTNotifiableManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableManager.h; path = "Notifiable-iOS/FWTNotifiableManager.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		65598A0F187C59EB00C46A51 /* FWTNotifiableManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableManager.h; path = "Notifiable-iOS/FWTNotifiableManager.h"; sourceTree = SOURCE_ROOT; };
 		65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableManager.m; path = "Notifiable-iOS/FWTNotifiableManager.m"; sourceTree = SOURCE_ROOT; };
 		7837C7BC1C4D63A4007B2F61 /* NSData+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "NSData+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSData+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };

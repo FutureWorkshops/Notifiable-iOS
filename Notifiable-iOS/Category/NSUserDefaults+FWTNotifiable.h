@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (FWTServerConfiguration * _Nullable)storedConfiguration;
 - (void) storeConfiguration:(FWTServerConfiguration *)configuration;
 
+- (void) syncronizeToGroupId:(NSString * _Nullable)groupId;
+
 - (FWTNotifiableDevice *)storedDevice;
 - (void) clearStoredDevice;
 - (void) storeDevice:(FWTNotifiableDevice *)device;

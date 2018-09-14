@@ -8,7 +8,6 @@
 
 #import "FWTHTTPSessionManager.h"
 #import "FWTHTTPRequestSerializer.h"
-#import "FWTSessionTaskDelegate.h"
 
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
@@ -19,7 +18,6 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 @property (nonatomic, strong) FWTHTTPRequestSerializer *requestSerializer;
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableHeaders;
-@property (nonatomic, strong) NSMutableDictionary<NSString *, FWTSessionTaskDelegate *> *delegates;
 
 @end
 
@@ -67,13 +65,6 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 - (NSDictionary<NSString *,NSString *> *)HTTPRequestHeaders
 {
     return [NSDictionary dictionaryWithDictionary: self.mutableHeaders];
-}
-
-- (NSMutableDictionary<NSString *,FWTSessionTaskDelegate *> *)delegates {
-    if (self->_delegates == nil) {
-        self->_delegates = [[NSMutableDictionary alloc] init];
-    }
-    return self->_delegates;
 }
 
 - (FWTHTTPRequestSerializer *)requestSerializer
@@ -161,14 +152,28 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                                     andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
-    NSURLSessionDataTask *task = [self _buildTaskForRequest:request];
-    FWTSessionTaskDelegate *delegate = [[FWTSessionTaskDelegate alloc] initWithTask:task
-                                                                       successBlock:success
-                                                                         andFailure:failure];
-    [self.delegates setObject:delegate forKey:task.taskDescription];
-    [task resume];
+
+    __weak typeof(self) weakSelf = self;
+    [NSURLConnection sendAsynchronousRequest:request queue:self.sessionOperationQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+        NSLog(@"Response with Error: %@", connectionError);
+        if (connectionError) {
+            failure(nil, connectionError);
+            return;
+        }
+        
+        id responseData = [weakSelf _jsonFromData:data];
+        
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
+            NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
+            failure(nil, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+            return;
+        }
+        
+        success(nil, responseData);
+    }];
     
-    return task;
+    return nil;
 }
 
 - (NSURLSessionDataTask *) _buildTaskForRequest:(NSURLRequest *)request
@@ -189,15 +194,15 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     return request;
 }
 
-- (FWTSessionTaskDelegate *) _delegateForTask:(NSURLSessionTask *)task
+- (id) _jsonFromData:(NSData *)data
 {
-    NSString *taskDescription = task.taskDescription;
-    if (taskDescription == nil) {
-        return nil;
+    NSError *error;
+    id jsonContent = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    if (error || jsonContent == nil) {
+        return data;
+    } else {
+        return jsonContent;
     }
-    
-    FWTSessionTaskDelegate *delegate = self.delegates[taskDescription];
-    return delegate;
 }
 
 #pragma mark - URLSession delegate
@@ -205,35 +210,19 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error
 {
-    FWTSessionTaskDelegate *delegate = [self _delegateForTask:task];
-    if (delegate == nil) {
-        return;
-    }
     
-    [self.delegates removeObjectForKey:task.description];
-    [delegate finishTask:task withError:error];
 }
 
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveData:(NSData *)data
 {
-    FWTSessionTaskDelegate *delegate = [self _delegateForTask:dataTask];
-    if (delegate == nil) {
-        return;
-    }
     
-    [delegate appendData:data];
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location
 {
-    FWTSessionTaskDelegate *delegate = [self _delegateForTask:downloadTask];
-    if (delegate == nil) {
-        return;
-    }
     
-    [delegate extractDataFromURL:location];
 }
 
 @end

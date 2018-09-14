@@ -11,6 +11,8 @@ import Keys
 import FWTNotifiable
 import UserNotifications
 
+let kAppGroupId = "group.com.futureworkshops.notifiable.Sample"
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -21,11 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let serverURL = URL(string: "https://notifiable.futureworkshops.com/") {
             let keys = SampleKeys()
-            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey)
+            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, groupId: kAppGroupId)
         }
         
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject] {
-            NotifiableManager.markAsOpen(notification: remoteNotification, completion: nil)
+            NotifiableManager.markAsOpen(notification: remoteNotification, groupId: kAppGroupId, completion: nil)
         }
         
         let center = UNUserNotificationCenter.current()
@@ -41,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         
-        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+        NotifiableManager.markAsReceived(notification: userInfo, groupId: kAppGroupId) { (error) in
             if let _ = error {
                 completionHandler(.failed)
             } else {
@@ -61,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        NotifiableManager.markAsOpen(notification: response.notification.request.content.userInfo) { (_) in
+        NotifiableManager.markAsOpen(notification: response.notification.request.content.userInfo, groupId: kAppGroupId) { (_) in
             completionHandler()
         }
     }
@@ -74,7 +76,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+        NotifiableManager.markAsOpen(notification: userInfo, groupId: kAppGroupId) { (error) in
             completionHandler(.alert)
         }
     }

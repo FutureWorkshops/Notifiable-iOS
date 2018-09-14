@@ -7,6 +7,11 @@
 //
 
 #import "NSUserDefaults+FWTNotifiable.h"
+#import "FWTServerConfiguration.h"
+#import "FWTNotifiableDevice.h"
+
+#define FWTUserInfoNotifiableCurrentDeviceKey @"FWTUserInfoNotifiableCurrentDeviceKey"
+#define FWTNotifiableServerConfiguration @"FWTNotifiableServerConfiguration"
 
 @implementation NSUserDefaults (FWTNotifiable)
 
@@ -16,6 +21,35 @@
     } else {
         return [NSUserDefaults standardUserDefaults];
     }
+}
+
+- (FWTServerConfiguration * _Nullable)storedConfiguration {
+    NSData *configurationData = (NSData *)[self objectForKey:FWTNotifiableServerConfiguration];
+    FWTServerConfiguration *configuration = (FWTServerConfiguration *)[NSKeyedUnarchiver unarchiveObjectWithData:configurationData];
+    return configuration;
+}
+
+- (void) storeConfiguration:(FWTServerConfiguration *)configuration {
+    NSData *configurationData = [NSKeyedArchiver archivedDataWithRootObject:configuration];
+    [self setObject:configurationData forKey:FWTNotifiableServerConfiguration];
+    [self synchronize];
+}
+
+- (void) clearStoredDevice {
+    [self removeObjectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    [self synchronize];
+}
+
+- (FWTNotifiableDevice *)storedDevice {
+    NSData *deviceData = [self objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    FWTNotifiableDevice *currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
+    return currentDevice;
+}
+
+- (void) storeDevice:(FWTNotifiableDevice *)device {
+    NSData *deviceData = [NSKeyedArchiver archivedDataWithRootObject:device];
+    [self setObject:deviceData forKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    [self synchronize];
 }
 
 @end

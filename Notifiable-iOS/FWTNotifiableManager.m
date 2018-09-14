@@ -15,11 +15,7 @@
 #import "FWTServerConfiguration.h"
 #import "NSUserDefaults+FWTNotifiable.h"
 
-NSString * const FWTUserInfoNotifiableCurrentDeviceKey          = @"FWTUserInfoNotifiableCurrentDeviceKey";
-NSString * const FWTNotifiableNotificationDevice = @"FWTNotifiableNotificationDevice";
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
-NSString * const FWTNotifiableNotificationDeviceToken = @"FWTNotifiableNotificationDeviceToken";
-NSString * const FWTNotifiableServerConfiguration = @"FWTNotifiableServerConfiguration";
 
 static NSHashTable *managerListeners;
 static NSHashTable *listeners;
@@ -57,8 +53,7 @@ static FWTRequesterManager *sharedRequesterManager;
 
 + (FWTServerConfiguration *)savedConfigurationWithUserDefaults:(NSUserDefaults *)userDefaults
 {
-    NSData *configurationData = (NSData *)[userDefaults objectForKey:FWTNotifiableServerConfiguration];
-    FWTServerConfiguration *configuration = (FWTServerConfiguration *)[NSKeyedUnarchiver unarchiveObjectWithData:configurationData];
+    FWTServerConfiguration *configuration = [userDefaults storedConfiguration];
     return configuration;
 }
 
@@ -78,8 +73,7 @@ static FWTRequesterManager *sharedRequesterManager;
 }
 
 + (FWTNotifiableDevice *)storedDeviceWithUserDefaults:(NSUserDefaults *)userDefaults {
-    NSData *deviceData = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
-    FWTNotifiableDevice *currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
+    FWTNotifiableDevice *currentDevice = [userDefaults storedDevice];
     return currentDevice;
 }
 
@@ -98,15 +92,10 @@ static FWTRequesterManager *sharedRequesterManager;
                 secretKey:(NSString *)secretKey
                   groupId:(NSString * _Nullable)groupId
 {
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults userDefaultsWithGroupId:groupId];
-    
     FWTServerConfiguration *configuration = [[FWTServerConfiguration alloc] initWithServerURL:url
                                                                                      accessId:accessId
                                                                                  andSecretKey:secretKey];
-    NSData *configurationData = [NSKeyedArchiver archivedDataWithRootObject:configuration];
-    [userDefaults setObject:configurationData forKey:FWTNotifiableServerConfiguration];
-    [userDefaults synchronize];
+    [[NSUserDefaults userDefaultsWithGroupId:groupId] storeConfiguration:configuration];
 }
 
 - (instancetype)initWithURL:(NSURL *)url
@@ -219,8 +208,7 @@ static FWTRequesterManager *sharedRequesterManager;
     @synchronized(self) {
         if (!self->_currentDevice) {
             NSUserDefaults *userDefaults = self.userDefaults;
-            NSData *deviceData = [userDefaults objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
-            self->_currentDevice = [NSKeyedUnarchiver unarchiveObjectWithData:deviceData];
+            self->_currentDevice = [userDefaults storedDevice];
         }
         return self->_currentDevice;
     }
@@ -231,14 +219,11 @@ static FWTRequesterManager *sharedRequesterManager;
     @synchronized(self) {
         self->_currentDevice = currentDevice;
         self->_deviceTokenData = self->_currentDevice.token;
-        NSUserDefaults *ud = self.userDefaults;
         if (self->_currentDevice) {
-            NSData *deviceData = [NSKeyedArchiver archivedDataWithRootObject:self->_currentDevice];
-            [ud setObject:deviceData forKey:FWTUserInfoNotifiableCurrentDeviceKey];
+            [self.userDefaults storedDevice];
         } else {
-            [ud removeObjectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+            [self.userDefaults clearStoredDevice];
         }
-        [ud synchronize];
     }
 }
 

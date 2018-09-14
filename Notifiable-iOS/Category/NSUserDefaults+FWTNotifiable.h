@@ -8,11 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+@class FWTServerConfiguration;
+@class FWTNotifiableDevice;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSUserDefaults (FWTNotifiable)
 
 + (NSUserDefaults *) userDefaultsWithGroupId:(NSString * _Nullable)groupId;
+
+- (FWTServerConfiguration * _Nullable)storedConfiguration;
+- (void) storeConfiguration:(FWTServerConfiguration *)configuration;
+
+- (FWTNotifiableDevice *)storedDevice;
+- (void) clearStoredDevice;
+- (void) storeDevice:(FWTNotifiableDevice *)device;
 
 @end
 

@@ -77,7 +77,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        NotifiableManager.markAsOpen(notification: userInfo, groupId: kAppGroupId) { (error) in
+        NotifiableManager.markAsReceived(notification: userInfo, groupId: kAppGroupId) { (error) in
             completionHandler(.alert)
         }
     }

@@ -107,7 +107,7 @@ NS_SWIFT_NAME(NotifiableManager)
  
  @return A flag to indicate if the notifications is from Notifiable server or not
  */
-+ (BOOL)isValidNotification:(NSDictionary *)notificationIfo;
++ (BOOL)isValidNotification:(NSDictionary *)notificationInfo;
 
 #pragma mark - Notification operations
 

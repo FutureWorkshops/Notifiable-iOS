@@ -39,5 +39,8 @@ You will need to provide two keys from the `Notfiable-Rails User API`:
 On the sample `AppDelegate.swift` file, replace the URL `http://fw-notifiable-staging2.herokuapp.com/` for the URL of your Notifiable-Rails server.
 
 ```swift
-self.notifiableManager = FWTNotifiableManager(URL: <<SERVER_URL>>, accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
+if let serverURL = URL(string: <<SERVER_URL>>) {
+    let keys = SampleKeys()
+    NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, groupId: kAppGroupId)
+}
 ```

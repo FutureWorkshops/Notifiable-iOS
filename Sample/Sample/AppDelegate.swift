@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, groupId: kAppGroupId)
         }
         
-        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject] {
+        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject], NotifiableManager.isValidNotification(remoteNotification) {
             NotifiableManager.markAsOpen(notification: remoteNotification, groupId: kAppGroupId, completion: nil)
         }
         
@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
-        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+        guard NotifiableManager.isValidNotification(userInfo) else {
             completionHandler(.noData)
             return
         }
@@ -64,7 +64,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        NotifiableManager.markAsOpen(notification: response.notification.request.content.userInfo, groupId: kAppGroupId) { (_) in
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        guard NotifiableManager.isValidNotification(userInfo) else {
+            completionHandler()
+            return
+        }
+        
+        NotifiableManager.markAsOpen(notification: userInfo, groupId: kAppGroupId) { (_) in
             completionHandler()
         }
     }
@@ -73,7 +81,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         let userInfo = notification.request.content.userInfo
         
-        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+        guard NotifiableManager.isValidNotification(userInfo) else {
             return
         }
         

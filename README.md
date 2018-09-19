@@ -11,7 +11,7 @@ Registering existing token for different user will result in token being reassig
 
 ### Project integration
 
-The `Notifiable` for iOS is avaliable on [CocoaPods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
+The `Notifiable` for iOS is available on [CocoaPods](http://cocoapods.org/). To install using it, just add the line to your `Podfile`:
 
 ```
 pod 'Notifiable'
@@ -26,14 +26,14 @@ You can see an example of the implementation in the [Sample folder](Sample).
 To use the `FWTNotifiableManager`, create a new object passing your server URL, application access id, application secret key. You can, also, provide blocks that will be used to notify your code when the device is registered for remote notifications and when it receives a new notification.
 
 ```swift
-self.manager = FWTNotifiableManager(url: <<SERVER_URL>>, accessId: <<USER_API_ACCESS_ID>>, secretKey: <<USER_API_SECRET_KEY>>, didRegisterBlock: { [unowned self] (manager, token) -> Void in 
+self.manager = FWTNotifiableManager(URL: <<SERVER_URL>>, accessId: <<USER_API_ACCESS_ID>>, secretKey: <<USER_API_SECRET_KEY>>, didRegisterBlock: { [unowned self] (manager, token) -> Void in 
 	...
 }, andNotificationBlock:{ [unowned self] (manager, device, notification) -> Void in
 	...
 })
 ```
 
-### Foward application events
+### Forward application events
 
 Forward device token to `FWTNotifiableManager`:
 
@@ -146,7 +146,7 @@ self.manager.associateDeviceToUser(user, completionHandler: { (device, error) ->
 }
 ```
 
-Or anonymise the token:
+Or anonymize the token:
 
 ```swift
 self.manager.anonymiseTokenWithCompletionHandler { (device, error) -> Void in

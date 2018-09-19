@@ -180,7 +180,9 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 - (id) _jsonFromData:(NSData *)data
 {
     NSError *error;
-    id jsonContent = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+    id jsonContent = [NSJSONSerialization JSONObjectWithData:data
+                                                     options:NSJSONReadingAllowFragments
+                                                       error:&error];
     if (error || jsonContent == nil) {
         return data;
     } else {

@@ -759,7 +759,6 @@ static FWTRequesterManager *sharedRequesterManager;
 
 - (void)applicationDidReciveNotification:(NSDictionary *)notification
 {
-    [FWTNotifiableManager markNotificationAsReceived:notification withCompletionHandler:nil];
     @synchronized(self) {
         if (self.notificationBlock) {
             self.notificationBlock(self, self.currentDevice, notification);

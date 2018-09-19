@@ -636,27 +636,17 @@ static FWTRequesterManager *sharedRequesterManager;
 
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
 {
+    [FWTNotifiableManager markNotificationAsReceived:notificationInfo withCompletionHandler:nil];
+    return [FWTNotifiableManager isValidNotification:notificationInfo];
+}
+
++ (BOOL)isValidNotification:(NSDictionary *)notificationInfo
+{
     NSNumber *notificationID = notificationInfo[@"n_id"];
     
     if (notificationID == nil) {
         return NO;
     }
-    
-    NSDictionary *notificationCopy = [notificationInfo copy];
-    
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
-        void (^performWithListener)(id) = ^(id listener) {
-            if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
-                [listener applicationDidReciveNotification:notificationCopy];
-            }
-        };
-        for (id listener in managerTable) {
-            performWithListener(listener);
-        }
-        for(id listener in table) {
-            performWithListener(listener);
-        }
-    }];
     
     return YES;
 }
@@ -724,7 +714,7 @@ static FWTRequesterManager *sharedRequesterManager;
     NSNumber *notificationID = notificationInfo[@"n_id"];
     NSNumber *deviceTokenId = [self storedDeviceWithUserDefaults:userDefaults].tokenId;
     
-    if (deviceTokenId == nil) {
+    if (deviceTokenId == nil || notificationID == nil) {
         if(handler) {
             handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
@@ -738,6 +728,23 @@ static FWTRequesterManager *sharedRequesterManager;
                                                                   handler(error);
                                                               }
                                                           }];
+    
+    NSDictionary *notificationCopy = [notificationInfo copy];
+    
+    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
+        void (^performWithListener)(id) = ^(id listener) {
+            if ([listener conformsToProtocol:@protocol(FWTNotifiableManagerListener)] && [listener respondsToSelector:@selector(applicationDidReciveNotification:)]) {
+                [listener applicationDidReciveNotification:notificationCopy];
+            }
+        };
+        for (id listener in managerTable) {
+            performWithListener(listener);
+        }
+        for(id listener in table) {
+            performWithListener(listener);
+        }
+    }];
+    
     return YES;
 }
 
@@ -752,6 +759,7 @@ static FWTRequesterManager *sharedRequesterManager;
 
 - (void)applicationDidReciveNotification:(NSDictionary *)notification
 {
+    [FWTNotifiableManager markNotificationAsReceived:notification withCompletionHandler:nil];
     @synchronized(self) {
         if (self.notificationBlock) {
             self.notificationBlock(self, self.currentDevice, notification);

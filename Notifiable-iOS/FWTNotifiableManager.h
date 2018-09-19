@@ -96,7 +96,18 @@ NS_SWIFT_NAME(NotifiableManager)
  
  @return A flag to indicate if the notifications is from Notifiable server or not
  */
-+ (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo;
++ (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo DEPRECATED_MSG_ATTRIBUTE("This is no longer used. Now, see the markNotificationAsReceived method, and isValidNotification to achieve the same result");
+
+
+/**
+ Check if a notification was sent from a Notifiable server. This is useful when there
+ is multiple frameworks sending notifications.
+ 
+ @param notificationInfo    The information of the notification given by the system
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
++ (BOOL)isValidNotification:(NSDictionary *)notificationIfo;
 
 #pragma mark - Notification operations
 

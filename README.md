@@ -35,10 +35,10 @@ If you have a [notification extension](https://developer.apple.com/library/archi
 
 ### Use
 
-To use the `FWTNotifiableManager`, create a new object passing your server URL, application access id, application secret key. You can, also, provide blocks that will be used to notify your code when the device is registered for remote notifications and when it receives a new notification.
+To use the `NotifiableManager`, create a new object passing your server URL, application access id, application secret key. You can, also, provide blocks that will be used to notify your code when the device is registered for remote notifications and when it receives a new notification.
 
 ```swift
-self.manager = FWTNotifiableManager(groupId: <<GROUP_ID>>, didRegisterBlock: { [unowned self] (manager, token) -> Void in 
+self.manager = NotifiableManager(groupId: <<GROUP_ID>>, didRegisterBlock: { [unowned self] (manager, token) -> Void in 
 	...
 }, andNotificationBlock: { [unowned self] (manager, device, notification) -> Void in
 	...
@@ -47,7 +47,7 @@ self.manager = FWTNotifiableManager(groupId: <<GROUP_ID>>, didRegisterBlock: { [
 
 ### Forward application events
 
-Forward device token to `FWTNotifiableManager`:
+Forward device token to `NotifiableManager`:
 
 ```swift
 func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) 
@@ -56,7 +56,7 @@ func application(application: UIApplication, didRegisterForRemoteNotificationsWi
 }
 ```
 
-Foward new notifications to `FWTNotifiableManager`:
+Foward new notifications to `NotifiableManager`:
 
 ```swift
 func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -78,7 +78,7 @@ func application(_ application: UIApplication, didReceiveRemoteNotification user
 
 ### Listen to application events
 
-To be notified when the device is registered for remote notifications or received a remote notification, you can use the blocks in the `FWTNotifiableManager` init or register an object as a `FWTNotifiableManagerListener`
+To be notified when the device is registered for remote notifications or received a remote notification, you can use the blocks in the `NotifiableManager` init or register an object as a `NotifiableManagerListener`
 
 ```swift
 func viewDidLoad() {
@@ -86,7 +86,7 @@ func viewDidLoad() {
 	NotifiableManager.register(listener: self)
 }
 
-//MARK: FWTNotifiableManagerListener methods
+//MARK: NotifiableManagerListener methods
 func applicationDidRegisterForRemoteNotification(token: NSData) {
 	...
 }
@@ -95,11 +95,11 @@ func applicationDidReceive(notification: [NSObject : AnyObject]) {
 	...
 }
 
-func manager(_ manager: FWTNotifiableManager, didRegisterDevice device: FWTNotifiableDevice) {
+func manager(_ manager: NotifiableManager, didRegisterDevice device: NotifiableDevice) {
 	...
 }
 
-func manager(_ manager: FWTNotifiableManager, didFailToRegisterDevice error: NSError) {
+func manager(_ manager: NotifiableManager, didFailToRegisterDevice error: NSError) {
 	...
 }
 ```
@@ -128,7 +128,7 @@ override func viewDidLoad() {
     }
 }
     
-func registerDevice(manager:FWTNotifiableManager, token:NSData) {
+func registerDevice(manager:NotifiableManager, token:NSData) {
     manager.register(name:"iPhone", locale: NSLocale.autoupdatingCurrentLocale(), properties: ["onsite":true]) { (device, error) -> Void in
     	...
     }
@@ -138,7 +138,7 @@ func registerDevice(manager:FWTNotifiableManager, token:NSData) {
 Or register a device associated to a user:
 
 ```swift
-func registerDevice(manager:FWTNotifiableManager, token:NSData) {
+func registerDevice(manager:NotifiableManager, token:NSData) {
     manager.register(name:"device", userAlias: "user", locale: NSLocale.autoupdatingCurrentLocale(), properties: ["onsite":true]) { (device, error) -> Void in
     	...       
     }

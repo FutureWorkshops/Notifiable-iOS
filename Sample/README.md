@@ -4,7 +4,7 @@ This sample shows how to integrate the `FWTNotifiable` iOS SDK into your app. Wi
 
 ## Requirements
 
-This sample uses [Cocoapods](https://cocoapods.org) and [Cocoapods Keys](https://github.com/orta/cocoapods-keys). If you don't have this instaled on your machine, you can install it by running:
+This sample uses [Cocoapods](https://cocoapods.org) and [Cocoapods Keys](https://github.com/orta/cocoapods-keys). If you don't have this installed on your machine, you can install it by running:
 
 ```
 $ gem install cocopods
@@ -29,7 +29,7 @@ $ pod keys set KEY VALUE
 
 After the next `pod install` or `pod update` keys will add a new Keys pod to your Pods project, supporting both static libraries and frameworks.
 
-You will need to provide two keys from the `Notfiable-Raisl User API`:
+You will need to provide two keys from the `Notfiable-Rails User API`:
 
 ```
 'FWTAccessID' <- The Access id of the service
@@ -39,5 +39,8 @@ You will need to provide two keys from the `Notfiable-Raisl User API`:
 On the sample `AppDelegate.swift` file, replace the URL `http://fw-notifiable-staging2.herokuapp.com/` for the URL of your Notifiable-Rails server.
 
 ```swift
-self.notifiableManager = FWTNotifiableManager(url: <<SERVER_URL>>, accessId: keys.fWTAccessID(), andSecretKey: keys.fWTSecretKey())
+if let serverURL = URL(string: <<SERVER_URL>>) {
+    let keys = SampleKeys()
+    NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, groupId: kAppGroupId)
+}
 ```

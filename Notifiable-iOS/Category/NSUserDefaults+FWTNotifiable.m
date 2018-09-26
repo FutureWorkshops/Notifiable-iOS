@@ -25,9 +25,20 @@
 
 - (void) syncronizeToGroupId:(NSString * _Nullable)groupId {
     NSUserDefaults *destination = [NSUserDefaults userDefaultsWithGroupId:groupId];
-    [destination setObject:[self objectForKey:FWTNotifiableServerConfiguration] forKey:FWTNotifiableServerConfiguration];
-    [destination setObject:[self objectForKey:FWTUserInfoNotifiableCurrentDeviceKey] forKey:FWTUserInfoNotifiableCurrentDeviceKey];
-    [destination synchronize];
+    BOOL changed = false;
+    id serverConfiguration = [self objectForKey:FWTNotifiableServerConfiguration];
+    if (serverConfiguration != nil) {
+        [destination setObject:serverConfiguration forKey:FWTNotifiableServerConfiguration];
+        changed = true;
+    }
+    id deviceData = [self objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    if (deviceData != nil) {
+        changed = true;
+        [destination setObject:deviceData forKey:FWTUserInfoNotifiableCurrentDeviceKey];
+    }
+    if (changed) {
+        [destination synchronize];
+    }
 }
 
 - (FWTServerConfiguration * _Nullable)storedConfiguration {

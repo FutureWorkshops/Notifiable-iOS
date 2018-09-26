@@ -27,12 +27,12 @@
     NSUserDefaults *destination = [NSUserDefaults userDefaultsWithGroupId:groupId];
     BOOL changed = false;
     id serverConfiguration = [self objectForKey:FWTNotifiableServerConfiguration];
-    if (serverConfiguration) {
+    if (serverConfiguration != nil) {
         [destination setObject:serverConfiguration forKey:FWTNotifiableServerConfiguration];
         changed = true;
     }
     id deviceData = [self objectForKey:FWTUserInfoNotifiableCurrentDeviceKey];
-    if (deviceData) {
+    if (deviceData != nil) {
         changed = true;
         [destination setObject:deviceData forKey:FWTUserInfoNotifiableCurrentDeviceKey];
     }

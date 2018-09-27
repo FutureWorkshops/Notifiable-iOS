@@ -14,6 +14,7 @@
 #import "NSLocale+FWTNotifiable.h"
 #import "FWTServerConfiguration.h"
 #import "NSUserDefaults+FWTNotifiable.h"
+#import "FWTNotifiableLogger.h"
 
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 
@@ -680,21 +681,40 @@ static FWTRequesterManager *sharedRequesterManager;
     NSNumber *tokenId = device.tokenId;
     NSString *user = device.user;
     
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogReceived
+                            forNotificationWithId:notificationID
+                                            error: nil];
+    
     if (tokenId == nil || notificationID == nil || user == nil) {
         if(handler) {
             handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
+        [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                forNotificationWithId:notificationID
+                                                error:[NSError fwt_invalidDeviceInformationError:nil]];
         return NO;
     }
     
-    [[FWTNotifiableManager requestManagerWithUserDefaults:userDefaults] markNotificationAsOpenedWithId:notificationID
-                                          deviceTokenId:tokenId
-                                                   user:user
-                                      completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                          if (handler) {
-                                              handler(error);
-                                          }
-                                      }];
+    __weak typeof(requestManager) weakRequestManager = requestManager;
+    [requestManager markNotificationAsOpenedWithId:notificationID
+                                     deviceTokenId:tokenId
+                                              user:user
+                                 completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                     if (success) {
+                                         [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusUpdate
+                                                                     forNotificationWithId:notificationID
+                                                                                     error: nil];
+                                     } else {
+                                         [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                                                     forNotificationWithId:notificationID
+                                                                                     error:error];
+                                     }
+                                     
+                                     if (handler) {
+                                         handler(error);
+                                     }
+                                 }];
     return YES;
 }
 
@@ -714,20 +734,40 @@ static FWTRequesterManager *sharedRequesterManager;
     NSNumber *notificationID = notificationInfo[@"n_id"];
     NSNumber *deviceTokenId = [self storedDeviceWithUserDefaults:userDefaults].tokenId;
     
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogReceived
+                            forNotificationWithId:notificationID
+                                            error:nil];
+    
     if (deviceTokenId == nil || notificationID == nil) {
         if(handler) {
             handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
+        [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                forNotificationWithId:notificationID
+                                                error:[NSError fwt_invalidDeviceInformationError:nil]];
         return NO;
     }
     
-    [[FWTNotifiableManager requestManagerWithUserDefaults:userDefaults] markNotificationAsReceivedWithId:notificationID
-                                                              deviceTokenId:deviceTokenId
-                                                          completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                                              if (handler) {
-                                                                  handler(error);
-                                                              }
-                                                          }];
+    __weak typeof(requestManager) weakRequestManager = requestManager;
+    [requestManager markNotificationAsReceivedWithId:notificationID
+                                       deviceTokenId:deviceTokenId
+                                   completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                       
+                                       if (success) {
+                                           [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusUpdate
+                                                                       forNotificationWithId:notificationID
+                                                                                       error:nil];
+                                       } else {
+                                           [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                                                       forNotificationWithId:notificationID
+                                                                                       error:error];
+                                       }
+                                       
+                                       if (handler) {
+                                           handler(error);
+                                       }
+                                   }];
     
     NSDictionary *notificationCopy = [notificationInfo copy];
     

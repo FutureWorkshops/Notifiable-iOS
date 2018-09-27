@@ -22,7 +22,9 @@ NS_SWIFT_NAME(NotifiableLogger)
 @property (nonatomic, assign) FWTNotifiableLogLevel logLevel NS_SWIFT_NAME(level);
 
 - (void)logError:(NSError *)error NS_SWIFT_NAME(log(error:));
-- (void)logNotificationEvent:(FWTNotifiableNotificationEventLog)event forNotificationWithId:(NSNumber *)notificationId NS_SWIFT_NAME(log(_:notificationId:));
+- (void)logNotificationEvent:(FWTNotifiableNotificationEventLog)event
+       forNotificationWithId:(NSNumber *)notificationId
+                       error:(NSError * _Nullable)error NS_SWIFT_NAME(log(_:notificationId:error:));
 
 @optional
 - (void)logMessage:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) NS_SWIFT_NAME(log(format:));

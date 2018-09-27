@@ -33,7 +33,7 @@
 #endif
 }
 
-- (void)logNotificationEvent:(FWTNotifiableNotificationEventLog)event forNotificationWithId:(NSNumber *)notificationId {
+- (void)logNotificationEvent:(FWTNotifiableNotificationEventLog)event forNotificationWithId:(NSNumber *)notificationId error:(NSError * _Nullable)error {
 #if DEBUG
     if (self.logLevel >= FWTNotifiableLogLevelInformation) {
         NSLog(@"Event %lu on notification %@", event, notificationId);

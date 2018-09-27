@@ -20,15 +20,11 @@
 #endif
 }
 
-- (void)logMessage:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2)
+- (void)logMessage:(NSString *)message
 {
 #if DEBUG
     if (self.logLevel >= FWTNotifiableLogLevelInformation) {
-        va_list args;
-        va_start(args, format);
-        NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
-        va_end(args);
-        NSLog(@"%@",msg);
+        NSLog(@"%@",message);
     }
 #endif
 }

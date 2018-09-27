@@ -213,7 +213,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
             return;
         }
         NSNumber *tokenId = response[@"id"];
-        [sself.logger logMessage:@"Did register for push notifications with token: %@ and tokenId: %@", token, tokenId];
+        [sself.logger logMessage:[NSString stringWithFormat:@"Did register for push notifications with token: %@ and tokenId: %@", token, tokenId]];
         
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -221,7 +221,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
             });
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
-        [weakSelf.logger logMessage:@"Failed to register device token: %@",error];
+        [weakSelf.logger logMessage:[NSString stringWithFormat:@"Failed to register device token: %@",error]];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -290,7 +290,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         
         __strong typeof(weakSelf) sself = weakSelf;
-        [sself.logger logMessage:@"Failed to update device with deviceTokenId %@: %@", deviceTokenId, error];
+        [sself.logger logMessage:[NSString stringWithFormat:@"Failed to update device with deviceTokenId %@: %@", deviceTokenId, error]];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

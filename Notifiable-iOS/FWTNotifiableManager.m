@@ -343,7 +343,7 @@ static FWTRequesterManager *sharedRequesterManager;
                                 customProperties:customProperties
                               platformProperties:platformProperties
                                completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
-                                   [[requestManager logger] logMessage:@"Finish anonymous device registration with error %@", error];
+                                   [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finish anonymous device registration with error %@", error]];
                                    __strong typeof(weakSelf) sself = weakSelf;
                                    sself.currentDevice = nil;
                                    [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
@@ -400,7 +400,7 @@ static FWTRequesterManager *sharedRequesterManager;
                               platformProperties:platformProperties
                                completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
                                    __strong typeof(weakSelf) sself = weakSelf;
-                                   [[requestManager logger] logMessage:@"Finished registering device with error %@", error];
+                                   [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finished registering device with error %@", error]];
                                    sself.currentDevice = nil;
                                    [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
                                    sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name customProperties:customProperties];
@@ -539,7 +539,7 @@ static FWTRequesterManager *sharedRequesterManager;
     
     __weak typeof(self) weakSelf = self;
     __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
-    [[requestManager logger] logMessage:@"Starting to update device %@", self.currentDevice.tokenId];
+    [[requestManager logger] logMessage:[NSString stringWithFormat:@"Starting to update device %@", self.currentDevice.tokenId]];
     [requestManager updateDevice:self.currentDevice.tokenId
                    withUserAlias:userAlias
                            token:token
@@ -559,7 +559,7 @@ static FWTRequesterManager *sharedRequesterManager;
                                                                             name:(name ? name : sself.currentDevice.name)
                                                                 customProperties:(customProperties ?: sself.currentDevice.customProperties)];
                    } else {
-                       [[requestManager logger] logMessage:@"Updated device %@", deviceTokenId];
+                       [[requestManager logger] logMessage:[NSString stringWithFormat:@"Updated device %@", deviceTokenId]];
                    }
                    
                    if (handler) {
@@ -637,7 +637,7 @@ static FWTRequesterManager *sharedRequesterManager;
     [requestManager unregisterTokenId:self.currentDevice.tokenId
                      completionHandler:^(BOOL success, NSError * _Nullable error) {
                          __strong typeof(weakSelf) sself = weakSelf;
-                         [[requestManager logger] logMessage:@"Finished unregistering device with error %@", error];
+                         [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finished unregistering device with error %@", error]];
                          FWTNotifiableDevice *responseDevice;
                          if (success) {
                              sself.currentDevice = nil;

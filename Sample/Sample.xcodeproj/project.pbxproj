@@ -251,7 +251,7 @@
 					7898B8831C56513700BD0CCB = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = BQHMJ2C6RL;
-						LastSwiftMigration = 0930;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -283,6 +283,7 @@
 					};
 					78D927DC20BDD904009320A0 = {
 						CreatedOnToolsVersion = 9.3.1;
+						DevelopmentTeam = BQHMJ2C6RL;
 						ProvisioningStyle = Manual;
 						TestTargetID = 7898B8831C56513700BD0CCB;
 					};
@@ -577,8 +578,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "356dcf59-d940-4f06-9769-af6819dcc6a5";
 				PROVISIONING_PROFILE_SPECIFIER = "Notifiable - Sample";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -595,8 +595,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.notifiable.Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -672,7 +671,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BQHMJ2C6RL;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = SampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;

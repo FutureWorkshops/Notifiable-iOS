@@ -12,6 +12,9 @@
 #import "FWTNotifiableDevice+Parser.h"
 #import "NSLocale+FWTNotifiable.h"
 
+typedef void (^FWTLoggedErrorHandler)(NSError * _Nullable error);
+typedef void (^FWTLoggedTokenErrorHandler)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
+
 NSString * const FWTNotifiableDeviceTokenKey       = @"token";
 NSString * const FWTNotifiableProviderKey          = @"provider";
 NSString * const FWTNotifiableUserAliasKey         = @"user_alias";
@@ -175,18 +178,14 @@ NSString * const FWTNotifiableProvider             = @"apns";
 {
     NSAssert(token != nil, @"To register a device, a token need to be provided");
     
+    FWTLoggedTokenErrorHandler errorHandler = [self _buildLoggedTokenIdErrorHandler: handler];
+    
     if (token == nil) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            handler(nil, [NSError fwt_invalidDeviceInformationError:previousError]);
-        });
+        errorHandler(nil, [NSError fwt_invalidDeviceInformationError:previousError]);
     }
     
     if (attempts == 0){
-        if(handler){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, [NSError fwt_errorWithUnderlyingError:previousError]);
-            });
-        }
+        errorHandler(nil, [NSError fwt_errorWithUnderlyingError:previousError]);
         return;
     }
     
@@ -258,21 +257,15 @@ NSString * const FWTNotifiableProvider             = @"apns";
              locale != nil ||
              customProperties != nil, @"You need provid at least one updated parameter.");
     
+    FWTLoggedTokenErrorHandler errorHandler = [self _buildLoggedTokenIdErrorHandler: handler];
+    
     if (attempts == 0){
-        if(handler){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(deviceTokenId, [NSError fwt_errorWithUnderlyingError:previousError]);
-            });
-        }
+        errorHandler(deviceTokenId, [NSError fwt_errorWithUnderlyingError:previousError]);
         return;
     }
     
     if(!deviceTokenId){
-        if(handler){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(nil, [NSError fwt_invalidDeviceInformationError:nil]);
-            });
-        }
+        errorHandler(nil, [NSError fwt_invalidDeviceInformationError:nil]);
         return;
     }
     
@@ -321,21 +314,15 @@ NSString * const FWTNotifiableProvider             = @"apns";
            previousError:(NSError *)previousError
        completionHandler:(FWTSimpleRequestResponse)handler
 {
+    FWTLoggedErrorHandler errorHandler = [self _buildLoggedErrorHandler:handler];
+    
     if (attempts == 0){
-        if(handler){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO, [NSError fwt_errorWithUnderlyingError:previousError]);
-            });
-        }
+        errorHandler([NSError fwt_errorWithUnderlyingError:previousError]);
         return;
     }
     
     if(!deviceTokenId){
-        if(handler){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                handler(NO, [NSError fwt_invalidDeviceInformationError:nil]);
-            });
-        }
+        errorHandler([NSError fwt_invalidDeviceInformationError:nil]);
         return;
     }
     
@@ -370,10 +357,10 @@ NSString * const FWTNotifiableProvider             = @"apns";
                           previousError:(NSError *)error
                       completionHandler:(FWTSimpleRequestResponse)handler
 {
+    FWTLoggedErrorHandler errorHandler = [self _buildLoggedErrorHandler:handler];
+    
     if (attempts == 0) {
-        if (handler) {
-            handler(NO, [NSError fwt_errorWithUnderlyingError:error]);
-        }
+        errorHandler([NSError fwt_errorWithUnderlyingError:error]);
         return;
     }
     
@@ -405,10 +392,10 @@ NSString * const FWTNotifiableProvider             = @"apns";
                             previousError:(NSError *)error
                         completionHandler:(FWTSimpleRequestResponse)handler
 {
+    FWTLoggedErrorHandler errorHandler = [self _buildLoggedErrorHandler:handler];
+    
     if (attempts == 0) {
-        if (handler) {
-            handler(NO, [NSError fwt_errorWithUnderlyingError:error]);
-        }
+        errorHandler([NSError fwt_errorWithUnderlyingError:error]);
         return;
     }
     
@@ -431,6 +418,34 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                     completionHandler:handler];
         });
     }];
+}
+
+- (FWTLoggedErrorHandler) _buildLoggedErrorHandler:(FWTSimpleRequestResponse)handler {
+    __weak typeof(self) weakSelf = self;
+    return  ^(NSError *error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        __weak typeof(strongSelf.logger) weakLogger = strongSelf.logger;
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakLogger logError:error];
+                handler(NO, error);
+            });
+        }
+    };
+}
+
+- (FWTLoggedTokenErrorHandler) _buildLoggedTokenIdErrorHandler:(FWTDeviceTokenIdResponse)handler {
+    __weak typeof(self) weakSelf = self;
+    return  ^(NSNumber *tokenId, NSError *error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        __weak typeof(strongSelf.logger) weakLogger = strongSelf.logger;
+        if(handler){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakLogger logError:error];
+                handler(tokenId, error);
+            });
+        }
+    };
 }
 
 @end

@@ -33,4 +33,13 @@
 #endif
 }
 
+- (void)logNotificationEvent:(FWTNotifiableNotificationEventLog)event forNotificationWithId:(NSNumber *)notificationId {
+#if DEBUG
+    if (self.logLevel >= FWTNotifiableLogLevelInformation) {
+        NSLog(@"Event %lu on notification %@", event, notificationId);
+    }
+#endif
+}
+
+
 @end

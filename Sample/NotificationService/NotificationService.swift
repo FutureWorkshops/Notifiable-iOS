@@ -10,6 +10,7 @@ import UserNotifications
 import FWTNotifiable
 
 let kAppGroupId = "group.com.futureworkshops.notifiable.Sample"
+let kLogger = SampleLogger(level: .information, groupId: kAppGroupId)
 
 class NotificationService: UNNotificationServiceExtension {
 
@@ -20,7 +21,9 @@ class NotificationService: UNNotificationServiceExtension {
         self.contentHandler = contentHandler
         self.bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
-        NotifiableManager.markAsReceived(notification: request.content.userInfo, groupId: kAppGroupId) { [weak self] (_) in
+        kLogger.log(message: "Received notification on extension: \(request.content.userInfo)")
+        
+        NotifiableManager.markAsReceived(notification: request.content.userInfo, groupId: kAppGroupId, logger: kLogger) { [weak self] (_) in
             guard let contentHandler = self?.contentHandler, let bestAttempt = self?.bestAttemptContent else { return }
             contentHandler(bestAttempt)
         }

@@ -691,6 +691,17 @@ static FWTRequesterManager *sharedRequesterManager;
                          groupId:(NSString * _Nullable)groupId
            withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler
 {
+    return [self markNotificationAsOpened:notificationInfo
+                                  groupId:groupId
+                                   logger:nil
+                    withCompletionHandler:handler];
+}
+
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+                         groupId:(NSString *)groupId
+                          logger:(id<FWTNotifiableLogger>)logger
+           withCompletionHandler:(void (^)(NSError * _Nullable))handler
+{
     NSUserDefaults *userDefaults = [NSUserDefaults userDefaultsWithGroupId:groupId];
     NSNumber *notificationID = notificationInfo[@"n_id"];
     FWTNotifiableDevice *device = [self storedDeviceWithUserDefaults:userDefaults];
@@ -746,11 +757,25 @@ static FWTRequesterManager *sharedRequesterManager;
                            groupId:(NSString * _Nullable)groupId
              withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler
 {
+    return [self markNotificationAsReceived:notificationInfo
+                                    groupId:groupId
+                                     logger:nil
+                      withCompletionHandler:handler];
+}
+
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+                           groupId:(NSString *)groupId
+                            logger:(id<FWTNotifiableLogger>)logger
+             withCompletionHandler:(void (^)(NSError * _Nullable))handler
+{
     NSUserDefaults *userDefaults = [NSUserDefaults userDefaultsWithGroupId:groupId];
     NSNumber *notificationID = notificationInfo[@"n_id"];
     NSNumber *deviceTokenId = [self storedDeviceWithUserDefaults:userDefaults].tokenId;
     
     FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    if (logger != nil) {
+        requestManager.logger = logger;
+    }
     [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogReceived
                             forNotificationWithId:notificationID
                                             error:nil];

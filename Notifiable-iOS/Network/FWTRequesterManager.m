@@ -401,13 +401,13 @@ NSString * const FWTNotifiableProvider             = @"apns";
     
     __weak typeof(self) weakSelf = self;
     [self.requester markNotificationAsReceivedWithId:notificationId deviceTokenId:deviceTokenId success:^(NSDictionary * _Nullable response) {
-        [weakSelf.logger logMessage:@"Notification flagged as opened"];
+        [weakSelf.logger logMessage:@"Notification flagged as received"];
         if (handler) {
             handler(YES,nil);
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         __strong typeof(weakSelf) sself = weakSelf;
-        [sself.logger logMessage:@"Failed to mark notification as opened"];
+        [sself.logger logMessage:@"Failed to mark notification as received"];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

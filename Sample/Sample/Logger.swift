@@ -53,7 +53,7 @@ class SampleLogger: NSObject, NotifiableLogger {
     }
     
     var logData: String {
-        return self.userDefaults.logDictionary.compactMap({ $0.value as? NSString }).map({ $0 as String }).joined(separator: "\n")
+        return self.userDefaults.logDictionary.sorted(by: { $0.key < $1.key }).compactMap({ $0.value as? NSString }).map({ $0 as String }).joined(separator: "\n\n")
     }
     
     init(level: LogLevel, groupId: String) {

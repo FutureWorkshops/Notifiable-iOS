@@ -5,5 +5,6 @@
 #define _FWTNotifiable_
 
 #import <FWTNotifiable/FWTNotifiableManager.h>
+#import <FWTNotifiable/FWTNotifiableLogger.h>
 
 #endif

@@ -14,18 +14,13 @@ class LoggerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clear(_:)))
         self.textArea?.text = kLogger.logData
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func clear(_ sender: Any) {
+        kLogger.clear()
+        self.textArea?.text = kLogger.logData
     }
-    */
 
 }

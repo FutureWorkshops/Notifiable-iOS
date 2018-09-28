@@ -52,6 +52,10 @@ class SampleLogger: NSObject, NotifiableLogger {
         return UserDefaults(groupId: self.groupId)
     }
     
+    func clear() {
+        self.userDefaults.logDictionary = [:]
+    }
+    
     var logData: String {
         return self.userDefaults.logDictionary.sorted(by: { $0.key < $1.key }).compactMap({ $0.value as? NSString }).map({ $0 as String }).joined(separator: "\n\n")
     }

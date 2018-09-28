@@ -9,14 +9,22 @@ typedef NS_ENUM(NSUInteger, FWTNotifiableLogLevel) {
     FWTNotifiableLogLevelInformation,
 } NS_SWIFT_NAME(LogLevel);
 
+typedef NS_ENUM(NSUInteger, FWTNotifiableNotificationEventLog) {
+    FWTNotifiableNotificationEventLogReceived = 0,
+    FWTNotifiableNotificationEventLogOpened,
+    FWTNotifiableNotificationEventLogStatusUpdate,
+    FWTNotifiableNotificationEventLogStatusFailure
+} NS_SWIFT_NAME(NotificationEvent);
+
 NS_SWIFT_NAME(NotifiableLogger)
 @protocol FWTNotifiableLogger <NSObject>
 
 @property (nonatomic, assign) FWTNotifiableLogLevel logLevel NS_SWIFT_NAME(level);
 
-- (void)logError:(NSError *)error NS_SWIFT_NAME(log(error:));
-
-@optional
-- (void)logMessage:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2) NS_SWIFT_NAME(log(format:));
+- (void)logError:(NSError * _Nonnull)error NS_SWIFT_NAME(log(error:));
+- (void)logNotificationEvent:(FWTNotifiableNotificationEventLog)event
+       forNotificationWithId:(NSNumber * _Nullable)notificationId
+                       error:(NSError * _Nullable)error NS_SWIFT_NAME(log(_:notificationId:error:));
+- (void)logMessage:(NSString * _Nonnull)message NS_SWIFT_NAME(log(message:));
 
 @end

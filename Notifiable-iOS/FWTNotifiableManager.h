@@ -126,7 +126,7 @@ NS_SWIFT_NAME(NotifiableManager)
  Notify the server that a notification was read and listen for the server response
  
  @param notificationInfo    The information of the notification given by the system
- @param groupId          Group being used to share the server configuration (useful for extensions)
+ @param groupId             Group being used to share the server configuration (useful for extensions)
  @param handler             Block called once that the operation is finished.
  
  @return A flag to indicate if the notifications is from Notifiable server or not
@@ -134,6 +134,21 @@ NS_SWIFT_NAME(NotifiableManager)
 + (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
                          groupId:(NSString * _Nullable)groupId
            withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler NS_SWIFT_NAME(markAsOpen(notification:groupId:completion:));
+
+/**
+ Notify the server that a notification was read and listen for the server response
+ 
+ @param notificationInfo    The information of the notification given by the system
+ @param groupId             Group being used to share the server configuration (useful for extensions)
+ @param logger              Logger object, used to store messages from the system
+ @param handler             Block called once that the operation is finished.
+ 
+ @return A flag to indicate if the notifications is from Notifiable server or not
+ */
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+                         groupId:(NSString * _Nullable)groupId
+                          logger:(id<FWTNotifiableLogger> _Nullable)logger
+           withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler NS_SWIFT_NAME(markAsOpen(notification:groupId:logger:completion:));
 
 
 /**
@@ -169,6 +184,20 @@ NS_SWIFT_NAME(NotifiableManager)
 + (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
                            groupId:(NSString * _Nullable)groupId
              withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler NS_SWIFT_NAME(markAsReceived(notification:groupId:completion:));
+
+/**
+ This informs the server that a notification was delivered to the device
+ 
+ @param notificationInfo The payload that is provided in the notification
+ @param groupId          Group being used to share the server configuration (useful for extensions)
+ @param logger           Logger object, used to store messages from the system
+ @param handler          Method that is called once the method is completed
+ @return An indication if it is a valid notification or not
+ */
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+                           groupId:(NSString * _Nullable)groupId
+                            logger:(id<FWTNotifiableLogger> _Nullable)logger
+             withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler NS_SWIFT_NAME(markAsReceived(notification:groupId:logger:completion:));
 
 #pragma mark - Initialization
 
@@ -402,7 +431,7 @@ Init a notifiable manager with the configurations of the Notifiable-Rails server
  */
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
-                 locale:(NSLocale * _Nullable)locale
+                   locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
        platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:name:locale:properties:platform:completion:));
@@ -438,7 +467,7 @@ Init a notifiable manager with the configurations of the Notifiable-Rails server
 - (void)updateDeviceToken:(NSData * _Nullable)token
                deviceName:(NSString * _Nullable)deviceName
                 userAlias:(NSString * _Nullable)userAlias
-                 locale:(NSLocale * _Nullable)locale
+                   locale:(NSLocale * _Nullable)locale
          customProperties:(NSDictionary<NSString *, id> * _Nullable)customProperties
        platformProperties:(NSDictionary<NSString *, id> * _Nullable)platformProperties
         completionHandler:(_Nullable FWTNotifiableOperationCompletionHandler)handler NS_SWIFT_NAME(update(deviceToken:name:userAlias:locale:properties:platform:completion:));

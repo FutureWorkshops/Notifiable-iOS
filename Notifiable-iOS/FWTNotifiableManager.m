@@ -14,6 +14,7 @@
 #import "NSLocale+FWTNotifiable.h"
 #import "FWTServerConfiguration.h"
 #import "NSUserDefaults+FWTNotifiable.h"
+#import "FWTNotifiableLogger.h"
 
 NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationError";
 
@@ -330,24 +331,28 @@ static FWTRequesterManager *sharedRequesterManager;
         return;
     }
     
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    [[requestManager logger] logMessage:@"Starting to register an anonymous device"];
+    
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
-    [[FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults] registerDeviceWithUserAlias:nil
-                                                                                                   token:token
-                                                                                                    name:name
-                                                                                                  locale:deviceLocale
-                                                                                        customProperties:customProperties
-                                                                                      platformProperties:platformProperties
-                                                                                       completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
-                                                                                           __strong typeof(weakSelf) sself = weakSelf;
-                                                                                           sself.currentDevice = nil;
-                                                                                           [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
-                                                                                           sself.currentDevice = [sself.currentDevice deviceWithCustomProperties:customProperties];
-                                                                                           [sself _notifyNewDevice:sself.currentDevice withError:error];
-                                                                                           if (handler) {
-                                                                                               handler(sself.currentDevice, error);
-                                                                                           }
-                                                                                       }];
+    [requestManager registerDeviceWithUserAlias:nil
+                                           token:token
+                                            name:name
+                                          locale:deviceLocale
+                                customProperties:customProperties
+                              platformProperties:platformProperties
+                               completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                                   [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finish anonymous device registration with error %@", error]];
+                                   __strong typeof(weakSelf) sself = weakSelf;
+                                   sself.currentDevice = nil;
+                                   [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
+                                   sself.currentDevice = [sself.currentDevice deviceWithCustomProperties:customProperties];
+                                   [sself _notifyNewDevice:sself.currentDevice withError:error];
+                                   if (handler) {
+                                       handler(sself.currentDevice, error);
+                                   }
+                               }];
 }
 
 - (void)registerDeviceWithName:(NSString *)name
@@ -382,24 +387,28 @@ static FWTRequesterManager *sharedRequesterManager;
         return;
     }
     
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    [[requestManager logger] logMessage:@"Starting to register a device"];
+    
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
-    [[FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults] registerDeviceWithUserAlias:userAlias
-                                                                                                   token:token
-                                                                                                    name:name
-                                                                                                  locale:deviceLocale
-                                                                                        customProperties:customProperties
-                                                                                      platformProperties:platformProperties
-                                                                                       completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
-                                                                                           __strong typeof(weakSelf) sself = weakSelf;
-                                                                                           sself.currentDevice = nil;
-                                                                                           [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
-                                                                                           sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name customProperties:customProperties];
-                                                                                           [sself _notifyNewDevice:sself.currentDevice withError:error];
-                                                                                           if (handler) {
-                                                                                               handler(sself.currentDevice, error);
-                                                                                           }
-                                                                                       }];
+    [requestManager registerDeviceWithUserAlias:userAlias
+                                           token:token
+                                            name:name
+                                          locale:deviceLocale
+                                customProperties:customProperties
+                              platformProperties:platformProperties
+                               completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                                   __strong typeof(weakSelf) sself = weakSelf;
+                                   [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finished registering device with error %@", error]];
+                                   sself.currentDevice = nil;
+                                   [sself _handleDeviceRegisterWithToken:token tokenId:deviceTokenId locale:deviceLocale name:name andError:error];
+                                   sself.currentDevice = [sself.currentDevice deviceWithUser:userAlias name:name customProperties:customProperties];
+                                   [sself _notifyNewDevice:sself.currentDevice withError:error];
+                                   if (handler) {
+                                       handler(sself.currentDevice, error);
+                                   }
+                               }];
 }
 
 - (void)updateDeviceLocale:(NSLocale *)locale completionHandler:(FWTNotifiableOperationCompletionHandler)handler
@@ -529,30 +538,34 @@ static FWTRequesterManager *sharedRequesterManager;
     NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:customProperties:completionHandler: instead");
     
     __weak typeof(self) weakSelf = self;
-    [[FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults] updateDevice:self.currentDevice.tokenId
-                                                                            withUserAlias:userAlias
-                                                                                    token:token
-                                                                                     name:name
-                                                                                   locale:locale
-                                                                         customProperties:customProperties
-                                                                       platformProperties:platformProperties
-                                                                        completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
-                                                                            __strong typeof(weakSelf) sself = weakSelf;
-                                                                            [sself _handleDeviceRegisterWithToken:(token ? token : sself.currentDevice.token)
-                                                                                                          tokenId:deviceTokenId
-                                                                                                           locale:(locale ? locale : sself.currentDevice.locale)
-                                                                                                             name:(name ? name : sself.currentDevice.name)
-                                                                                                         andError:error];
-                                                                            if (error == nil) {
-                                                                                sself.currentDevice = [sself.currentDevice deviceWithUser:(userAlias ? userAlias : sself.currentDevice.user)
-                                                                                                                                     name:(name ? name : sself.currentDevice.name)
-                                                                                                                         customProperties:(customProperties ?: sself.currentDevice.customProperties)];
-                                                                            }
-                        
-                                                                            if (handler) {
-                                                                                handler(sself.currentDevice, error);
-                                                                            }
-                                                                        }];
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    [[requestManager logger] logMessage:[NSString stringWithFormat:@"Starting to update device %@", self.currentDevice.tokenId]];
+    [requestManager updateDevice:self.currentDevice.tokenId
+                   withUserAlias:userAlias
+                           token:token
+                            name:name
+                          locale:locale
+                customProperties:customProperties
+              platformProperties:platformProperties
+               completionHandler:^(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error) {
+                   __strong typeof(weakSelf) sself = weakSelf;
+                   [sself _handleDeviceRegisterWithToken:(token ? token : sself.currentDevice.token)
+                                                 tokenId:deviceTokenId
+                                                  locale:(locale ? locale : sself.currentDevice.locale)
+                                                    name:(name ? name : sself.currentDevice.name)
+                                                andError:error];
+                   if (error == nil) {
+                       sself.currentDevice = [sself.currentDevice deviceWithUser:(userAlias ? userAlias : sself.currentDevice.user)
+                                                                            name:(name ? name : sself.currentDevice.name)
+                                                                customProperties:(customProperties ?: sself.currentDevice.customProperties)];
+                   } else {
+                       [[requestManager logger] logMessage:[NSString stringWithFormat:@"Updated device %@", deviceTokenId]];
+                   }
+                   
+                   if (handler) {
+                       handler(sself.currentDevice, error);
+                   }
+               }];
 }
 
 -(void)anonymiseTokenWithCompletionHandler:(FWTNotifiableOperationCompletionHandler)handler
@@ -617,21 +630,25 @@ static FWTRequesterManager *sharedRequesterManager;
         return;
     }
     
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    [[requestManager logger] logMessage:@"Starting to unregister device"];
+    
     __weak typeof(self) weakSelf = self;
-    [[FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults] unregisterTokenId:self.currentDevice.tokenId
-                                                                             completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                                                                 __strong typeof(weakSelf) sself = weakSelf;
-                                                                                 FWTNotifiableDevice *responseDevice;
-                                                                                 if (success) {
-                                                                                     sself.currentDevice = nil;
-                                                                                     responseDevice = nil;
-                                                                                 } else {
-                                                                                     responseDevice = sself.currentDevice;
-                                                                                 }
-                                                                                 if (handler) {
-                                                                                     handler(responseDevice, error);
-                                                                                 }
-                                                                             }];
+    [requestManager unregisterTokenId:self.currentDevice.tokenId
+                     completionHandler:^(BOOL success, NSError * _Nullable error) {
+                         __strong typeof(weakSelf) sself = weakSelf;
+                         [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finished unregistering device with error %@", error]];
+                         FWTNotifiableDevice *responseDevice;
+                         if (success) {
+                             sself.currentDevice = nil;
+                             responseDevice = nil;
+                         } else {
+                             responseDevice = sself.currentDevice;
+                         }
+                         if (handler) {
+                             handler(responseDevice, error);
+                         }
+                     }];
 }
 
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo
@@ -674,27 +691,57 @@ static FWTRequesterManager *sharedRequesterManager;
                          groupId:(NSString * _Nullable)groupId
            withCompletionHandler:(nullable void(^)(NSError * _Nullable))handler
 {
+    return [self markNotificationAsOpened:notificationInfo
+                                  groupId:groupId
+                                   logger:nil
+                    withCompletionHandler:handler];
+}
+
++ (BOOL)markNotificationAsOpened:(NSDictionary *)notificationInfo
+                         groupId:(NSString *)groupId
+                          logger:(id<FWTNotifiableLogger>)logger
+           withCompletionHandler:(void (^)(NSError * _Nullable))handler
+{
     NSUserDefaults *userDefaults = [NSUserDefaults userDefaultsWithGroupId:groupId];
     NSNumber *notificationID = notificationInfo[@"n_id"];
     FWTNotifiableDevice *device = [self storedDeviceWithUserDefaults:userDefaults];
     NSNumber *tokenId = device.tokenId;
     NSString *user = device.user;
     
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogReceived
+                            forNotificationWithId:notificationID
+                                            error: nil];
+    
     if (tokenId == nil || notificationID == nil || user == nil) {
         if(handler) {
             handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
+        [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                forNotificationWithId:notificationID
+                                                error:[NSError fwt_invalidDeviceInformationError:nil]];
         return NO;
     }
     
-    [[FWTNotifiableManager requestManagerWithUserDefaults:userDefaults] markNotificationAsOpenedWithId:notificationID
-                                          deviceTokenId:tokenId
-                                                   user:user
-                                      completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                          if (handler) {
-                                              handler(error);
-                                          }
-                                      }];
+    __weak typeof(requestManager) weakRequestManager = requestManager;
+    [requestManager markNotificationAsOpenedWithId:notificationID
+                                     deviceTokenId:tokenId
+                                              user:user
+                                 completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                     if (success) {
+                                         [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusUpdate
+                                                                     forNotificationWithId:notificationID
+                                                                                     error: nil];
+                                     } else {
+                                         [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                                                     forNotificationWithId:notificationID
+                                                                                     error:error];
+                                     }
+                                     
+                                     if (handler) {
+                                         handler(error);
+                                     }
+                                 }];
     return YES;
 }
 
@@ -710,24 +757,58 @@ static FWTRequesterManager *sharedRequesterManager;
                            groupId:(NSString * _Nullable)groupId
              withCompletionHandler:(nullable void(^)(NSError * _Nullable error))handler
 {
+    return [self markNotificationAsReceived:notificationInfo
+                                    groupId:groupId
+                                     logger:nil
+                      withCompletionHandler:handler];
+}
+
++ (BOOL)markNotificationAsReceived:(NSDictionary *)notificationInfo
+                           groupId:(NSString *)groupId
+                            logger:(id<FWTNotifiableLogger>)logger
+             withCompletionHandler:(void (^)(NSError * _Nullable))handler
+{
     NSUserDefaults *userDefaults = [NSUserDefaults userDefaultsWithGroupId:groupId];
     NSNumber *notificationID = notificationInfo[@"n_id"];
     NSNumber *deviceTokenId = [self storedDeviceWithUserDefaults:userDefaults].tokenId;
+    
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    if (logger != nil) {
+        requestManager.logger = logger;
+    }
+    [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogReceived
+                            forNotificationWithId:notificationID
+                                            error:nil];
     
     if (deviceTokenId == nil || notificationID == nil) {
         if(handler) {
             handler([NSError fwt_invalidDeviceInformationError:nil]);
         }
+        [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                forNotificationWithId:notificationID
+                                                error:[NSError fwt_invalidDeviceInformationError:nil]];
         return NO;
     }
     
-    [[FWTNotifiableManager requestManagerWithUserDefaults:userDefaults] markNotificationAsReceivedWithId:notificationID
-                                                              deviceTokenId:deviceTokenId
-                                                          completionHandler:^(BOOL success, NSError * _Nullable error) {
-                                                              if (handler) {
-                                                                  handler(error);
-                                                              }
-                                                          }];
+    __weak typeof(requestManager) weakRequestManager = requestManager;
+    [requestManager markNotificationAsReceivedWithId:notificationID
+                                       deviceTokenId:deviceTokenId
+                                   completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                       
+                                       if (success) {
+                                           [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusUpdate
+                                                                       forNotificationWithId:notificationID
+                                                                                       error:nil];
+                                       } else {
+                                           [[weakRequestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogStatusFailure
+                                                                       forNotificationWithId:notificationID
+                                                                                       error:error];
+                                       }
+                                       
+                                       if (handler) {
+                                           handler(error);
+                                       }
+                                   }];
     
     NSDictionary *notificationCopy = [notificationInfo copy];
     

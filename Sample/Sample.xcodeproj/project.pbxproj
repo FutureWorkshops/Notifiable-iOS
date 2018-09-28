@@ -9,11 +9,14 @@
 /* Begin PBXBuildFile section */
 		17C78C21F9DE76CC5BBF3A66 /* Pods_NotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5938C2BE2CA1D9338EA4E44 /* Pods_NotificationService.framework */; };
 		38CD7C91FC7544E193B1597B /* Pods_Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09C837D4A89E04F9FB2866E6 /* Pods_Sample.framework */; };
+		7851EA69215D348800B9DE87 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EA68215D348800B9DE87 /* Logger.swift */; };
+		7851EA6A215D348800B9DE87 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851EA68215D348800B9DE87 /* Logger.swift */; };
 		7898B8881C56513700BD0CCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898B8871C56513700BD0CCB /* AppDelegate.swift */; };
 		7898B88A1C56513700BD0CCB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7898B8891C56513700BD0CCB /* ViewController.swift */; };
 		7898B88D1C56513700BD0CCB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7898B88B1C56513700BD0CCB /* Main.storyboard */; };
 		7898B88F1C56513700BD0CCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7898B88E1C56513700BD0CCB /* Assets.xcassets */; };
 		7898B8921C56513700BD0CCB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7898B8901C56513700BD0CCB /* LaunchScreen.storyboard */; };
+		78C51F8E215D45EC00E344D5 /* LoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C51F8D215D45EC00E344D5 /* LoggerViewController.swift */; };
 		78CD0754214BF7C600CCDB08 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD0753214BF7C600CCDB08 /* NotificationService.swift */; };
 		78CD0758214BF7C600CCDB08 /* NotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 78CD0751214BF7C500CCDB08 /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		78D927E020BDD905009320A0 /* SampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D927DF20BDD905009320A0 /* SampleTests.m */; };
@@ -54,6 +57,7 @@
 		09C837D4A89E04F9FB2866E6 /* Pods_Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DB397D499AB097ABE27E2A3 /* Pods-Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Sample/Pods-Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		76F57792E742AECB845DC0E2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7851EA68215D348800B9DE87 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		7898B8841C56513700BD0CCB /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7898B8871C56513700BD0CCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7898B8891C56513700BD0CCB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -62,6 +66,7 @@
 		7898B8911C56513700BD0CCB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7898B8931C56513700BD0CCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78B5D28D1E4D130C00C585FB /* Sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Sample.entitlements; sourceTree = "<group>"; };
+		78C51F8D215D45EC00E344D5 /* LoggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerViewController.swift; sourceTree = "<group>"; };
 		78CD0751214BF7C500CCDB08 /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		78CD0753214BF7C600CCDB08 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		78CD0755214BF7C600CCDB08 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -144,6 +149,8 @@
 				7898B88E1C56513700BD0CCB /* Assets.xcassets */,
 				7898B8901C56513700BD0CCB /* LaunchScreen.storyboard */,
 				7898B8931C56513700BD0CCB /* Info.plist */,
+				7851EA68215D348800B9DE87 /* Logger.swift */,
+				78C51F8D215D45EC00E344D5 /* LoggerViewController.swift */,
 			);
 			path = Sample;
 			sourceTree = "<group>";
@@ -251,7 +258,7 @@
 					7898B8831C56513700BD0CCB = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = BQHMJ2C6RL;
-						LastSwiftMigration = 0930;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -283,6 +290,7 @@
 					};
 					78D927DC20BDD904009320A0 = {
 						CreatedOnToolsVersion = 9.3.1;
+						DevelopmentTeam = BQHMJ2C6RL;
 						ProvisioningStyle = Manual;
 						TestTargetID = 7898B8831C56513700BD0CCB;
 					};
@@ -401,7 +409,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78C51F8E215D45EC00E344D5 /* LoggerViewController.swift in Sources */,
 				7898B88A1C56513700BD0CCB /* ViewController.swift in Sources */,
+				7851EA69215D348800B9DE87 /* Logger.swift in Sources */,
 				7898B8881C56513700BD0CCB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,6 +421,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78CD0754214BF7C600CCDB08 /* NotificationService.swift in Sources */,
+				7851EA6A215D348800B9DE87 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -577,8 +588,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "356dcf59-d940-4f06-9769-af6819dcc6a5";
 				PROVISIONING_PROFILE_SPECIFIER = "Notifiable - Sample";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -595,8 +605,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.futureworkshops.notifiable.Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -672,7 +681,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BQHMJ2C6RL;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = SampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;

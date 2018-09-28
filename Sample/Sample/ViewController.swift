@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         let manager = NotifiableManager(groupId: kAppGroupId, didRegister: { [weak self] (_, token) in
             self?.registerCompleted?(token as NSData)
         }, didRecieve: nil)
-        
+        manager.logger = kLogger
         manager.retryAttempts = 0
         return manager
     }()

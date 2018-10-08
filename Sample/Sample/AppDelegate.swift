@@ -11,21 +11,28 @@ import Keys
 import FWTNotifiable
 import UserNotifications
 
+let kAppGroupId = "group.com.futureworkshops.notifiable.Sample"
+let kLogger = SampleLogger(level: .information, groupId: kAppGroupId)
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
+        application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        
+        NotifiableManager.syncronizeData(withGroupId: kAppGroupId)
         
         if let serverURL = URL(string: "https://notifiable.futureworkshops.com/") {
             let keys = SampleKeys()
-            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey)
+            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, groupId: kAppGroupId)
         }
         
-        if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject] {
-            NotifiableManager.markAsOpen(notification: remoteNotification, completion: nil)
+        if let remoteNotification = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject], NotifiableManager.isValidNotification(remoteNotification) {
+            kLogger.log(message: "Opened the message on app: \(remoteNotification)")
+            NotifiableManager.markAsOpen(notification: remoteNotification, groupId: kAppGroupId, logger: kLogger, completion: nil)
         }
         
         let center = UNUserNotificationCenter.current()
@@ -36,12 +43,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
-        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+        guard NotifiableManager.isValidNotification(userInfo) else {
             completionHandler(.noData)
             return
         }
         
-        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+        kLogger.log(message: "Received notification on app: \(userInfo)")
+        
+        NotifiableManager.markAsReceived(notification: userInfo, groupId: kAppGroupId, logger: kLogger) { (error) in
             if let _ = error {
                 completionHandler(.failed)
             } else {
@@ -61,7 +70,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        NotifiableManager.markAsOpen(notification: response.notification.request.content.userInfo) { (_) in
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        guard NotifiableManager.isValidNotification(userInfo) else {
+            completionHandler()
+            return
+        }
+        
+        kLogger.log(message: "Opened the message on app: \(userInfo)")
+        
+        NotifiableManager.markAsOpen(notification: userInfo, groupId: kAppGroupId, logger: kLogger) { (_) in
             completionHandler()
         }
     }
@@ -70,11 +89,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         let userInfo = notification.request.content.userInfo
         
-        guard NotifiableManager.applicationDidReceiveRemoteNotification(userInfo) else {
+        guard NotifiableManager.isValidNotification(userInfo) else {
             return
         }
         
-        NotifiableManager.markAsReceived(notification: userInfo) { (error) in
+        kLogger.log(message: "Received notification on app: \(userInfo)")
+        
+        NotifiableManager.markAsReceived(notification: userInfo, groupId: kAppGroupId, logger: kLogger) { (error) in
             completionHandler(.alert)
         }
     }

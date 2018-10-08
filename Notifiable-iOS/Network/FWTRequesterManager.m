@@ -143,7 +143,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
         [params setObject:name forKey:FWTNotifiableNameKey];
     }
     if (userAlias) {
-        [params addEntriesFromDictionary:@{FWTNotifiableUserAliasKey: userAlias}];
+        [params setObject:userAlias forKey:FWTNotifiableUserAliasKey];
     }
     if (token) {
         [params setObject:[token fwt_notificationTokenString] forKey:FWTNotifiableDeviceTokenKey];

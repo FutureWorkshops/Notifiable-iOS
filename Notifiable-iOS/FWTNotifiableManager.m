@@ -336,7 +336,7 @@ static FWTRequesterManager *sharedRequesterManager;
     
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
     __weak typeof(self) weakSelf = self;
-    [requestManager registerDeviceWithUserAlias:nil
+    [requestManager registerDeviceWithUserAlias:@""
                                            token:token
                                             name:name
                                           locale:deviceLocale
@@ -630,25 +630,7 @@ static FWTRequesterManager *sharedRequesterManager;
         return;
     }
     
-    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
-    [[requestManager logger] logMessage:@"Starting to unregister device"];
-    
-    __weak typeof(self) weakSelf = self;
-    [requestManager unregisterTokenId:self.currentDevice.tokenId
-                     completionHandler:^(BOOL success, NSError * _Nullable error) {
-                         __strong typeof(weakSelf) sself = weakSelf;
-                         [[requestManager logger] logMessage:[NSString stringWithFormat:@"Finished unregistering device with error %@", error]];
-                         FWTNotifiableDevice *responseDevice;
-                         if (success) {
-                             sself.currentDevice = nil;
-                             responseDevice = nil;
-                         } else {
-                             responseDevice = sself.currentDevice;
-                         }
-                         if (handler) {
-                             handler(responseDevice, error);
-                         }
-                     }];
+    [self anonymiseTokenWithCompletionHandler:handler];
 }
 
 + (BOOL)applicationDidReceiveRemoteNotification:(NSDictionary *)notificationInfo

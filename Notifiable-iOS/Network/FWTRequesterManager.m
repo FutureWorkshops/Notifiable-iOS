@@ -11,6 +11,7 @@
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
 #import "NSLocale+FWTNotifiable.h"
+#import "FWTRequestQueue.h"
 
 typedef void (^FWTLoggedErrorHandler)(NSError * _Nullable error);
 typedef void (^FWTLoggedTokenErrorHandler)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
@@ -28,17 +29,25 @@ NSString * const FWTNotifiableProvider             = @"apns";
 @interface FWTRequesterManager ()
 
 @property (nonatomic, strong, readonly) FWTHTTPRequester *requester;
+@property (nonatomic, strong, readonly) FWTRequestQueue *requestQueue;
 
 @end
 
 @implementation FWTRequesterManager
 
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester
+                       andGroupId:(NSString *)groupId
 {
-    return [self initWithRequester:requester retryAttempts:3 andRetryDelay:60];
+    return [self initWithRequester:requester
+                           groupId:groupId
+                     retryAttempts:3
+                     andRetryDelay:60];
 }
 
-- (instancetype)initWithRequester:(FWTHTTPRequester *)requester retryAttempts:(NSInteger)attempts andRetryDelay:(NSTimeInterval)delay
+- (instancetype)initWithRequester:(FWTHTTPRequester *)requester
+                          groupId:(NSString *)groupId
+                    retryAttempts:(NSInteger)attempts
+                    andRetryDelay:(NSTimeInterval)delay
 {
     NSAssert(requester != nil, @"The manager need a requester");
     self = [super init];
@@ -47,6 +56,8 @@ NSString * const FWTNotifiableProvider             = @"apns";
         self->_retryAttempts = attempts;
         self->_retryDelay = delay;
         self->_logger = [[FWTDefaultNotifiableLogger alloc] init];
+        self->_requestQueue = [FWTRequestQueue fetchInstanceWithGroupId:groupId];
+        self.requestQueue.logger = self.logger;
     }
     return self;
 }

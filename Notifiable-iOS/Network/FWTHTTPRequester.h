@@ -40,6 +40,9 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                            deviceTokenId:(NSString *)deviceTokenId
                                  success:(FWTRequestManagerSuccessBlock)success
                                  failure:(FWTRequestManagerFailureBlock)failure;
+- (void)retryRequest:(NSURLRequest *)request
+             success:(_Nullable FWTRequestManagerSuccessBlock)success
+             failure:(_Nullable FWTRequestManagerFailureBlock)failure;
 
 @end
 

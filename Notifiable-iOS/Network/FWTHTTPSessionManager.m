@@ -8,6 +8,7 @@
 
 #import "FWTHTTPSessionManager.h"
 #import "FWTHTTPRequestSerializer.h"
+#import "FWTNotifiableAuthenticator.h"
 
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
@@ -17,16 +18,18 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 @property (nonatomic, strong) FWTHTTPRequestSerializer *requestSerializer;
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableHeaders;
+@property (nonatomic, strong) FWTNotifiableAuthenticator *authenticator;
 
 @end
 
 @implementation FWTHTTPSessionManager
 
-- (instancetype) initWithBaseURL:(NSURL *)baseUrl
+- (instancetype) initWithBaseURL:(NSURL *)baseUrl andAuthenticator:(FWTNotifiableAuthenticator *)authenticator
 {
     self = [super init];
     if (self) {
         self->_baseURL = baseUrl;
+        self->_authenticator = authenticator;
     }
     return self;
 }
@@ -133,6 +136,13 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                            forKey:field];
 }
 
+- (void)retryRequest:(NSURLRequest *)request
+             success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+             failure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
+    NSURLRequest *builtRequest = [self _resignRequest:request];
+    [self _performRequest:request success:success andFailure:failure];
+}
+
 #pragma mark - Private methods
 
 - (void) _buildTaskForPath:(NSString *)path
@@ -142,7 +152,11 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                 andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
-
+    [self _performRequest:request success:success andFailure:failure];
+}
+- (void) _performRequest:(NSURLRequest *)request
+                 success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+              andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
     __weak typeof(self) weakSelf = self;
     [NSURLConnection sendAsynchronousRequest:request queue:self.sessionOperationQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         NSLog(@"Response with Error: %@", connectionError);
@@ -170,11 +184,35 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                            andParameters:(NSDictionary *)paramters
 {
     NSURL* url = [self.baseURL URLByAppendingPathComponent:path];
+    NSDictionary *headers = [self _updateAuthenticationForPath:path
+                                                    httpMethod:FWTHTTPMethodString(method)];
     NSURLRequest *request = [self.requestSerializer buildRequestWithBaseURL:url
                                                                  parameters:paramters
-                                                                 andHeaders:self.HTTPRequestHeaders
+                                                                 andHeaders:headers
                                                                   forMethod:method];
     return request;
+}
+
+- (NSURLRequest *) _resignRequest:(NSURLRequest *)request
+{
+    NSString *path = [request.URL path];
+    NSString *method = [request HTTPMethod];
+    NSDictionary *headers = [self _updateAuthenticationForPath:path httpMethod:method];
+    
+    NSMutableURLRequest *resultRequest = [request mutableCopy];
+    [resultRequest setAllHTTPHeaderFields:headers];
+    return [resultRequest copy];
+}
+
+- (NSDictionary<NSString *, NSString *> *) _updateAuthenticationForPath:(NSString *)path
+                                                             httpMethod:(NSString *)httpMethod
+{
+    NSMutableDictionary *source = [[NSMutableDictionary alloc] initWithDictionary:self.HTTPRequestHeaders];
+    NSDictionary *headers = [self.authenticator authHeadersForPath:path
+                                                        httpMethod:httpMethod
+                                                        andHeaders:source];
+    [source setValuesForKeysWithDictionary:headers];
+    return source;
 }
 
 - (id) _jsonFromData:(NSData *)data

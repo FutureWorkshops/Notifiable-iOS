@@ -40,7 +40,8 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 - (FWTHTTPSessionManager *)httpSessionManager
 {
     if (!self->_httpSessionManager) {
-        self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl];
+        self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl
+                                                                  andAuthenticator:self.authenticator];
     }
     return self->_httpSessionManager;
 }
@@ -50,9 +51,6 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
                          failure:(FWTRequestManagerFailureBlock)failure
 {
     NSAssert(params != nil, @"You need provide, at least, the device token that will be registered");
-    
-    [self _updateAuthenticationForPath:FWTDeviceTokensPath httpMethod:@"POST"];
-    
     [self.httpSessionManager POST:FWTDeviceTokensPath
                        parameters:params
                           success:[self _defaultSuccessHandler:success]
@@ -68,7 +66,6 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     NSAssert(tokenId != nil, @"Device token id missing");
     
     NSString *path = [NSString stringWithFormat:@"%@/%@",FWTDeviceTokensPath, [tokenId stringValue]];
-    [self _updateAuthenticationForPath:path httpMethod:@"PATCH"];
     [self.httpSessionManager PATCH:path
                         parameters:params
                            success:[self _defaultSuccessHandler:success]
@@ -103,7 +100,6 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     }
     
     NSString *path = [NSString stringWithFormat:FWTNotificationOpenPath, notificationId];
-    [self _updateAuthenticationForPath:path httpMethod:@"POST"];
     [self.httpSessionManager POST:path
                       parameters:@{@"device_token_id": deviceTokenId,
                                    @"user": @{@"alias":user}}
@@ -126,11 +122,18 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
     }
     
     NSString *path = [NSString stringWithFormat:FWTNotificationReceivedPath, notificationId];
-    [self _updateAuthenticationForPath:path httpMethod:@"POST"];
     [self.httpSessionManager POST:path
                        parameters:@{@"device_token_id": deviceTokenId}
                           success:[self _defaultSuccessHandler:success]
                           failure:[self _defaultFailureHandler:failure success:success]];
+}
+
+- (void)retryRequest:(NSURLRequest *)request
+             success:(FWTRequestManagerSuccessBlock)success
+             failure:(FWTRequestManagerFailureBlock)failure {
+    [self.httpSessionManager retryRequest:request
+                                  success:[self _defaultSuccessHandler:success]
+                                  failure:[self _defaultFailureHandler:failure success:success]];
 }
 
 #pragma mark - Private Methods
@@ -156,18 +159,6 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
             failure(responseCode, error);
         }
     };
-}
-
-- (void) _updateAuthenticationForPath:(NSString *)path
-                           httpMethod:(NSString *)httpMethod
-{
-    NSDictionary *headers = [self.authenticator authHeadersForPath:path
-                                                        httpMethod:httpMethod
-                                                        andHeaders:self.httpSessionManager.HTTPRequestHeaders];
-    for (NSString *header in headers.keyEnumerator) {
-        [self.httpSessionManager setValue:headers[header]
-                       forHTTPHeaderField:header];
-    }
 }
 
 - (NSError *) _errorForStatusCode:(NSInteger)statusCode withUnderlyingError:(NSError *)underlyingError

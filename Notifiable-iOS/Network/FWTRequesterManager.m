@@ -13,6 +13,8 @@
 #import "NSLocale+FWTNotifiable.h"
 #import "FWTRequestQueue.h"
 
+#define kProcessQueueInterval 2
+
 typedef void (^FWTLoggedErrorHandler)(NSError * _Nullable error);
 typedef void (^FWTLoggedTokenErrorHandler)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
 
@@ -30,6 +32,8 @@ NSString * const FWTNotifiableProvider             = @"apns";
 
 @property (nonatomic, strong, readonly) FWTHTTPRequester *requester;
 @property (nonatomic, strong, readonly) FWTRequestQueue *requestQueue;
+@property (nonatomic, assign) BOOL processQueue;
+@property (nonatomic, assign) dispatch_queue_t queueProcessQueue;
 
 @end
 
@@ -55,8 +59,10 @@ NSString * const FWTNotifiableProvider             = @"apns";
         self->_requester = requester;
         self->_retryAttempts = attempts;
         self->_retryDelay = delay;
+        self->_processQueue = YES;
         self->_logger = [[FWTDefaultNotifiableLogger alloc] init];
         self->_requestQueue = [FWTRequestQueue fetchInstanceWithGroupId:groupId];
+        self->_queueProcessQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
         self.requestQueue.logger = self.logger;
     }
     return self;
@@ -133,6 +139,19 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                    attempts:self.retryAttempts + 1
                               previousError:nil
                           completionHandler:handler];
+}
+
+- (void) stopToProcessRequestQueue {
+    @synchronized (self) {
+        self.processQueue = NO;
+    }
+}
+
+- (void) resumeProcessingRequestQueue {
+    @synchronized (self) {
+        self.processQueue = YES;
+    }
+    [self _processQueue];
 }
 
 #pragma mark - Private
@@ -457,6 +476,51 @@ NSString * const FWTNotifiableProvider             = @"apns";
             });
         }
     };
+}
+
+#pragma mark - Session processor
+
+- (void) _processQueue {
+    
+    BOOL process = NO;
+    @synchronized (self) {
+        process = self.processQueue;
+    }
+    
+    if (process == NO) {
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    void(^finishBlock)(void) = ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kProcessQueueInterval * NSEC_PER_SEC)), weakSelf.queueProcessQueue, ^{
+            [weakSelf _processQueue];
+        });
+    };
+    
+    NSURLRequest *request = nil;
+    @synchronized (self) {
+        request = [self.requestQueue fetchFirst];
+    }
+    
+    if (request == nil) {
+        finishBlock();
+        return;
+    }
+    
+    [self.requester retryRequest:request success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        @synchronized (strongSelf.requestQueue) {
+            [strongSelf.requestQueue removeRequest:request];
+        }
+        finishBlock();
+    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        @synchronized (strongSelf.requestQueue) {
+            [strongSelf.requestQueue moveRequestToEndOfTheQueue:request];
+        }
+        finishBlock();
+    }];
 }
 
 @end

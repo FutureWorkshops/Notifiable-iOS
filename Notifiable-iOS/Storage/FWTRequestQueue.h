@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSURLRequest * _Nullable) fetchFirst;
 - (void) removeRequest:(NSURLRequest * _Nonnull)request NS_SWIFT_NAME(remove(_:));
 - (void) addRequest:(NSURLRequest * _Nonnull)request NS_SWIFT_NAME(add(_:));
+- (void) moveRequestToEndOfTheQueue:(NSURLRequest *)request NS_SWIFT_NAME(moveToEnd(_:));
 - (BOOL) syncronize: (NSError * __autoreleasing * _Nullable)error;
 
 @end

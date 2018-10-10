@@ -139,8 +139,9 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 - (void)retryRequest:(NSURLRequest *)request
              success:(nullable FWTHTTPSessionManagerSuccessBlock)success
              failure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
-    NSURLRequest *builtRequest = [self _resignRequest:request];
-    [self _performRequest:request success:success andFailure:failure];
+    [self _performRequest:[self _resignRequest:request]
+                  success:success
+               andFailure:failure];
 }
 
 #pragma mark - Private methods

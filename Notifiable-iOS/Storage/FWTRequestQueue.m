@@ -98,6 +98,12 @@
     [self _save];
 }
 
+- (void)moveRequestToEndOfTheQueue:(NSURLRequest *)request {
+    [self.requests removeObject:request];
+    [self.requests addObject:request];
+    [self _save];
+}
+
 - (BOOL) syncronize: (NSError * __autoreleasing * _Nullable)error {
     NSError *innerError = nil;
     NSData *data = nil;
@@ -122,7 +128,7 @@
 #pragma mark - Private methdos
 
 - (void) _save {
-    if (self.autoSyncronize == false) {
+    if (self.autoSyncronize == NO) {
         return;
     }
     

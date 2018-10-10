@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		65598A13187C59EB00C46A51 /* FWTNotifiableManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */; };
+		7823CCE9216E2D5B005923B0 /* FWTRequestQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823CCE8216E2D5B005923B0 /* FWTRequestQueue.m */; };
 		7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */; };
 		7837C7C11C4D7258007B2F61 /* NSError+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7837C7C01C4D7258007B2F61 /* NSError+FWTNotifiable.m */; };
 		783AED111C57AC9400066EE7 /* NSLocale+FWTNotifiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AED101C57AC9400066EE7 /* NSLocale+FWTNotifiable.m */; };
@@ -133,6 +134,8 @@
 /* Begin PBXFileReference section */
 		65598A0F187C59EB00C46A51 /* FWTNotifiableManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = FWTNotifiableManager.h; path = "Notifiable-iOS/FWTNotifiableManager.h"; sourceTree = SOURCE_ROOT; };
 		65598A10187C59EB00C46A51 /* FWTNotifiableManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FWTNotifiableManager.m; path = "Notifiable-iOS/FWTNotifiableManager.m"; sourceTree = SOURCE_ROOT; };
+		7823CCE7216E2D5B005923B0 /* FWTRequestQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FWTRequestQueue.h; path = "Notifiable-iOS/Storage/FWTRequestQueue.h"; sourceTree = "<group>"; };
+		7823CCE8216E2D5B005923B0 /* FWTRequestQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FWTRequestQueue.m; path = "Notifiable-iOS/Storage/FWTRequestQueue.m"; sourceTree = "<group>"; };
 		7837C7BC1C4D63A4007B2F61 /* NSData+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "NSData+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		7837C7BD1C4D63A4007B2F61 /* NSData+FWTNotifiable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSData+FWTNotifiable.m"; path = "Notifiable-iOS/Category/NSData+FWTNotifiable.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		7837C7BF1C4D7258007B2F61 /* NSError+FWTNotifiable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "NSError+FWTNotifiable.h"; path = "Notifiable-iOS/Category/NSError+FWTNotifiable.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -229,6 +232,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7823CCE6216E2D30005923B0 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				7823CCE7216E2D5B005923B0 /* FWTRequestQueue.h */,
+				7823CCE8216E2D5B005923B0 /* FWTRequestQueue.m */,
+			);
+			name = Storage;
+			sourceTree = "<group>";
+		};
 		7837C7BB1C4D637E007B2F61 /* Category */ = {
 			isa = PBXGroup;
 			children = (
@@ -385,6 +397,7 @@
 		8E4119CE17E9B9D1000CD6F3 /* Notifiable-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				7823CCE6216E2D30005923B0 /* Storage */,
 				78843C701C4E9AF00044CE25 /* Model */,
 				78843C6A1C4E65610044CE25 /* Logger */,
 				7837C7BB1C4D637E007B2F61 /* Category */,
@@ -623,6 +636,7 @@
 				7837C7BE1C4D63A4007B2F61 /* NSData+FWTNotifiable.m in Sources */,
 				783AED111C57AC9400066EE7 /* NSLocale+FWTNotifiable.m in Sources */,
 				7879F6EC1C494D8E00C6176C /* FWTHTTPRequester.m in Sources */,
+				7823CCE9216E2D5B005923B0 /* FWTRequestQueue.m in Sources */,
 				78B5D2841E4CD2BE00C585FB /* FWTHTTPRequestSerializer.m in Sources */,
 				78CD073A214BE87200CCDB08 /* NSUserDefaults+FWTNotifiable.m in Sources */,
 				78B5D2741E4CC8DF00C585FB /* FWTHTTPSessionManager.m in Sources */,

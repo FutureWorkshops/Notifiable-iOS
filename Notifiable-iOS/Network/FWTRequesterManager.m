@@ -40,8 +40,8 @@ NSString * const FWTNotifiableProvider             = @"apns";
 {
     return [self initWithRequester:requester
                            groupId:groupId
-                     retryAttempts:3
-                     andRetryDelay:60];
+                     retryAttempts:1
+                     andRetryDelay:5];
 }
 
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester

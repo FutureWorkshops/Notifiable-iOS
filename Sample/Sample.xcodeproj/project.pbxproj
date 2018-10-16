@@ -16,6 +16,8 @@
 		7898B88D1C56513700BD0CCB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7898B88B1C56513700BD0CCB /* Main.storyboard */; };
 		7898B88F1C56513700BD0CCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7898B88E1C56513700BD0CCB /* Assets.xcassets */; };
 		7898B8921C56513700BD0CCB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7898B8901C56513700BD0CCB /* LaunchScreen.storyboard */; };
+		789FC6E82175F4BC00B951E6 /* ServerConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789FC6E72175F4BC00B951E6 /* ServerConfigurationViewController.swift */; };
+		789FC6EA2175F6D900B951E6 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789FC6E92175F6D900B951E6 /* Configuration.swift */; };
 		78C51F8E215D45EC00E344D5 /* LoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C51F8D215D45EC00E344D5 /* LoggerViewController.swift */; };
 		78CD0754214BF7C600CCDB08 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CD0753214BF7C600CCDB08 /* NotificationService.swift */; };
 		78CD0758214BF7C600CCDB08 /* NotificationService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 78CD0751214BF7C500CCDB08 /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -65,6 +67,8 @@
 		7898B88E1C56513700BD0CCB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7898B8911C56513700BD0CCB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7898B8931C56513700BD0CCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		789FC6E72175F4BC00B951E6 /* ServerConfigurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationViewController.swift; sourceTree = "<group>"; };
+		789FC6E92175F6D900B951E6 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		78B5D28D1E4D130C00C585FB /* Sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Sample.entitlements; sourceTree = "<group>"; };
 		78C51F8D215D45EC00E344D5 /* LoggerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerViewController.swift; sourceTree = "<group>"; };
 		78CD0751214BF7C500CCDB08 /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,6 +155,8 @@
 				7898B8931C56513700BD0CCB /* Info.plist */,
 				7851EA68215D348800B9DE87 /* Logger.swift */,
 				78C51F8D215D45EC00E344D5 /* LoggerViewController.swift */,
+				789FC6E72175F4BC00B951E6 /* ServerConfigurationViewController.swift */,
+				789FC6E92175F6D900B951E6 /* Configuration.swift */,
 			);
 			path = Sample;
 			sourceTree = "<group>";
@@ -409,7 +415,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				789FC6EA2175F6D900B951E6 /* Configuration.swift in Sources */,
 				78C51F8E215D45EC00E344D5 /* LoggerViewController.swift in Sources */,
+				789FC6E82175F4BC00B951E6 /* ServerConfigurationViewController.swift in Sources */,
 				7898B88A1C56513700BD0CCB /* ViewController.swift in Sources */,
 				7851EA69215D348800B9DE87 /* Logger.swift in Sources */,
 				7898B8881C56513700BD0CCB /* AppDelegate.swift in Sources */,

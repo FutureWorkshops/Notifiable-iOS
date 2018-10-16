@@ -97,6 +97,7 @@ static FWTRequesterManager *sharedRequesterManager;
                                                                                      accessId:accessId
                                                                                  andSecretKey:secretKey];
     [[NSUserDefaults userDefaultsWithGroupId:groupId] storeConfiguration:configuration];
+    sharedRequesterManager = nil;
 }
 
 - (instancetype)initWithURL:(NSURL *)url

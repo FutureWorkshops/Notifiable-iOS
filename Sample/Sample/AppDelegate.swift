@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Keys
 import FWTNotifiable
 import UserNotifications
 
@@ -25,10 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         NotifiableManager.syncronizeData(withGroupId: kAppGroupId)
         
-        if let serverURL = URL(string: "https://notifiable.futureworkshops.com/") {
-            let keys = SampleKeys()
-            NotifiableManager.configure(url: serverURL, accessId: keys.fWTAccessID, secretKey: keys.fWTSecretKey, groupId: kAppGroupId)
-        }
+        let configuration = Configuration.defaultInstance(groupId: kAppGroupId)
+        NotifiableManager.configure(url: configuration.serverURL, accessId: configuration.accessKey, secretKey: configuration.secretKey, groupId: kAppGroupId)
         
         if let remoteNotification = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [NSObject:AnyObject], NotifiableManager.isValidNotification(remoteNotification) {
             kLogger.log(message: "Opened the message on app: \(remoteNotification)")

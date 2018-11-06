@@ -61,7 +61,7 @@ NS_SWIFT_NAME(NotifiableManager)
  */
 + (void) syncronizeDataWithGroupId:(NSString *)groupId;
 
-#pragma makr - Application lifecycle to support background retry
+#pragma mark - Application lifecycle to support background retry
 
 
 /**

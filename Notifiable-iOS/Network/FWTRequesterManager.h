@@ -23,10 +23,8 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
 @property (nonatomic, strong) id<FWTNotifiableLogger> logger;
 
 - (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithRequester:(FWTHTTPRequester *)requester;
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester
-                       andGroupId:(NSString * _Nullable)groupId;
-- (instancetype)initWithRequester:(FWTHTTPRequester *)requester
-                          groupId:(NSString * _Nullable)groupId
                     retryAttempts:(NSInteger)attempts
                     andRetryDelay:(NSTimeInterval)delay NS_DESIGNATED_INITIALIZER;
 
@@ -58,9 +56,6 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
 
 - (void)unregisterTokenId:(NSNumber *)tokenId
         completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
-
-- (void) stopToProcessRequestQueue;
-- (void) resumeProcessingRequestQueue;
 
 @end
 

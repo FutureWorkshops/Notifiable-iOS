@@ -48,7 +48,7 @@ static FWTRequesterManager *sharedRequesterManager;
                                                                                             andSecretKey:[FWTNotifiableManager serverSecretKeyWithUserDefaults:userDefaults]];
         FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseURL:[FWTNotifiableManager serverURLWithUserDefaults:userDefaults]
                                                                andAuthenticator:authenticator];
-        sharedRequesterManager = [[FWTRequesterManager alloc] initWithRequester:requester andGroupId:groupId];
+        sharedRequesterManager = [[FWTRequesterManager alloc] initWithRequester:requester];
     }
     return sharedRequesterManager;
 }

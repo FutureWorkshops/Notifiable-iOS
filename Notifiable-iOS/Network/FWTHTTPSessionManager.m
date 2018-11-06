@@ -172,7 +172,7 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
         
         if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
             NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
-            failure(404, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+            failure(httpResponse.statusCode, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
             return;
         }
         

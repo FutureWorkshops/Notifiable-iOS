@@ -67,6 +67,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dump(error)
     }
     
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        NotifiableManager.calledForBackgroundFetch(application: application, groupId: kAppGroupId)
+        completionHandler(.noData)
+    }
+    
     func applicationDidBecomeActive(_ application: UIApplication) {
         NotifiableManager.didBecomeActive(application: application, groupId: kAppGroupId)
     }

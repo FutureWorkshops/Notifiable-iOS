@@ -66,6 +66,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         dump(error)
     }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        NotifiableManager.didBecomeActive(application: application, groupId: kAppGroupId)
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        NotifiableManager.didEnterBackground(application: application, groupId: kAppGroupId)
+    }
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {

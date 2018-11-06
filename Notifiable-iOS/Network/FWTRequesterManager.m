@@ -11,9 +11,6 @@
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
 #import "NSLocale+FWTNotifiable.h"
-#import "FWTRequestQueue.h"
-
-#define kProcessQueueInterval 2
 
 typedef void (^FWTLoggedErrorHandler)(NSError * _Nullable error);
 typedef void (^FWTLoggedTokenErrorHandler)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
@@ -129,6 +126,14 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                    attempts:self.retryAttempts + 1
                               previousError:nil
                           completionHandler:handler];
+}
+
+- (void)startQueueProcess {
+    [self.requester startQueueProcess];
+}
+
+- (void)stopQueueProcess {
+    [self.requester stopQueueProcess];
 }
 
 #pragma mark - Private

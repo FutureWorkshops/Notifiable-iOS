@@ -20,6 +20,7 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithBaseURL:(NSURL *)baseUrl
+                        groupID:(NSString *)groupID
                andAuthenticator:(FWTNotifiableAuthenticator*)authenticator NS_DESIGNATED_INITIALIZER;
 - (void)registerDeviceWithParams:(NSDictionary *)params
                          success:(_Nullable FWTRequestManagerSuccessBlock)success
@@ -40,9 +41,9 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
                            deviceTokenId:(NSString *)deviceTokenId
                                  success:(FWTRequestManagerSuccessBlock)success
                                  failure:(FWTRequestManagerFailureBlock)failure;
-- (void)retryRequest:(NSURLRequest *)request
-             success:(_Nullable FWTRequestManagerSuccessBlock)success
-             failure:(_Nullable FWTRequestManagerFailureBlock)failure;
+
+- (void)startQueueProcess;
+- (void)stopQueueProcess;
 
 @end
 

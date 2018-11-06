@@ -20,7 +20,9 @@ typedef void(^FWTHTTPSessionManagerFailureBlock)(NSInteger responseCode, NSError
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, NSString *> *HTTPRequestHeaders;
 
 - (instancetype) init NS_UNAVAILABLE;
-- (instancetype) initWithBaseURL:(NSURL *)baseUrl andAuthenticator:(nonnull FWTNotifiableAuthenticator *)authenticator NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithBaseURL:(NSURL *)baseUrl
+                         groupID:(nullable NSString *)groupID
+                andAuthenticator:(nonnull FWTNotifiableAuthenticator *)authenticator NS_DESIGNATED_INITIALIZER;
 
 - (void)GET:(NSString *)URLString
  parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters
@@ -48,9 +50,9 @@ typedef void(^FWTHTTPSessionManagerFailureBlock)(NSInteger responseCode, NSError
      failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
 - (void) setValue:(NSString *)value forHTTPHeaderField:(NSString *)field;
-- (void)retryRequest:(NSURLRequest *)request
-             success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-             failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
+
+- (void)startQueueProcess;
+- (void)stopQueueProcess;
 
 @end
 

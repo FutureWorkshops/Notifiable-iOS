@@ -57,6 +57,9 @@ typedef void (^FWTDeviceListResponse)(NSArray<FWTNotifiableDevice *> *devices, N
 - (void)unregisterTokenId:(NSNumber *)tokenId
         completionHandler:(_Nullable FWTSimpleRequestResponse)handler;
 
+- (void)startQueueProcess;
+- (void)stopQueueProcess;
+
 @end
 
 NS_ASSUME_NONNULL_END

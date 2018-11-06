@@ -27,23 +27,18 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 @implementation FWTHTTPRequester
 
 - (instancetype)initWithBaseURL:(NSURL*)baseUrl
+                        groupID:(NSString *)groupID
                andAuthenticator:(FWTNotifiableAuthenticator*)authenticator
 {
     self = [super init];
     if (self) {
         self->_baseUrl = baseUrl;
         self->_authenticator = authenticator;
-    }
-    return self;
-}
-
-- (FWTHTTPSessionManager *)httpSessionManager
-{
-    if (!self->_httpSessionManager) {
         self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl
+                                                                           groupID:groupID
                                                                   andAuthenticator:self.authenticator];
     }
-    return self->_httpSessionManager;
+    return self;
 }
 
 - (void)registerDeviceWithParams:(NSDictionary *)params
@@ -128,12 +123,12 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
                           failure:[self _defaultFailureHandler:failure success:success]];
 }
 
-- (void)retryRequest:(NSURLRequest *)request
-             success:(FWTRequestManagerSuccessBlock)success
-             failure:(FWTRequestManagerFailureBlock)failure {
-    [self.httpSessionManager retryRequest:request
-                                  success:[self _defaultSuccessHandler:success]
-                                  failure:[self _defaultFailureHandler:failure success:success]];
+- (void)startQueueProcess {
+    [self.httpSessionManager startQueueProcess];
+}
+
+- (void)stopQueueProcess {
+    [self.httpSessionManager stopQueueProcess];
 }
 
 #pragma mark - Private Methods

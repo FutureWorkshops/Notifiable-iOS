@@ -9,6 +9,9 @@
 #import "FWTHTTPSessionManager.h"
 #import "FWTHTTPRequestSerializer.h"
 #import "FWTNotifiableAuthenticator.h"
+#import "FWTRequestQueue.h"
+
+#define kProcessQueueInterval 2
 
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
@@ -19,17 +22,27 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableHeaders;
 @property (nonatomic, strong) FWTNotifiableAuthenticator *authenticator;
+@property (nonatomic, strong) dispatch_queue_t queueProcessQueue;
+@property (nonatomic, strong) FWTRequestQueue *requestQueue;
+/**
+ This process allows the enable/disable of failed request processing.
+ For now, it is not exposed.
+ */
+@property (nonatomic, assign) BOOL processQueue;
 
 @end
 
 @implementation FWTHTTPSessionManager
 
-- (instancetype) initWithBaseURL:(NSURL *)baseUrl andAuthenticator:(FWTNotifiableAuthenticator *)authenticator
+- (instancetype) initWithBaseURL:(NSURL *)baseUrl groupID:(NSString *)groupID andAuthenticator:(FWTNotifiableAuthenticator *)authenticator
 {
     self = [super init];
     if (self) {
         self->_baseURL = baseUrl;
         self->_authenticator = authenticator;
+        self->_processQueue = NO;
+        self->_queueProcessQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+        self->_requestQueue = [FWTRequestQueue fetchInstanceWithGroupId:groupID];
     }
     return self;
 }
@@ -136,15 +149,27 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                            forKey:field];
 }
 
-- (void)retryRequest:(NSURLRequest *)request
-             success:(nullable FWTHTTPSessionManagerSuccessBlock)success
-             failure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
+- (void)startQueueProcess {
+    if (self.processQueue == YES) {
+        return;
+    }
+    self.processQueue = YES;
+    [self processQueue];
+}
+
+- (void)stopQueueProcess {
+    self.processQueue = NO;
+}
+
+#pragma mark - Private methods
+
+- (void) _retryRequest:(NSURLRequest *)request
+               success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+               failure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
     [self _performRequest:[self _resignRequest:request]
                   success:success
                andFailure:failure];
 }
-
-#pragma mark - Private methods
 
 - (void) _buildTaskForPath:(NSString *)path
                     method:(FWTHTTPMethod)method
@@ -227,6 +252,51 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     } else {
         return jsonContent;
     }
+}
+
+#pragma mark - Session processor
+
+- (void) _processQueue {
+    
+    BOOL process = NO;
+    @synchronized (self) {
+        process = self.processQueue;
+    }
+    
+    if (process == NO) {
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    void(^finishBlock)(void) = ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kProcessQueueInterval * NSEC_PER_SEC)), weakSelf.queueProcessQueue, ^{
+            [weakSelf _processQueue];
+        });
+    };
+    
+    NSURLRequest *request = nil;
+    @synchronized (self) {
+        request = [self.requestQueue fetchFirst];
+    }
+    
+    if (request == nil) {
+        finishBlock();
+        return;
+    }
+    
+    [self _retryRequest:request success:^(NSDictionary<NSString *,NSObject *> * _Nullable response) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        @synchronized (strongSelf.requestQueue) {
+            [strongSelf.requestQueue removeRequest:request];
+        }
+        finishBlock();
+    } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        @synchronized (strongSelf.requestQueue) {
+            [strongSelf.requestQueue moveRequestToEndOfTheQueue:request];
+        }
+        finishBlock();
+    }];
 }
 
 @end

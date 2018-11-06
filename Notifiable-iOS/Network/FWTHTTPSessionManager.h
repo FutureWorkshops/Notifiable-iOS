@@ -29,8 +29,18 @@ typedef void(^FWTHTTPSessionManagerFailureBlock)(NSInteger responseCode, NSError
     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
+- (void)GET:(NSString *)URLString
+ parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters enqueueOnFailure:(BOOL)enqueue
+    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+    failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
+
 - (void)PATCH:(NSString *)URLString
    parameters:(nullable NSDictionary *)parameters
+      success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+      failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
+
+- (void)PATCH:(NSString *)URLString
+   parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
       success:(nullable FWTHTTPSessionManagerSuccessBlock)success
       failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
@@ -39,13 +49,28 @@ typedef void(^FWTHTTPSessionManagerFailureBlock)(NSInteger responseCode, NSError
        success:(nullable FWTHTTPSessionManagerSuccessBlock)success
        failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
+- (void)DELETE:(NSString *)URLString
+    parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
+       success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+       failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
+
 - (void)PUT:(NSString *)URLString
  parameters:(nullable NSDictionary *)parameters
     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 
+- (void)PUT:(NSString *)URLString
+ parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
+    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+    failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
+
 - (void)POST:(NSString *)URLString
   parameters:(nullable NSDictionary *)parameters
+     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
+
+- (void)POST:(NSString *)URLString
+  parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
      success:(nullable FWTHTTPSessionManagerSuccessBlock)success
      failure:(nullable FWTHTTPSessionManagerFailureBlock)failure;
 

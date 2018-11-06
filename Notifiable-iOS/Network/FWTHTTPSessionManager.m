@@ -97,9 +97,22 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
+    [self GET:URLString
+   parameters:parameters
+enqueueOnFailure:YES
+      success:success
+      failure:failure];
+}
+
+- (void)GET:(NSString *)URLString
+ parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters enqueueOnFailure:(BOOL)enqueue
+    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+    failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+{
     [self _buildTaskForPath:URLString
                      method:FWTHTTPMethodGET
                  parameters:parameters
+           enqueueOnFailure:enqueue
                     success:success
                  andFailure:failure];
 }
@@ -109,9 +122,22 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
       success:(nullable FWTHTTPSessionManagerSuccessBlock)success
       failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
+    [self PATCH:URLString
+     parameters:parameters
+enqueueOnFailure:YES
+        success:success
+        failure:failure];
+}
+
+- (void)PATCH:(NSString *)URLString
+   parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
+      success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+      failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+{
     [self _buildTaskForPath:URLString
                      method:FWTHTTPMethodPATCH
                  parameters:parameters
+           enqueueOnFailure:enqueue
                     success:success
                  andFailure:failure];
 }
@@ -121,9 +147,22 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
        success:(nullable FWTHTTPSessionManagerSuccessBlock)success
        failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
+    [self DELETE:URLString
+      parameters:parameters
+enqueueOnFailure:YES
+         success:success
+         failure:failure];
+}
+
+- (void)DELETE:(NSString *)URLString
+    parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
+       success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+       failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+{
     [self _buildTaskForPath:URLString
                      method:FWTHTTPMethodDELETE
                  parameters:parameters
+           enqueueOnFailure:enqueue
                     success:success
                  andFailure:failure];
 }
@@ -133,9 +172,22 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
+    [self PUT:URLString
+   parameters:parameters
+enqueueOnFailure:YES
+      success:success
+      failure:failure];
+}
+
+- (void)PUT:(NSString *)URLString
+ parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
+    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+    failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+{
     [self _buildTaskForPath:URLString
                      method:FWTHTTPMethodPUT
                  parameters:parameters
+           enqueueOnFailure:enqueue
                     success:success
                  andFailure:failure];
 }
@@ -145,9 +197,22 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
      success:(nullable FWTHTTPSessionManagerSuccessBlock)success
      failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
+    [self POST:URLString
+    parameters:parameters
+enqueueOnFailure:YES
+       success:success
+       failure:failure];
+}
+
+- (void)POST:(NSString *)URLString
+  parameters:(nullable NSDictionary *)parameters enqueueOnFailure:(BOOL)enqueue
+     success:(nullable FWTHTTPSessionManagerSuccessBlock)success
+     failure:(nullable FWTHTTPSessionManagerFailureBlock)failure
+{
     [self _buildTaskForPath:URLString
                      method:FWTHTTPMethodPOST
                  parameters:parameters
+           enqueueOnFailure:enqueue
                     success:success
                  andFailure:failure];
 }
@@ -184,12 +249,13 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 - (void) _buildTaskForPath:(NSString *)path
                     method:(FWTHTTPMethod)method
                 parameters:(NSDictionary*)parameters
+          enqueueOnFailure:(BOOL)enqueue
                    success:(nullable FWTHTTPSessionManagerSuccessBlock)success
                 andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
     [self _performRequest:request
-         enqueueOnFailure:YES
+         enqueueOnFailure:enqueue
                   success:success
                andFailure:failure];
 }

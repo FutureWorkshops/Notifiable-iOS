@@ -11,6 +11,7 @@
 #import "NSData+FWTNotifiable.h"
 #import "FWTNotifiableDevice+Parser.h"
 #import "NSLocale+FWTNotifiable.h"
+#import "NSError+FWTNetwork.h"
 
 typedef void (^FWTLoggedErrorHandler)(NSError * _Nullable error);
 typedef void (^FWTLoggedTokenErrorHandler)(NSNumber * _Nullable deviceTokenId, NSError * _Nullable error);
@@ -36,7 +37,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester
 {
     return [self initWithRequester:requester
-                     retryAttempts:0
+                     retryAttempts:1
                      andRetryDelay:2];
 }
 
@@ -234,6 +235,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
         }
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         [weakSelf.logger logMessage:[NSString stringWithFormat:@"Failed to register device token: %@",error]];
+        NSInteger newAttempts = [weakSelf _adjustRetryAttempts:attempts forResponseCode:responseCode];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -243,7 +245,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                                             locale:locale
                                   customProperties:customProperties
                                 platformProperties:platformProperties
-                                          attempts:(attempts - 1)
+                                          attempts:newAttempts
                                      previousError:error
                                  completionHandler:handler];
         });
@@ -303,6 +305,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
         
         __strong typeof(weakSelf) sself = weakSelf;
         [sself.logger logMessage:[NSString stringWithFormat:@"Failed to update device with deviceTokenId %@: %@", deviceTokenId, error]];
+        NSInteger newAttempts = [sself _adjustRetryAttempts:attempts forResponseCode:responseCode];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -313,7 +316,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
                              locale:locale
                    customProperties:customProperties
                  platformProperties:platformProperties
-                           attempts:(attempts - 1)
+                           attempts:newAttempts
                       previousError:error
                   completionHandler:handler];
         });
@@ -349,12 +352,13 @@ NSString * const FWTNotifiableProvider             = @"apns";
         }
         
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
+        NSInteger newAttempts = [weakSelf _adjustRetryAttempts:attempts forResponseCode:responseCode];
         [weakSelf.logger logMessage:@"Failed to unregister for push notifications"];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _unregisterToken:deviceTokenId
-                          withAttempts:(attempts - 1)
+                          withAttempts:newAttempts
                          previousError:error
                      completionHandler:handler];
         });
@@ -385,13 +389,14 @@ NSString * const FWTNotifiableProvider             = @"apns";
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself.logger logMessage:@"Failed to mark notification as opened"];
+        NSInteger newAttempts = [sself _adjustRetryAttempts:attempts forResponseCode:responseCode];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _markNotificationAsOpenedWithId:notificationId
                                         deviceTokenId:deviceTokenId
                                                  user:user
-                                             attempts:(attempts - 1)
+                                             attempts:newAttempts
                                         previousError:error
                                     completionHandler:handler];
         });
@@ -420,16 +425,25 @@ NSString * const FWTNotifiableProvider             = @"apns";
     } failure:^(NSInteger responseCode, NSError * _Nonnull error) {
         __strong typeof(weakSelf) sself = weakSelf;
         [sself.logger logMessage:@"Failed to mark notification as received"];
+        NSInteger newAttempts = [sself _adjustRetryAttempts:attempts forResponseCode:responseCode];
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(sself.retryDelay * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [weakSelf _markNotificationAsReceivedWithId:notificationId
                                         deviceTokenId:deviceTokenId
-                                             attempts:(attempts - 1)
+                                             attempts:newAttempts
                                         previousError:error
                                     completionHandler:handler];
         });
     }];
+}
+
+- (NSUInteger) _adjustRetryAttempts:(NSUInteger)attempts forResponseCode:(NSInteger)responseCode {
+    if (responseCode == FWTNotifiableEnqueueRequestResponseCode) {
+        return 0;
+    } else {
+        return (attempts - 1);
+    }
 }
 
 - (FWTLoggedErrorHandler) _buildLoggedErrorHandler:(FWTSimpleRequestResponse)handler {

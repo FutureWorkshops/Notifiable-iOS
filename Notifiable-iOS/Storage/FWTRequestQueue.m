@@ -33,12 +33,7 @@
     }
     
     NSError *error = nil;
-    FWTRequestQueue *requestQueue = nil;
-    if (@available(iOS 11.0, *)) {
-        requestQueue = [NSKeyedUnarchiver unarchivedObjectOfClass:[FWTRequestQueue class] fromData:queueData error:&error];
-    } else {
-        requestQueue = [NSKeyedUnarchiver unarchiveTopLevelObjectWithData:queueData error:&error];
-    }
+    FWTRequestQueue *requestQueue = [NSKeyedUnarchiver unarchiveTopLevelObjectWithData:queueData error:&error];
     
     if (requestQueue == nil || error != nil) {
         return [[FWTRequestQueue alloc] initWithGroupId:groupId];
@@ -77,7 +72,7 @@
         NSArray *requestArray = (NSArray *)[aDecoder decodeObjectOfClass:[NSArray class] forKey:kRequestQueueBuffer];
         NSNumber *autoSave = (NSNumber *)[aDecoder decodeObjectOfClass:[NSNumber class] forKey:kRequestQueueAutoSyncronize];
         self->_requests = [[NSMutableArray alloc] initWithArray:requestArray];
-        self->_autoSyncronize = [autoSave boolValue];
+        self->_autoSyncronize = (autoSave == nil ? YES : [autoSave boolValue]);
     }
     return self;
 }
@@ -106,12 +101,7 @@
 
 - (BOOL) syncronize: (NSError * __autoreleasing * _Nullable)error {
     NSError *innerError = nil;
-    NSData *data = nil;
-    if (@available(iOS 11.0, *)) {
-        data = [NSKeyedArchiver archivedDataWithRootObject:self requiringSecureCoding:YES error:&innerError];
-    } else {
-        data = [NSKeyedArchiver archivedDataWithRootObject:self];
-    }
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self];
     
     if (innerError != nil) {
         *error = innerError;

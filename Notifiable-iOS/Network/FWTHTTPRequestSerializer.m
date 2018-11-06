@@ -21,7 +21,7 @@ NSString * const FWHTTPRequestSerializerQueryRegex = @"\\?([\\w-]+(=[\\w-]*)?(&[
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:finalURL
                                                                 cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                                            timeoutInterval:10000];
+                                                            timeoutInterval:5000];
     [request setHTTPMethod:FWTHTTPMethodString(method)];
     [request setAllHTTPHeaderFields:headers];
     

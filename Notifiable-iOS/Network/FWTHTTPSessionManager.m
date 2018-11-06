@@ -10,8 +10,17 @@
 #import "FWTHTTPRequestSerializer.h"
 #import "FWTNotifiableAuthenticator.h"
 #import "FWTRequestQueue.h"
+#import "NSError+FWTNetwork.h"
 
 #define kProcessQueueInterval 2
+
+#define SupportedErrorsForEnqueue @[@(NSURLErrorSecureConnectionFailed),\
+@(NSURLErrorCancelled),\
+@(NSURLErrorTimedOut),\
+@(NSURLErrorCannotConnectToHost),\
+@(NSURLErrorNetworkConnectionLost),\
+@(NSURLErrorDNSLookupFailed),\
+@(NSURLErrorNotConnectedToInternet)]
 
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
@@ -154,7 +163,7 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
         return;
     }
     self.processQueue = YES;
-    [self processQueue];
+    [self _processQueue];
 }
 
 - (void)stopQueueProcess {
@@ -167,6 +176,7 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                success:(nullable FWTHTTPSessionManagerSuccessBlock)success
                failure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
     [self _performRequest:[self _resignRequest:request]
+         enqueueOnFailure:NO
                   success:success
                andFailure:failure];
 }
@@ -178,31 +188,57 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
                 andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure
 {
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
-    [self _performRequest:request success:success andFailure:failure];
+    [self _performRequest:request
+         enqueueOnFailure:YES
+                  success:success
+               andFailure:failure];
 }
 - (void) _performRequest:(NSURLRequest *)request
+        enqueueOnFailure:(BOOL)enqueue
                  success:(nullable FWTHTTPSessionManagerSuccessBlock)success
               andFailure:(nullable FWTHTTPSessionManagerFailureBlock)failure {
     __weak typeof(self) weakSelf = self;
+    
+    NSURLRequest *preProcessedRequest = [request copy];
+    
     [NSURLConnection sendAsynchronousRequest:request queue:self.sessionOperationQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         NSLog(@"Response with Error: %@", connectionError);
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         
+        NSInteger statusCode = httpResponse.statusCode ?: connectionError.code;
+        
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        
         if (connectionError) {
-            failure(httpResponse.statusCode, connectionError);
+            NSInteger responseCode;
+            if (enqueue) {
+                responseCode = [strongSelf _enqueueRequest:preProcessedRequest withResponseCode:statusCode] ? FWTNotifiableEnqueueRequestResponseCode : statusCode;
+            } else {
+                responseCode = statusCode;
+            }
+            failure(responseCode, connectionError);
             return;
         }
         
-        id responseData = [weakSelf _jsonFromData:data];
+        id responseData = [strongSelf _jsonFromData:data];
         
-        if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
+        if (httpResponse != nil && (statusCode < 200 || statusCode >= 300)) {
             NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
-            failure(httpResponse.statusCode, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+            failure(statusCode, [NSError errorWithDomain:@"FWTNotifiableError" code:statusCode userInfo:userInfo]);
             return;
         }
         
         success(responseData);
     }];
+}
+
+- (BOOL) _enqueueRequest:(NSURLRequest *)request withResponseCode:(NSInteger)responseCode {
+    if (![SupportedErrorsForEnqueue containsObject:@(responseCode)]) {
+        return NO;
+    }
+    
+    [self.requestQueue addRequest:request];
+    return YES;
 }
 
 - (NSURLRequest *) _buildRequestWithPath:(NSString *)path

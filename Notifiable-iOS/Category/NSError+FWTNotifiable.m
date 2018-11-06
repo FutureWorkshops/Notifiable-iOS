@@ -5,6 +5,7 @@
 //
 
 #import "NSError+FWTNotifiable.h"
+#import "NSError+FWTNetwork.h"
 
 static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNotifiable.error";
 
@@ -32,6 +33,10 @@ static NSString * const FWTNotifiableErrorDomain = @"com.futureworkshops.FWTNoti
             return [NSError fwt_forbiddenErrorWithUnderlyingError:error];
         case 404:
             return [NSError fwt_invalidOperationErrorWithUnderlyingError:error];
+        case -7598:
+            return [self fwt_errorWithCode:FWTErrorResponseEnqueuedForLater
+                               description:@"Update enqueued for later retry"
+                        andUnderlyingError:error];
         default:
             return [NSError fwt_errorWithCode:error.code
                                   description:error.localizedDescription

@@ -21,7 +21,8 @@ typedef NS_ENUM(NSInteger, FWTError) {
     FWTErrorUserAliasMissing,
     FWTErrorForbidden,
     FWTErrorInvalidDeviceInformation,
-    FWTErrorInvalidNotification
+    FWTErrorInvalidNotification,
+    FWTErrorResponseEnqueuedForLater
 };
 
 @interface NSError (FWTNotifiable)

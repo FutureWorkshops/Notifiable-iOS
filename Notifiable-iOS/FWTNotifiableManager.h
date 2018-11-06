@@ -63,9 +63,33 @@ NS_SWIFT_NAME(NotifiableManager)
 
 #pragma makr - Application lifecycle to support background retry
 
-+ (void) applicationDidEnterBackground:(UIApplication *)application groupId:(NSString *)groupId;
-+ (void) applicationDidBecomeActive:(UIApplication *)application groupId:(NSString *)groupId;
-+ (void) applicationCalledForBackgroundFetchRequest:(UIApplication *)application groupId:(NSString *)groupId;
+
+/**
+ This tells the Notifiable Manager that the application is going background,
+ and allows the process to extend the background request retry attemps.
+
+ @param application Application that went background
+ @param groupId Group ID used to store the Notifiable informations
+ */
++ (void) applicationDidEnterBackground:(UIApplication *)application groupId:(nullable NSString *)groupId NS_SWIFT_NAME(didEnterBackground(application:groupId:));
+
+/**
+ This tells the Notifiable Manager that the application is going back active,
+ and allows the process to resume retrying background processes.
+ 
+ @param application Application that went background
+ @param groupId Group ID used to store the Notifiable informations
+ */
++ (void) applicationDidBecomeActive:(UIApplication *)application groupId:(nullable NSString *)groupId NS_SWIFT_NAME(didBecomeActive(application:groupId:));
+
+/**
+ This tells the Notifiable Manager that the application was awaken to perform background tasks,
+ and allows the process to resume retrying background processes.
+ 
+ @param application Application that went background
+ @param groupId Group ID used to store the Notifiable informations
+ */
++ (void) applicationCalledForBackgroundFetchRequest:(UIApplication *)application groupId:(nullable NSString *)groupId NS_SWIFT_NAME(calledForBackgroundFetch(application:groupId:));
 
 #pragma mark - Permission notification
 /**

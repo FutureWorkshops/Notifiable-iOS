@@ -36,8 +36,8 @@ NSString * const FWTNotifiableProvider             = @"apns";
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester
 {
     return [self initWithRequester:requester
-                     retryAttempts:1
-                     andRetryDelay:5];
+                     retryAttempts:0
+                     andRetryDelay:2];
 }
 
 - (instancetype)initWithRequester:(FWTHTTPRequester *)requester

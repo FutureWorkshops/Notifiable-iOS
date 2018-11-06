@@ -61,6 +61,12 @@ NS_SWIFT_NAME(NotifiableManager)
  */
 + (void) syncronizeDataWithGroupId:(NSString *)groupId;
 
+#pragma makr - Application lifecycle to support background retry
+
++ (void) applicationDidEnterBackground:(UIApplication *)application groupId:(NSString *)groupId;
++ (void) applicationDidBecomeActive:(UIApplication *)application groupId:(NSString *)groupId;
++ (void) applicationCalledForBackgroundFetchRequest:(UIApplication *)application groupId:(NSString *)groupId;
+
 #pragma mark - Permission notification
 /**
  Inform the Notifiable Manager that the application did register for remote notifications

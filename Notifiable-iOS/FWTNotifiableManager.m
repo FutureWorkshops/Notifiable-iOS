@@ -21,6 +21,7 @@ NSString * const FWTNotifiableNotificationError = @"FWTNotifiableNotificationErr
 static NSHashTable *managerListeners;
 static NSHashTable *listeners;
 static NSData * tokenDataBuffer;
+static UIBackgroundTaskIdentifier taskIdentifier;
 static FWTRequesterManager *sharedRequesterManager;
 
 @interface FWTNotifiableManager () <FWTNotifiableManagerListener>
@@ -812,6 +813,35 @@ static FWTRequesterManager *sharedRequesterManager;
     }];
     
     return YES;
+}
+
+#pragma mark - Application lifecycle
+
++ (void) applicationDidEnterBackground:(UIApplication *)application groupId:(NSString *)groupId {
+    //This background task holds the request Manager able to perform background tasks for longer
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithGroupId:groupId];
+    [requestManager startQueueProcess];
+    
+    taskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+        if (taskIdentifier == UIBackgroundTaskInvalid) {
+            return;
+        }
+        
+        taskIdentifier = UIBackgroundTaskInvalid;
+        FWTRequesterManager *blockRequestManager = [FWTNotifiableManager requestManagerWithGroupId:groupId];
+        [blockRequestManager stopQueueProcess];
+    }];
+}
+
++ (void) applicationDidBecomeActive:(UIApplication *)application groupId:(NSString *)groupId {
+    taskIdentifier = UIBackgroundTaskInvalid;
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithGroupId:groupId];
+    [requestManager startQueueProcess];
+}
+
++ (void) applicationCalledForBackgroundFetchRequest:(UIApplication *)application groupId:(NSString *)groupId {
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithGroupId:groupId];
+    [requestManager startQueueProcess];
 }
 
 #pragma mark - FWTManagerListener

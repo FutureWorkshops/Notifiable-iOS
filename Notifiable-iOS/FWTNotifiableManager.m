@@ -840,8 +840,8 @@ static FWTRequesterManager *sharedRequesterManager;
 }
 
 + (void) applicationCalledForBackgroundFetchRequest:(UIApplication *)application groupId:(NSString *)groupId {
-    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithGroupId:groupId];
-    [requestManager startQueueProcess];
+    //For now, this will have the same behaviour of the enter background
+    [FWTNotifiableManager applicationDidEnterBackground:application groupId:groupId];
 }
 
 #pragma mark - FWTManagerListener

@@ -137,15 +137,6 @@ static FWTRequesterManager *sharedRequesterManager;
     return self;
 }
 
-- (void)dealloc
-{
-    [FWTNotifiableManager operateOnListenerTableOnBackground:^(NSHashTable *table, NSHashTable *managerTable) {
-        if ([managerTable containsObject:self]) {
-            [managerTable removeObject:self];
-        }
-    }];
-}
-
 + (NSHashTable *)listenerTable
 {
     __block NSHashTable* table;

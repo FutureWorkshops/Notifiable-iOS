@@ -484,6 +484,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 8E4119C017E9B9D1000CD6F3;

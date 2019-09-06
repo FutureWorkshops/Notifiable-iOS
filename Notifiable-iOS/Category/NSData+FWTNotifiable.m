@@ -8,9 +8,18 @@
 
 @implementation NSData (FWTNotifiable)
 
+- (NSString *)hexString {
+    const unsigned char *bytes = (const unsigned char *)self.bytes;
+    NSMutableString *hex = [NSMutableString new];
+    for (NSInteger i = 0; i < self.length; i++) {
+        [hex appendFormat:@"%02x", bytes[i]];
+    }
+    return [hex copy];
+}
+
 - (NSString *)fwt_notificationTokenString
 {
-    NSString *tokenString = self.description;
+    NSString *tokenString = self.hexString;
     NSString *clearToken = [[tokenString stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
     return clearToken;
 }

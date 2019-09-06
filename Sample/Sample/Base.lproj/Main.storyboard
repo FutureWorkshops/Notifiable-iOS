@@ -220,7 +220,13 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="1IK-S0-qNj" secondAttribute="bottom" id="b9y-BE-TR5"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="FWTNotifiable" id="oRE-Po-oGW"/>
+                    <navigationItem key="navigationItem" title="FWTNotifiable" id="oRE-Po-oGW">
+                        <barButtonItem key="rightBarButtonItem" title="Configure" id="ne8-CY-A1v">
+                            <connections>
+                                <segue destination="Ixy-CI-7eT" kind="show" id="mgM-iH-mMx"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="onSiteSwitch" destination="vIy-h8-tFJ" id="UQF-tY-0pt"/>
                     </connections>
@@ -228,6 +234,94 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="580" y="698.5007496251875"/>
+        </scene>
+        <!--Configuration-->
+        <scene sceneID="svB-t8-KhA">
+            <objects>
+                <viewController id="Ixy-CI-7eT" customClass="ServerConfigurationViewController" customModule="Sample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="G61-EJ-KkV"/>
+                        <viewControllerLayoutGuide type="bottom" id="2ej-eY-vbl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Prz-qg-uez">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Server URL:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-sb-VNH">
+                                <rect key="frame" x="16" y="72" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="L5p-mD-tqj">
+                                <rect key="frame" x="16" y="101" width="343" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Key:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWs-J3-mfJ">
+                                <rect key="frame" x="16" y="139" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hr3-Ne-Kv6">
+                                <rect key="frame" x="16" y="168" width="343" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Secret Key:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ti-ge-pOh">
+                                <rect key="frame" x="16" y="206" width="343" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EMX-At-QHN">
+                                <rect key="frame" x="16" y="235" width="343" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="L5p-mD-tqj" firstAttribute="top" secondItem="Shv-sb-VNH" secondAttribute="bottom" constant="8" id="BoP-8V-mtG"/>
+                            <constraint firstItem="BWs-J3-mfJ" firstAttribute="leading" secondItem="Prz-qg-uez" secondAttribute="leadingMargin" id="Crw-AV-ODf"/>
+                            <constraint firstItem="hr3-Ne-Kv6" firstAttribute="top" secondItem="BWs-J3-mfJ" secondAttribute="bottom" constant="8" id="EA5-vK-w4M"/>
+                            <constraint firstItem="0Ti-ge-pOh" firstAttribute="top" secondItem="hr3-Ne-Kv6" secondAttribute="bottom" constant="8" id="Euv-UP-JbI"/>
+                            <constraint firstItem="BWs-J3-mfJ" firstAttribute="top" secondItem="L5p-mD-tqj" secondAttribute="bottom" constant="8" id="LvF-Iq-BfA"/>
+                            <constraint firstItem="BWs-J3-mfJ" firstAttribute="trailing" secondItem="Prz-qg-uez" secondAttribute="trailingMargin" id="P99-4j-6zd"/>
+                            <constraint firstItem="EMX-At-QHN" firstAttribute="top" secondItem="0Ti-ge-pOh" secondAttribute="bottom" constant="8" id="PHf-rX-iH2"/>
+                            <constraint firstItem="Shv-sb-VNH" firstAttribute="top" secondItem="G61-EJ-KkV" secondAttribute="bottom" constant="8" id="PgQ-rx-w2x"/>
+                            <constraint firstItem="EMX-At-QHN" firstAttribute="trailing" secondItem="Prz-qg-uez" secondAttribute="trailingMargin" id="Saq-93-dPR"/>
+                            <constraint firstItem="EMX-At-QHN" firstAttribute="leading" secondItem="Prz-qg-uez" secondAttribute="leadingMargin" id="Y1C-qQ-Bde"/>
+                            <constraint firstItem="L5p-mD-tqj" firstAttribute="leading" secondItem="Prz-qg-uez" secondAttribute="leadingMargin" id="ZD9-hY-224"/>
+                            <constraint firstItem="hr3-Ne-Kv6" firstAttribute="leading" secondItem="Prz-qg-uez" secondAttribute="leadingMargin" id="aUZ-6Q-suw"/>
+                            <constraint firstItem="Shv-sb-VNH" firstAttribute="trailing" secondItem="Prz-qg-uez" secondAttribute="trailingMargin" id="exP-ue-N51"/>
+                            <constraint firstItem="L5p-mD-tqj" firstAttribute="trailing" secondItem="Prz-qg-uez" secondAttribute="trailingMargin" id="jjx-4k-aIl"/>
+                            <constraint firstItem="hr3-Ne-Kv6" firstAttribute="trailing" secondItem="Prz-qg-uez" secondAttribute="trailingMargin" id="klH-2c-ldF"/>
+                            <constraint firstItem="0Ti-ge-pOh" firstAttribute="leading" secondItem="Prz-qg-uez" secondAttribute="leadingMargin" id="ks4-lh-Usy"/>
+                            <constraint firstItem="Shv-sb-VNH" firstAttribute="leading" secondItem="Prz-qg-uez" secondAttribute="leadingMargin" id="ky3-hi-znw"/>
+                            <constraint firstItem="0Ti-ge-pOh" firstAttribute="trailing" secondItem="Prz-qg-uez" secondAttribute="trailingMargin" id="pMM-iv-oZQ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Configuration" id="nBe-aL-Jnb">
+                        <barButtonItem key="rightBarButtonItem" title="Apply" id="Vsw-Bv-Oi6">
+                            <connections>
+                                <action selector="applyChanges:" destination="Ixy-CI-7eT" id="fmY-Q8-X8v"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="accessKey" destination="hr3-Ne-Kv6" id="3h6-3k-IlC"/>
+                        <outlet property="secretKey" destination="EMX-At-QHN" id="XZ5-kh-sHC"/>
+                        <outlet property="serverURL" destination="L5p-mD-tqj" id="egy-DD-PaS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="upO-yL-Q7O" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1408.8" y="375.56221889055473"/>
         </scene>
         <!--Logger View Controller-->
         <scene sceneID="dj2-bV-Zik">
@@ -263,7 +357,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OER-n7-0lJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1292" y="698.5007496251875"/>
+            <point key="canvasLocation" x="1410" y="1042"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Gye-bk-wu1">

@@ -8,8 +8,12 @@
 
 @interface NSLocale (FWTNotifiable)
 
+NS_ASSUME_NONNULL_BEGIN
+
 + (NSLocale *)fwt_currentLocale;
 - (NSString *)fwt_countryCode;
-- (nonnull NSString *)fwt_languageCode;
+- (NSString *)fwt_languageCode;
+
+NS_ASSUME_NONNULL_END
 
 @end

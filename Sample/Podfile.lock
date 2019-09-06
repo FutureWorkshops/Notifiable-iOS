@@ -1,6 +1,6 @@
 PODS:
   - Keys (1.0.1)
-  - Notifiable (1.2.1)
+  - Notifiable (1.2.2)
   - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
@@ -9,7 +9,7 @@ DEPENDENCIES:
   - SVProgressHUD (~> 2.2.5)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - SVProgressHUD
 
 EXTERNAL SOURCES:
@@ -20,9 +20,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Keys: a576f4c9c1c641ca913a959a9c62ed3f215a8de9
-  Notifiable: cd9fba315bf6b09903413678b79e3c51c129ed05
+  Notifiable: f8da058d5cef432d64cf3f8f7eb4e1bac44f19b9
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
 PODFILE CHECKSUM: 8ac137fc07aacbe75db67bd1c45ad5b8aa8a8e82
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3

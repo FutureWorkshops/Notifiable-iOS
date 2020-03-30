@@ -20,6 +20,7 @@ extension NotificationEvent: CustomStringConvertible {
             return "Failure on updating Status"
         case .statusUpdate:
             return "Updated Status"
+        @unknown default: return "Unknown"
         }
     }
 }

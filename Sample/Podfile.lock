@@ -1,6 +1,6 @@
 PODS:
   - Keys (1.0.1)
-  - Notifiable (1.2.2)
+  - Notifiable (1.2.3)
   - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Keys: a576f4c9c1c641ca913a959a9c62ed3f215a8de9
-  Notifiable: f8da058d5cef432d64cf3f8f7eb4e1bac44f19b9
+  Notifiable: 18fe6c4aa80f1e0c92e27b11c6b89a59c8f6754c
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
 PODFILE CHECKSUM: 8ac137fc07aacbe75db67bd1c45ad5b8aa8a8e82

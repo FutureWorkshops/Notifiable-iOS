@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.summary      = "Utility classes to integrate with Notifiable-Rails gem"
 
-  s.ios.frameworks  = 'MobileCoreServices'
+  s.ios.frameworks  = 'CoreServices'
   s.frameworks   = 'SystemConfiguration'
 
   s.description  = <<-DESC

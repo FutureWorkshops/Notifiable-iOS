@@ -9,6 +9,12 @@
 #import "FWTHTTPSessionManager.h"
 #import "FWTHTTPRequestSerializer.h"
 
+#ifdef DEBUG
+#define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#define NSLog(...)
+#endif
+
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
 @interface FWTHTTPSessionManager ()
@@ -17,16 +23,18 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 @property (nonatomic, strong) FWTHTTPRequestSerializer *requestSerializer;
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableHeaders;
+@property (nonatomic, strong) NSURLSession *urlSession;
 
 @end
 
 @implementation FWTHTTPSessionManager
 
-- (instancetype) initWithBaseURL:(NSURL *)baseUrl
+- (instancetype) initWithBaseURL:(NSURL *)baseUrl session:(NSURLSession *)session
 {
     self = [super init];
     if (self) {
         self->_baseURL = baseUrl;
+        self->_urlSession = session;
     }
     return self;
 }
@@ -144,12 +152,12 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
 
     __weak typeof(self) weakSelf = self;
-    [NSURLConnection sendAsynchronousRequest:request queue:self.sessionOperationQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-        NSLog(@"Response with Error: %@", connectionError);
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         
-        if (connectionError) {
-            failure(httpResponse.statusCode, connectionError);
+        if (error) {
+            failure(httpResponse.statusCode, error);
+            NSLog(@"Response with Error: %@", error);
             return;
         }
         
@@ -157,12 +165,15 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
         
         if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
             NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
-            failure(404, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+            NSError *error = [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo];
+            NSLog(@"Response with Error: %@", error);
+            failure(404, error);
             return;
         }
         
         success(responseData);
     }];
+    [task resume];
 }
 
 - (NSURLRequest *) _buildRequestWithPath:(NSString *)path

@@ -20,6 +20,7 @@ typedef void(^FWTRequestManagerFailureBlock)(NSInteger responseCode, NSError * e
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithBaseURL:(NSURL *)baseUrl
+                        session:(NSURLSession *)session
                andAuthenticator:(FWTNotifiableAuthenticator*)authenticator NS_DESIGNATED_INITIALIZER;
 - (void)registerDeviceWithParams:(NSDictionary *)params
                          success:(_Nullable FWTRequestManagerSuccessBlock)success

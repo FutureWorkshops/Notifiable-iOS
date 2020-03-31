@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     
     let FWTDeviceListSegue = "FWTDeviceListSegue"
     lazy var manager:NotifiableManager! = {
-        let manager = NotifiableManager(groupId: kAppGroupId, didRegister: { [weak self] (_, token) in
+        let manager = NotifiableManager(groupId: kAppGroupId, session: URLSession.shared, didRegister: { [weak self] (_, token) in
             self?.registerCompleted?(token as NSData)
         }, didRecieve: nil)
         manager.logger = kLogger

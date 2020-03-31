@@ -236,6 +236,21 @@ Init a notifiable manager with the configurations of the Notifiable-Rails server
                     andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(didRegister:didRecieve:));
 
 /**
+Init a notifiable manager with the configurations of the Notifiable-Rails server
+ 
+@see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
+
+@param urlSession                         NSURLSession used to perform network requests
+@param registerBlock       Block that is called once that the device is registered for receiving notifications
+@param notificationBlock   Block that is called once that the device receives a notification;
+
+@return Manager configured to access a specific Notifiable-Rails server
+*/
+- (instancetype)initWithURLSession:(NSURLSession *)urlSession
+                  didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+                    andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(session:didRegister:didRecieve:));
+
+/**
  Init a notifiable manager with the configurations of the Notifiable-Rails server
  
  @see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
@@ -248,8 +263,24 @@ Init a notifiable manager with the configurations of the Notifiable-Rails server
  */
 - (instancetype)initWithGroupId:(NSString * _Nullable)group
                didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
-           andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(groupId:didRegister:didRecieve:)) NS_DESIGNATED_INITIALIZER;
+           andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(groupId:didRegister:didRecieve:));
 
+/**
+ Init a notifiable manager with the configurations of the Notifiable-Rails server
+ 
+ @see <a href="https://github.com/FutureWorkshops/notifiable-rails">Notifiable-Rails gem</a>
+ 
+ @param group                            An string representing the group id in which the SDK saved data will be accessible. If nil, no data is available outside the app.
+ @param urlSession                         NSURLSession used to perform network requests
+ @param registerBlock           Block that is called once that the device is registered for receiving notifications
+ @param notificationBlock   Block that is called once that the device receives a notification;
+ 
+ @return Manager configured to access a specific Notifiable-Rails server
+ */
+- (instancetype)initWithGroupId:(NSString * _Nullable)group
+                     urlSession:(NSURLSession * _Nonnull)urlSession
+               didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+           andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock NS_SWIFT_NAME(init(groupId:session:didRegister:didRecieve:)) NS_DESIGNATED_INITIALIZER;
 
 /**
  This method configures the SDK to a specific Notifiable configuration

@@ -281,7 +281,7 @@ NSString * const FWTNotifiableProvider             = @"apns";
     NSNumber *tokenId = [deviceTokenId copy];
     [self.requester updateDeviceWithTokenId:deviceTokenId params:params success:^(NSDictionary * _Nullable response) {
         __strong typeof(weakSelf) sself = weakSelf;
-        [sself.logger logMessage:@"Did unregister for push notifications"];
+        [sself.logger logMessage:@"Did updated device"];
         if(handler){
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(tokenId, nil);

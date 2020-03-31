@@ -21,18 +21,20 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 
 @property (nonatomic, strong) FWTHTTPSessionManager *httpSessionManager;
 @property (nonatomic, strong) FWTNotifiableAuthenticator *authenticator;
+@property (nonatomic, strong) NSURLSession *urlSession;
 
 @end
 
 @implementation FWTHTTPRequester
 
-- (instancetype)initWithBaseURL:(NSURL*)baseUrl
-               andAuthenticator:(FWTNotifiableAuthenticator*)authenticator
-{
+- (instancetype)initWithBaseURL:(NSURL *)baseUrl
+                        session:(NSURLSession *)session
+               andAuthenticator:(FWTNotifiableAuthenticator*)authenticator {
     self = [super init];
     if (self) {
         self->_baseUrl = baseUrl;
         self->_authenticator = authenticator;
+        self->_urlSession = session;
     }
     return self;
 }
@@ -40,7 +42,8 @@ NSString * const FWTListDevicesPath = @"api/v1/device_tokens.json";
 - (FWTHTTPSessionManager *)httpSessionManager
 {
     if (!self->_httpSessionManager) {
-        self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl];
+        self->_httpSessionManager = [[FWTHTTPSessionManager alloc] initWithBaseURL:self.baseUrl
+                                                                           session:self.urlSession];
     }
     return self->_httpSessionManager;
 }

@@ -9,6 +9,12 @@
 #import "FWTHTTPSessionManager.h"
 #import "FWTHTTPRequestSerializer.h"
 
+#ifdef DEBUG
+#define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#define NSLog(...)
+#endif
+
 NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiable.FWTHTTPSessionManager";
 
 @interface FWTHTTPSessionManager ()
@@ -147,11 +153,11 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 
     __weak typeof(self) weakSelf = self;
     NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSLog(@"Response with Error: %@", error);
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         
         if (error) {
             failure(httpResponse.statusCode, error);
+            NSLog(@"Response with Error: %@", error);
             return;
         }
         
@@ -159,7 +165,9 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
         
         if (httpResponse && (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300)) {
             NSDictionary *userInfo = [responseData isKindOfClass:[NSDictionary class]] ? (NSDictionary *)responseData : @{};
-            failure(404, [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo]);
+            NSError *error = [NSError errorWithDomain:@"FWTNotifiableError" code:httpResponse.statusCode userInfo:userInfo];
+            NSLog(@"Response with Error: %@", error);
+            failure(404, error);
             return;
         }
         

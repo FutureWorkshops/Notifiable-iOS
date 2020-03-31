@@ -17,16 +17,18 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
 @property (nonatomic, strong) FWTHTTPRequestSerializer *requestSerializer;
 @property (nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableHeaders;
+@property (nonatomic, strong) NSURLSession *urlSession;
 
 @end
 
 @implementation FWTHTTPSessionManager
 
-- (instancetype) initWithBaseURL:(NSURL *)baseUrl
+- (instancetype) initWithBaseURL:(NSURL *)baseUrl session:(NSURLSession *)session
 {
     self = [super init];
     if (self) {
         self->_baseURL = baseUrl;
+        self->_urlSession = session;
     }
     return self;
 }
@@ -144,12 +146,12 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
     NSURLRequest *request = [self _buildRequestWithPath:path method:method andParameters:parameters];
 
     __weak typeof(self) weakSelf = self;
-    [NSURLConnection sendAsynchronousRequest:request queue:self.sessionOperationQueue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-        NSLog(@"Response with Error: %@", connectionError);
+    NSURLSessionDataTask *task = [self.urlSession dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSLog(@"Response with Error: %@", error);
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         
-        if (connectionError) {
-            failure(httpResponse.statusCode, connectionError);
+        if (error) {
+            failure(httpResponse.statusCode, error);
             return;
         }
         
@@ -163,6 +165,7 @@ NSString *const FWTHTTPSessionManagerIdentifier = @"com.futureworkshops.notifiab
         
         success(responseData);
     }];
+    [task resume];
 }
 
 - (NSURLRequest *) _buildRequestWithPath:(NSString *)path

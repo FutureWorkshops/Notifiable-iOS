@@ -32,6 +32,7 @@ static FWTRequesterManager *sharedRequesterManager;
 @property (nonatomic, copy) FWTNotifiableDidReceiveNotificationBlock notificationBlock;
 @property (nonatomic, strong, readonly) NSString *groupId;
 @property (nonatomic, strong, readonly) NSUserDefaults *userDefaults;
+@property (nonatomic, strong, readonly) NSURLSession *urlSession;
 
 @end
 
@@ -39,13 +40,15 @@ static FWTRequesterManager *sharedRequesterManager;
 
 @synthesize currentDevice = _currentDevice;
 @synthesize userDefaults = _userDefaults;
+@synthesize urlSession = _urlSession;
 
-+ (FWTRequesterManager *)requestManagerWithUserDefaults:(NSUserDefaults *)userDefaults
++ (FWTRequesterManager *)requestManagerWithUserDefaults:(NSUserDefaults *)userDefaults andSession:(NSURLSession *)session
 {
     if (sharedRequesterManager == nil) {
         FWTNotifiableAuthenticator *authenticator = [[FWTNotifiableAuthenticator alloc] initWithAccessId:[FWTNotifiableManager serverAccessIdWithUserDefaults:userDefaults]
                                                                                             andSecretKey:[FWTNotifiableManager serverSecretKeyWithUserDefaults:userDefaults]];
         FWTHTTPRequester *requester = [[FWTHTTPRequester alloc] initWithBaseURL:[FWTNotifiableManager serverURLWithUserDefaults:userDefaults]
+                                                                        session: session
                                                                andAuthenticator:authenticator];
         sharedRequesterManager = [[FWTRequesterManager alloc] initWithRequester:requester];
     }
@@ -106,19 +109,59 @@ static FWTRequesterManager *sharedRequesterManager;
            didRegisterBlock:(FWTNotifiableDidRegisterBlock)registerBlock
        andNotificationBlock:(FWTNotifiableDidReceiveNotificationBlock)notificationBlock
 {
+    return [self initWithURL:url
+                    accessId:accessId
+                   secretKey:secretKey
+                  urlSession:[NSURLSession sharedSession]
+            didRegisterBlock:registerBlock
+        andNotificationBlock:notificationBlock];
+}
+
+- (instancetype)initWithURL:(NSURL *)url
+                   accessId:(NSString *)accessId
+                  secretKey:(NSString *)secretKey
+                 urlSession:(NSURLSession *)urlSession
+           didRegisterBlock:(FWTNotifiableDidRegisterBlock)registerBlock
+       andNotificationBlock:(FWTNotifiableDidReceiveNotificationBlock)notificationBlock
+{
     [FWTNotifiableManager configureWithURL:url
                                   accessId:accessId
                                  secretKey:secretKey];
-    return [self initWithDidRegisterBlock:registerBlock andNotificationBlock:notificationBlock];
+    return [self initWithURLSession:urlSession
+                   didRegisterBlock:registerBlock
+               andNotificationBlock:notificationBlock];
 }
 
 - (instancetype)initWithDidRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
                     andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock
 {
-    return [self initWithGroupId:nil didRegisterBlock:registerBlock andNotificationBlock:notificationBlock];
+    return [self initWithURLSession:[NSURLSession sharedSession]
+                   didRegisterBlock:registerBlock
+               andNotificationBlock:notificationBlock];
+}
+
+- (instancetype)initWithURLSession:(NSURLSession* )urlSession
+                  didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+              andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock
+{
+    return [self initWithGroupId:nil
+                      urlSession:urlSession
+                didRegisterBlock:registerBlock
+            andNotificationBlock:notificationBlock];
 }
 
 - (instancetype)initWithGroupId:(NSString * _Nullable)group
+               didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
+           andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock
+{
+    return [self initWithGroupId:group
+                      urlSession:[NSURLSession sharedSession]
+                didRegisterBlock:registerBlock
+            andNotificationBlock:notificationBlock];
+}
+
+- (instancetype)initWithGroupId:(NSString * _Nullable)group
+                     urlSession:(NSURLSession * _Nonnull)urlSession
                didRegisterBlock:(_Nullable FWTNotifiableDidRegisterBlock)registerBlock
            andNotificationBlock:(_Nullable FWTNotifiableDidReceiveNotificationBlock)notificationBlock
 {
@@ -127,6 +170,7 @@ static FWTRequesterManager *sharedRequesterManager;
         self->_registerBlock = registerBlock;
         self->_notificationBlock = notificationBlock;
         self->_groupId = group;
+        self->_urlSession = urlSession;
         self->_deviceTokenData = tokenDataBuffer;
         
         // register self as listener
@@ -222,32 +266,32 @@ static FWTRequesterManager *sharedRequesterManager;
 
 - (NSInteger)retryAttempts
 {
-    return [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults].retryAttempts;
+    return [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession].retryAttempts;
 }
 
 - (void)setRetryAttempts:(NSInteger)retryAttempts
 {
-    [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults].retryAttempts = retryAttempts;
+    [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession].retryAttempts = retryAttempts;
 }
 
 -(NSTimeInterval)retryDelay
 {
-    return [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults].retryDelay;
+    return [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession].retryDelay;
 }
 
 - (void)setRetryDelay:(NSTimeInterval)retryDelay
 {
-    [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults].retryDelay = retryDelay;
+    [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession].retryDelay = retryDelay;
 }
 
 - (id<FWTNotifiableLogger>)logger
 {
-    return [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults].logger;
+    return [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession].logger;
 }
 
 - (void)setLogger:(id<FWTNotifiableLogger>)logger
 {
-    [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults].logger = logger;
+    [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession].logger = logger;
 }
 
 #pragma mark - Public static methods
@@ -323,7 +367,7 @@ static FWTRequesterManager *sharedRequesterManager;
         return;
     }
     
-    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession];
     [[requestManager logger] logMessage:@"Starting to register an anonymous device"];
     
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
@@ -379,7 +423,7 @@ static FWTRequesterManager *sharedRequesterManager;
         return;
     }
     
-    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession];
     [[requestManager logger] logMessage:@"Starting to register a device"];
     
     NSLocale *deviceLocale = locale ?: [NSLocale fwt_currentLocale];
@@ -530,7 +574,7 @@ static FWTRequesterManager *sharedRequesterManager;
     NSAssert(self.currentDevice.tokenId != nil, @"This device is not registered, please use the method registerToken:withUserAlias:locale:customProperties:completionHandler: instead");
     
     __weak typeof(self) weakSelf = self;
-    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults];
+    __weak FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:self.userDefaults andSession:self.urlSession];
     [[requestManager logger] logMessage:[NSString stringWithFormat:@"Starting to update device %@", self.currentDevice.tokenId]];
     [requestManager updateDevice:self.currentDevice.tokenId
                    withUserAlias:userAlias
@@ -681,8 +725,9 @@ static FWTRequesterManager *sharedRequesterManager;
     FWTNotifiableDevice *device = [self storedDeviceWithUserDefaults:userDefaults];
     NSNumber *tokenId = device.tokenId;
     NSString *user = device.user;
+    NSURLSession *urlSession = [NSURLSession sharedSession];
     
-    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults andSession:urlSession];
     [[requestManager logger] logNotificationEvent:FWTNotifiableNotificationEventLogReceived
                             forNotificationWithId:notificationID
                                             error: nil];
@@ -743,10 +788,11 @@ static FWTRequesterManager *sharedRequesterManager;
              withCompletionHandler:(void (^)(NSError * _Nullable))handler
 {
     NSUserDefaults *userDefaults = [NSUserDefaults userDefaultsWithGroupId:groupId];
+    NSURLSession *urlSession = [NSURLSession sharedSession];
     NSNumber *notificationID = notificationInfo[@"n_id"];
     NSNumber *deviceTokenId = [self storedDeviceWithUserDefaults:userDefaults].tokenId;
     
-    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults];
+    FWTRequesterManager *requestManager = [FWTNotifiableManager requestManagerWithUserDefaults:userDefaults andSession:urlSession];
     if (logger != nil) {
         requestManager.logger = logger;
     }

@@ -18,7 +18,7 @@ typedef void(^FWTHTTPSessionManagerFailureBlock)(NSInteger responseCode, NSError
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, NSString *> *HTTPRequestHeaders;
 
 - (instancetype) init NS_UNAVAILABLE;
-- (instancetype) initWithBaseURL:(NSURL *)baseUrl NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithBaseURL:(NSURL *)baseUrl session:(NSURLSession *)session NS_DESIGNATED_INITIALIZER;
 
 - (void)GET:(NSString *)URLString
  parameters:(nullable NSDictionary<NSString *, NSString *> *)parameters
